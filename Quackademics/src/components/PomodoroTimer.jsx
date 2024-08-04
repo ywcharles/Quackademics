@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Typography, Box } from '@mui/material';
+import { timeOptions } from '../util/Pomodoro.util';
 
 const PomodoroTimer = () => {
   const [timeLeft, setTimeLeft] = useState(0);
@@ -73,7 +74,7 @@ const PomodoroTimer = () => {
         </Button>
       </Box>
       <Box sx={{ display: 'flex', gap: 1, marginTop: 2 }}>
-        {[5, 10, 15, 25, 30].map((minutes) => (
+        {timeOptions.map((minutes) => (
           <Button
             key={minutes}
             variant="contained"
