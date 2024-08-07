@@ -8,10 +8,27 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import React from "react";
+import React, {useState} from "react";
+
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
 
 // Color SCheme Orange: FBAF00, Yellow: FFD639, Brown: 93827F, Green: 92B4A7, Gray: 2F2F2F
 const RubberDuck = () => {
+  const [textFieldContent, setTextFieldContent] = useState("");
+  
+  const startSpeechRecognition = () => {
+    recognition.start();
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setTextFieldContent((prevContent) => prevContent + transcript + " ");
+    };
+    recognition.onerror = (event) => {
+      console.error("Speech recognition error", event.error);
+    };
+  };
+
   return (
     <Box
       sx={{
@@ -50,10 +67,12 @@ const RubberDuck = () => {
         }}
       >
         <TextField
+          value={textFieldContent}
           disabled
           multiline
           sx={{
-            color: "#2F2F2F",
+            backgroundColor: "white",
+            borderRadius: 2,
             width: "100%",
             height: "80%",
           }}
@@ -64,15 +83,10 @@ const RubberDuck = () => {
             width: "100%",
           }}
         >
-          <Button
-            sx={{ backgroundColor: "#92B4A7", color: "white", width: "40%" }}
+          <Button onClick={startSpeechRecognition}
+            sx={{ backgroundColor: "#92B4A7", color: "white", width: "80%" }}
           >
             Quack to Me
-          </Button>
-          <Button
-            sx={{ backgroundColor: "#FBAF00", color: "white", width: "40%" }}
-          >
-            Stop
           </Button>
           <Button
             sx={{ backgroundColor: "#2F2F2F", color: "white", width: "20%" }}
