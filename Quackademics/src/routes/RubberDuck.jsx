@@ -5,68 +5,90 @@ import {
   Avatar,
   Select,
   MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import React from "react";
 
 // Color SCheme Orange: FBAF00, Yellow: FFD639, Brown: 93827F, Green: 92B4A7, Gray: 2F2F2F
 const RubberDuck = () => {
   return (
-    <Box sx={{
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 5,
-      }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 5,
+        height: "80vh",
+        width: "100vh",
+      }}
+    >
       <Avatar
-          src={"/rubber_duck.jpeg"}
-          alt="quackquack"
-          sx={{
-            width: "30%",
-            height: "30%",
-            borderRadius: "50%",
-            objectFit: "cover",
-          }}
-        />
+        src={"/rubber_duck.jpeg"}
+        alt="quackquack"
+        sx={{
+          width: 300,
+          height: 300,
+          borderRadius: "50%",
+          objectFit: "cover",
+        }}
+      />
 
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
+          justifyContent: "space-between",
           alignItems: "center",
           gap: 2,
           backgroundColor: "#93827F",
           padding: 2,
           borderRadius: 2,
+          width: "100%",
+          maxWidth: 600,
+          height: 400,
         }}
       >
-        <TextField sx={{
-          width: 500,
-          height: 300 
-        }}/>
+        <TextField
+          disabled
+          multiline
+          sx={{
+            color: "#2F2F2F",
+            width: "100%",
+            height: "80%",
+          }}
+        />
         <Box
           sx={{
             display: "flex-inline",
-            width: "100%"
+            width: "100%",
           }}
         >
-          <Button sx={{ backgroundColor: "#92B4A7", color: "white", width: "80%" }}>
+          <Button
+            sx={{ backgroundColor: "#92B4A7", color: "white", width: "40%" }}
+          >
             Quack to Me
           </Button>
-          <Button sx={{ backgroundColor: "#2F2F2F", color: "white", width: "20%" }}>
+          <Button
+            sx={{ backgroundColor: "#FBAF00", color: "white", width: "40%" }}
+          >
+            Stop
+          </Button>
+          <Button
+            sx={{ backgroundColor: "#2F2F2F", color: "white", width: "20%" }}
+          >
             Save
           </Button>
         </Box>
 
-        <Select
-          sx={{
-            width: "100%",
-            height: 50
-          }}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
+        <FormControl fullWidth>
+          <InputLabel>Old conversations</InputLabel>
+          <Select label="Old conversations">
+            <MenuItem>Merge sort</MenuItem>
+            <MenuItem>Servers and HTTP Requests</MenuItem>
+            <MenuItem>Nutrition</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
     </Box>
   );
