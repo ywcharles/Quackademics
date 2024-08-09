@@ -3,7 +3,7 @@ import { Button, Typography, Box } from '@mui/material';
 import { timeOptions } from '../util/Pomodoro.util';
 
 const PomodoroTimer = () => {
-  const [timeLeft, setTimeLeft] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
   const [selectedTime, setSelectedTime] = useState(25);
@@ -24,7 +24,6 @@ const PomodoroTimer = () => {
   }, [isRunning, timeLeft]);
 
   const handleStart = () => {
-    setTimeLeft(selectedTime * 60);
     setIsRunning(true);
   };
 
@@ -36,13 +35,14 @@ const PomodoroTimer = () => {
   const handleReset = () => {
     clearInterval(intervalId);
     setIsRunning(false);
-    setTimeLeft(0);
+    setTimeLeft(selectedTime * 60);
   };
 
   const handleTimeChange = (minutes) => {
     setSelectedTime(minutes);
-    if (!isRunning) {
-      setTimeLeft(minutes * 60);
+    setTimeLeft(minutes * 60);
+    if (isRunning) {
+      setIsRunning(false);
     }
   };
 
@@ -59,7 +59,7 @@ const PomodoroTimer = () => {
         borderRadius: 2,
       }}
     >
-      <Typography variant="h1" sx={{ fontWeight: 'bold' }}>
+      <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
         {`${Math.floor(timeLeft / 60).toString().padStart(2, '0')}:${(timeLeft % 60).toString().padStart(2, '0')}`}
       </Typography>
       <Box sx={{ display: 'flex', gap: 2 }}>
@@ -78,8 +78,10 @@ const PomodoroTimer = () => {
           <Button
             key={minutes}
             variant="contained"
-            color="primary"
             onClick={() => handleTimeChange(minutes)}
+            sx={{
+              backgroundColor: selectedTime === minutes ? '#79aadb' : '#1976d2',
+            }}
           >
             {minutes} min
           </Button>
