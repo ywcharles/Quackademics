@@ -5,6 +5,11 @@ export const navComponents = [
     description: "Pomodoro timer",
   },
   {
+    title: "Assignments",
+    href: "/dashboard/assignments",
+    description: "Assignment Tracker",
+  },
+  {
     title: "Rubber Duck",
     href: "/dashboard/rubberduck",
     description: "Rubber duck to talk to i guess",

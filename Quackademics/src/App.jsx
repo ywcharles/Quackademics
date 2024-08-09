@@ -7,6 +7,7 @@ import VoiceChannel from "./routes/VoiceChannel";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Assignments from "./routes/Assignments";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="dashboard/home" element={<Home />} />
           <Route path="dashboard/pomodoro" element={<Pomodoro />} />
+          <Route path="dashboard/assignments" element={<Assignments />} />
           <Route path="dashboard/profile" element={<Profile />} />
           <Route path="dashboard/rubberduck" element={<RubberDuck />} />
           <Route path="dashboard/voicechannel" element={<VoiceChannel />} />
