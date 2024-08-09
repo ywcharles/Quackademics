@@ -1,5 +1,10 @@
 export const navComponents = [
   {
+    title: "Flashcards",
+    href: "/dashboard/flashcards",
+    description: "Flashcards for studying",
+  },
+  {
     title: "Pomodoro",
     href: "/dashboard/pomodoro",
     description: "Pomodoro timer",
