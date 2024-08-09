@@ -13,7 +13,7 @@ const OverrallStudyRanking = () => {
           color: "white",
           p: 2,
           borderRadius: 2,
-          height: 200,
+          height: 215,
           width: 300
         }}
       >

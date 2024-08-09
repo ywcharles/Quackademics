@@ -1,6 +1,10 @@
 import React from "react";
 import ProfileCard from "../components/ProfileCard";
-import { Box, Grid } from "@mui/material";
+import { Box, Button, ButtonGroup} from "@mui/material";
+import StatsGraph from "../components/StatsGraph";
+import Heatmap from "../components/Heatmap";
+import PomodoroRanking from "../components/PomodoroRanking";
+import OverrallStudyRanking from "../components/OverallStudyRanking";
 
 function Profile() {
   return (
@@ -17,10 +21,11 @@ function Profile() {
             display: "flex",
             flexDirection: "column",
             gap: 5,
-            pr: 10
+            mr: 10,
+            width: 250
           }}>
           <ProfileCard />
-          <ProfileCard /> 
+          <StatsGraph />
         </Box>
 
         {/* Right Side */}
@@ -37,42 +42,37 @@ function Profile() {
                 flexDirection: "row",
                 gap: 1
               }}>
-                <ProfileCard />// Friends
-                <ProfileCard />// Config
-                <ProfileCard />// Scoreboard
+                <Button variant="contained" color="primary" sx={{ width: "100%"}}>Friends</Button>
+                <Button variant="contained" color="primary" sx={{ width: "100%" }}>Config</Button>
+                <Button variant="contained" color="primary" sx={{ width: "100%" }}>Scoreboard</Button>
             </Box>
 
-            {/* heat map box */}
-            <Box
+            {/* heat map */}
+            <Heatmap />
+
+            {/* Ranking box */}
+            <Box 
               sx={{
                 display: "flex",
-                pt: 2,
+                flexDirection: "row",
+                gap: 2
               }}>
-                <ProfileCard /> // Heat map 
+                <PomodoroRanking /> 
+                <OverrallStudyRanking/> 
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1,
+                    width: 135
+                  }}>
+                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
+                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
+                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
+                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
+                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
+                  </Box>
               </Box>
-
-              {/* Ranking box */}
-              <Box 
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: 2
-                }}>
-                  <ProfileCard /> // Pomodoro Ranking
-                  <ProfileCard /> // Overrall ranking
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 1
-                    }}>
-                      <ProfileCard /> 
-                      <ProfileCard /> 
-                      <ProfileCard /> 
-                      <ProfileCard /> 
-                      <ProfileCard /> 
-                    </Box>
-                </Box>
         </Box>
     </Box>
     

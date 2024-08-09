@@ -13,7 +13,7 @@ const StatsGraph = () => {
           color: "white",
           p: 2,
           borderRadius: 2,
-          height: 200,
+          height: 250,
           width: 250
         }}
       >
