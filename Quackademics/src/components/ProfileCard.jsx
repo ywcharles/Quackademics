@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import { Avatar, Typography } from '@mui/material';
+import { Avatar, Button, Typography } from '@mui/material';
 
 const ProfileCard = () => {
   return (
@@ -13,21 +13,23 @@ const ProfileCard = () => {
           backgroundColor: "#615f5f",
           color: "white",
           p: 2,
-          gap: 2,
+          gap: 1,
           borderRadius: 2,
-          height: 275,
-          width: "100%"
+          height: "100%",
+          width: "100%",
+          overflow: "hidden"
         }}
       >
         <Avatar 
-          src="../public/kiki_lin.jpg"
+          src="/kiki_lin.jpg"
           alt="Kiki Lin" // alt content should be person's name they input
           sx={{ width: 125, height: 125 }}
         />
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column"
+            flexDirection: "column",
+            height: "100%"
           }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', overflow: "hidden"}}>Kiki Lin</Typography>
           <Typography variant="body1" sx={{ overflow: "hidden"}}>Computer Science, 2020-2025 </Typography>
@@ -35,6 +37,7 @@ const ProfileCard = () => {
             Hi! My name is Kiki! Pretend there is some very interesting facts about me here.
           </Typography>
         </Box>
+        <Button variant="contained" color="secondary" size='small'>Edit Profile</Button>
       </Box>
     </>
   )

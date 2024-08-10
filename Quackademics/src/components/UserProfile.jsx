@@ -20,7 +20,7 @@ const UserProfile = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 5,
+            gap: 4,
             mr: 10,
             width: 250
             // width: "25%"
