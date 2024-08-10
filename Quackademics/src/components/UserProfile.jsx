@@ -12,7 +12,7 @@ const UserProfile = () => {
       sx={{
         display: "flex",
         flexDirection: "row",
-        alignContent: "top",
+        alignContent: "top"
       }}>
 
         {/* Left column */}
@@ -23,6 +23,7 @@ const UserProfile = () => {
             gap: 5,
             mr: 10,
             width: 250
+            // width: "25%"
           }}>
           <ProfileCard />
           <StatsGraph />
@@ -65,6 +66,7 @@ const UserProfile = () => {
                     flexDirection: "column",
                     gap: 1,
                     width: 135
+                    // width: "15%"
                   }}>
                     <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
                     <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
