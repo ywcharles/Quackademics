@@ -23,7 +23,7 @@ const ProfileCard = () => {
         <Avatar 
           src="/kiki_lin.jpg"
           alt="Kiki Lin" // alt content should be person's name they input
-          sx={{ width: 125, height: 125 }}
+          sx={{ width: 130, height: 130 }}
         />
         <Box
           sx={{
