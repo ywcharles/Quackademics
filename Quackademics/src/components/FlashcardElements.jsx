@@ -29,7 +29,9 @@ const FlashcardElements = () => {
             sx={{
                 display: "flex",
                 flexDirection: "row",
-                paddingTop: "6%"
+                paddingTop: "6%",
+                width: "100vw",
+                height: "90vh"
             }}
         >
             <Box
