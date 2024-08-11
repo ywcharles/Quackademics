@@ -1,9 +1,10 @@
-import FlashcardsMenu from '../components/FlashcardsMenu';
+import FlashcardElements from '../components/FlashcardElements';
 
 const Flashcards = () => {
+    
     return (
         <div> 
-            <FlashcardsMenu/> 
+            <FlashcardElements/> 
         </div>
     )
 }

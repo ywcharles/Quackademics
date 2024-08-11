@@ -1,13 +1,24 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 
-const FlashcardsMenu = () => {
+const FlashcardElements = () => {
     const [flashcards, setFlashcards] = useState(["Flashcard 1", "Flashcard 2"]);
+    const [currFlashcardSet, setCurrFlashcardSet] = useState("");
     const [searchInput, setSearchInput] = useState("");
+
+
+    const rootElement = document.getElementById('root');
+    rootElement.style.padding = "0";
+    rootElement.style.margin = "0";
+    rootElement.style.height = "100vh";
 
     const searchInputChange = (event) => {
         setSearchInput(event.target.value);
     }
+
+    const flashcardSelected = (flashcard) => {
+        setCurrFlashcardSet(flashcard);
+      };
 
     const filteredFlashcards = flashcards.filter(flashcard =>
         flashcard.toLowerCase().includes(searchInput)
@@ -18,13 +29,13 @@ const FlashcardsMenu = () => {
             sx={{
                 display: "flex",
                 flexDirection: "row",
-                backgroundColor: "white"
+                paddingTop: "6%"
             }}
         >
             <Box
                 sx={{
                     display: "flex",
-                    flexDirection: "column"
+                    flexDirection: "column",
                 }}
             >
                 <TextField id="search" label="Search" variant="filled" onChange={searchInputChange}
@@ -48,7 +59,7 @@ const FlashcardsMenu = () => {
                 >
                     <Typography sx={{ fontWeight: "bold" }}>
                         {filteredFlashcards.map((flashcard, index) => (
-                            <span style={{display: "block"}} key={index}>
+                            <span id="flashcard" style={{display: "block"}} key={index} onClick={() => flashcardSelected(flashcard)}>
                                 {flashcard}
                             </span>
                         ))}
@@ -57,9 +68,6 @@ const FlashcardsMenu = () => {
                 <Box
                 sx={{
                     width: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-end",
                     backgroundColor: "#615f5f",
                     padding: 1
                 }}
@@ -83,7 +91,7 @@ const FlashcardsMenu = () => {
             <Box
                 sx={{
                     display: "flex",
-                    flexDirection: "column",
+                    flexDirection: "column"
                 }}
             >
                 <Box sx={{ position: "relative", height: "80vh", width: "70vw", left: "10%"}}>
@@ -100,7 +108,7 @@ const FlashcardsMenu = () => {
                         }}
                     >
                         <Typography sx={{ fontWeight: "bold", color: 'white' }}>
-                            Flashcard
+                            {currFlashcardSet}
                         </Typography>
                     </Box>
                     <Box
@@ -136,4 +144,4 @@ const FlashcardsMenu = () => {
     );
 };
 
-export default FlashcardsMenu;
+export default FlashcardElements;
