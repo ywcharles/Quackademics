@@ -11,10 +11,9 @@ const Heatmap = () => {
           alignItems: "center",
           backgroundColor: "#615f5f",
           color: "white",
-          p: 2,
           borderRadius: 2,
-          height: 250,
-          width: 800
+          width: "100%",
+          height: "60%"
         }}
       >
         Heatmap

@@ -10,9 +10,12 @@ const UserProfile = () => {
   return (
     <Box
       sx={{
+        // backgroundColor: "#f0f0f0",
         display: "flex",
         flexDirection: "row",
-        alignContent: "top"
+        alignContent: "top",
+        height: "70vh",
+        width: "100%"
       }}>
 
         {/* Left column */}
@@ -22,8 +25,7 @@ const UserProfile = () => {
             flexDirection: "column",
             gap: 4,
             mr: 10,
-            width: 250
-            // width: "25%"
+            width: "25vw",
           }}>
           <ProfileCard />
           <StatsGraph />
@@ -34,7 +36,8 @@ const UserProfile = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 4
+            gap: 4,
+            width: "100%",
           }}>
             {/* tabs box */}
             <Box
@@ -56,7 +59,8 @@ const UserProfile = () => {
               sx={{
                 display: "flex",
                 flexDirection: "row",
-                gap: 2
+                gap: 2,
+                height: "45%"
               }}>
                 <PomodoroRanking /> 
                 <OverrallStudyRanking/> 
@@ -65,14 +69,13 @@ const UserProfile = () => {
                     display: "flex",
                     flexDirection: "column",
                     gap: 1,
-                    width: 135
-                    // width: "15%"
+                    width: "50%",
                   }}>
-                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
-                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
-                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
-                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
-                    <Button variant="contained" color="primary" sx={{height: "100%"}}>button</Button>
+                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
+                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
+                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
+                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
+                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
                   </Box>
               </Box>
         </Box>

@@ -12,18 +12,21 @@ const ProfileCard = () => {
           alignItems: "center",
           backgroundColor: "#615f5f",
           color: "white",
-          p: 2,
           gap: 1,
           borderRadius: 2,
-          height: "100%",
+          overflow: "auto",
           width: "100%",
-          overflow: "hidden"
+          height: "65%"
         }}
       >
         <Avatar 
           src="/kiki_lin.jpg"
           alt="Kiki Lin" // alt content should be person's name they input
-          sx={{ width: 130, height: 130 }}
+          sx={{ 
+            mt: 2,
+            width: 130,
+            height: 130,
+          }}
         />
         <Box
           sx={{
@@ -33,7 +36,7 @@ const ProfileCard = () => {
           }}>
           <Typography variant="h6" sx={{ fontWeight: 'bold', overflow: "hidden"}}>Kiki Lin</Typography>
           <Typography variant="body1" sx={{ overflow: "hidden"}}>Computer Science, 2020-2025 </Typography>
-          <Typography variant="body2" sx={{ color: "lightgrey", overflow: "hidden", mt: 1}}>
+          <Typography variant="body2" sx={{ color: "lightgrey", overflow: "hidden", mt: 2}}>
             Hi! My name is Kiki! Pretend there is some very interesting facts about me here.
           </Typography>
         </Box>

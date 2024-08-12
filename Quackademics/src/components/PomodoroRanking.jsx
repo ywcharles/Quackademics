@@ -11,10 +11,11 @@ const PomodoroRanking = () => {
           alignItems: "center",
           backgroundColor: "#615f5f",
           color: "white",
-          p: 2,
           borderRadius: 2,
-          height: 215,
-          width: 300
+          // height: 215,
+          // width: 300,
+          width: "100%",
+          height: "100%"
         }}
       >
         Pomodoro Rankings Board

@@ -11,10 +11,9 @@ const StatsGraph = () => {
           alignItems: "center",
           backgroundColor: "#615f5f",
           color: "white",
-          p: 2,
           borderRadius: 2,
-          height: "67%",
-          width: 250
+          height: "45%",
+          width: "100%",
         }}
       >
         Stats Graph 
