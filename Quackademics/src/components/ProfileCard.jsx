@@ -11,10 +11,9 @@ const ProfileCard = () => {
           alignItems: "center",
           backgroundColor: "#615f5f",
           color: "white",
-          p: 2,
           borderRadius: 2,
-          height: 275,
-          width: "100%"
+          width: "100%",
+          height: "65%"
         }}
       >
         Profile card
