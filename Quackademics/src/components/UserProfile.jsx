@@ -13,6 +13,8 @@ const UserProfile = () => {
         display: "flex",
         flexDirection: "row",
         alignContent: "top",
+        height: "100%",
+        width: "100%"
       }}>
 
         {/* Left column */}
