@@ -12,8 +12,6 @@ const PomodoroRanking = () => {
           backgroundColor: "#615f5f",
           color: "white",
           borderRadius: 2,
-          // height: 215,
-          // width: 300,
           width: "100%",
           height: "100%"
         }}

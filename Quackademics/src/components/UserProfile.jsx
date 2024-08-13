@@ -10,7 +10,6 @@ const UserProfile = () => {
   return (
     <Box
       sx={{
-        // backgroundColor: "#f0f0f0",
         display: "flex",
         flexDirection: "row",
         alignContent: "top",
@@ -54,7 +53,7 @@ const UserProfile = () => {
             {/* heat map */}
             <Heatmap />
 
-            {/* Ranking box */}
+            {/* Ranking boxes */}
             <Box 
               sx={{
                 display: "flex",
