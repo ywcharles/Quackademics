@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import AddCardIcon from '@mui/icons-material/AddCard';
+import { AddCard } from "@mui/icons-material";
 
 const FlashcardElements = () => {
     const [flashcards, setFlashcards] = useState(["Flashcard 1", "Flashcard 2"]);
@@ -85,7 +87,7 @@ const FlashcardElements = () => {
                         overflow: "auto"
                     }}
                     >
-                        New +
+                        <AddCard/>
                     </Button>
                 </Box>
             </Box>
