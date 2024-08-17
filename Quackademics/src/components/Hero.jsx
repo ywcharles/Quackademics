@@ -35,7 +35,7 @@ const Hero = () => {
             gap: 2,
           }}
         >
-          <Button variant="contained" color="primary" sx={{width: "50%"}}>
+          <Button variant="contained" color="primary" sx={{width: "50%"}} href="/login">
             Login
           </Button>
         </Box>
