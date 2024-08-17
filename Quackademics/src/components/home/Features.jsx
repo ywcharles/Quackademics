@@ -26,12 +26,12 @@ const Features = () => {
           position: "relative",
         }}
       >
-        <FeatureCard image="/Flashcards.png" title="Flashcards" route="/dashboard/flashcards">
+        <FeatureCard image="/Flashcards.jpg" title="Flashcards" route="/dashboard/flashcards">
           Master your studies with our Flashcard feature. Create custom cards,
           test your knowledge, and track progress. Learn efficiently and
           effectively.
         </FeatureCard>
-        <FeatureCard image="/Pomodoro.png" title="Pomodoro" route="/dashboard/pomodoro">
+        <FeatureCard image="/Pomodoro.jpg" title="Pomodoro" route="/dashboard/pomodoro">
           Boost focus and productivity with our Pomodoro Timer. Work in timed
           intervals, take short breaks, and maximize your study sessions.
           Achieve more in less time.
@@ -53,9 +53,10 @@ const Features = () => {
         >
           The profile feature offers personalized study statistics, enabling
           users to monitor their productivity. It provides insights into
-          learning patterns, helping users track progress and achieve their
-          educational goals efficiently.
+          learning patterns, helping users track progress efficiently.
         </FeatureCard>
+
+        {/* To-do: Add Assignment tracker */}
       </Box>
     </Box>
   );

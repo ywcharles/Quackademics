@@ -11,11 +11,16 @@ import {
 const FeatureCard = (props) => {
   return (
     <div>
-      <Card sx={{ width:"50vh", height:"50vh" }}>
-        <CardMedia
-          sx={{ height: 140 }}
-          image={props.image}
-        />
+      <Card
+        sx={{
+          width: "50vh",
+          height: "50vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <CardMedia sx={{ height: 140 }} image={props.image} />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
             {props.title}
@@ -25,7 +30,9 @@ const FeatureCard = (props) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" href={props.route}>{props.title}</Button>
+          <Button size="small" href={props.route}>
+            {props.title}
+          </Button>
         </CardActions>
       </Card>
     </div>
