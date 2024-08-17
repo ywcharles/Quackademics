@@ -9,7 +9,8 @@ const Hero = () => {
         flexDirection: "row",
         alignItems: "center",
         gap: 10,
-        padding: 15,
+        paddingX: 15,
+        height: "100vh",
       }}
     >
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
