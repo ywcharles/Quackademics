@@ -14,7 +14,8 @@ const UserProfile = () => {
         flexDirection: "row",
         alignContent: "top",
         height: "70vh",
-        width: "100%"
+        width: "100%",
+        overflow: "scroll"
       }}>
 
         {/* Left column */}
