@@ -1,5 +1,5 @@
-function VoiceChannel() {
+const VoiceChannel = () => {
   return <div>vc </div>;
-}
+};
 
 export default VoiceChannel;
