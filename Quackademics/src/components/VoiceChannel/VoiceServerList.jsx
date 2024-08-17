@@ -1,6 +1,5 @@
 import { DataGrid } from "@mui/x-data-grid";
 import { pingEnum } from "../../util/VoiceChannel.util";
-import { Chip } from "@mui/material";
 
 const tableHeaderWidth = 150;
 
