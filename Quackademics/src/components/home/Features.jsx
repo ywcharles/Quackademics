@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { navComponents } from "../util/Navbar.util";
+import { navComponents } from "../../util/Navbar.util";
 
 import React from "react";
 import FeatureCard from "./FeatureCard";
