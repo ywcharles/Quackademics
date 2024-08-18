@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, TextField, Button, Grid, Typography } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { columns } from '../util/AssignmentTracker.util';
 
 const AssignmentTracker = () => {
   const [assignments, setAssignments] = useState([]);
@@ -74,7 +75,7 @@ const AssignmentTracker = () => {
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Grid container spacing={3} style={{ marginTop: '20px' }}>
-          {['To-do', 'In Progress', 'Complete'].map((status) => (
+          {columns.map((status) => (
             <Grid item xs={12} sm={4} key={status}>
               <Typography variant="h6">{status}</Typography>
               <Droppable droppableId={status}>
