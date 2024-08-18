@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Typography, Box } from '@mui/material';
-import { timeOptions } from '../util/Pomodoro.util';
+import React, { useState, useEffect } from "react";
+import { Button, Typography, Box } from "@mui/material";
+import { timeOptions } from "../utils/Pomodoro.util";
 
 const PomodoroTimer = () => {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
@@ -18,7 +18,7 @@ const PomodoroTimer = () => {
     } else if (timeLeft === 0 && isRunning) {
       clearInterval(intervalId);
       setIsRunning(false);
-      alert('Time is up!');
+      alert("Time is up!");
     }
     return () => clearInterval(id);
   }, [isRunning, timeLeft]);
@@ -49,38 +49,50 @@ const PomodoroTimer = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
         gap: 2,
-        backgroundColor: '#615f5f',
-        color: 'white',
+        backgroundColor: "#615f5f",
+        color: "white",
         padding: 4,
         borderRadius: 2,
       }}
     >
-      <Typography variant="h2" sx={{ fontWeight: 'bold' }}>
-        {`${Math.floor(timeLeft / 60).toString().padStart(2, '0')}:${(timeLeft % 60).toString().padStart(2, '0')}`}
+      <Typography variant="h2" sx={{ fontWeight: "bold" }}>
+        {`${Math.floor(timeLeft / 60)
+          .toString()
+          .padStart(2, "0")}:${(timeLeft % 60).toString().padStart(2, "0")}`}
       </Typography>
-      <Box sx={{ display: 'flex', gap: 2 }}>
-        <Button variant="contained" color="secondary" onClick={handleStart} disabled={isRunning}>
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleStart}
+          disabled={isRunning}
+        >
           Start
         </Button>
-        <Button variant="contained" color="secondary" onClick={handleStop} disabled={!isRunning}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleStop}
+          disabled={!isRunning}
+        >
           Stop
         </Button>
         <Button variant="contained" color="secondary" onClick={handleReset}>
           Reset
         </Button>
       </Box>
-      <Box sx={{ display: 'flex', gap: 1, marginTop: 2 }}>
+      <Box sx={{ display: "flex", gap: 1, marginTop: 2 }}>
         {timeOptions.map((minutes) => (
           <Button
             key={minutes}
             variant="contained"
             onClick={() => handleTimeChange(minutes)}
             sx={{
-              backgroundColor: selectedTime === minutes ? '#79aadb' : '#1976d2',
+              backgroundColor: selectedTime === minutes ? "#79aadb" : "#1976d2",
             }}
           >
             {minutes} min

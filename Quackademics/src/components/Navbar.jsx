@@ -7,7 +7,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { loginPage, navComponents } from "../util/Navbar.util";
+import { loginPage, navComponents } from "../utils/Navbar.util";
 
 function Navbar() {
   return (
