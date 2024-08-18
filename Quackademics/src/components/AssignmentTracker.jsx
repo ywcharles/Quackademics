@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Card, CardContent, TextField, Button, Grid, Typography } from '@mui/material';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const AssignmentTracker = () => {
   const [assignments, setAssignments] = useState([]);
@@ -15,17 +16,23 @@ const AssignmentTracker = () => {
     setNewAssignment({ ...newAssignment, [name]: value });
   };
 
-  const handleStatusChange = (assignment, newStatus) => {
-    const updatedAssignments = assignments.map((a) =>
-      a === assignment ? { ...a, status: newStatus } : a
-    );
-    setAssignments(updatedAssignments);
-  };
-
   const sortAssignmentsByDueDate = (status) => {
     return assignments
       .filter((assignment) => assignment.status === status)
       .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+  };
+
+  const onDragEnd = (result) => {
+    const { destination, source } = result;
+
+    if (!destination) return;
+
+    const updatedAssignments = Array.from(assignments);
+    const [movedAssignment] = updatedAssignments.splice(source.index, 1);
+    movedAssignment.status = destination.droppableId;
+    updatedAssignments.splice(destination.index, 0, movedAssignment);
+
+    setAssignments(updatedAssignments);
   };
 
   return (
@@ -65,35 +72,48 @@ const AssignmentTracker = () => {
         </CardContent>
       </Card>
 
-      <Grid container spacing={3} style={{ marginTop: '20px' }}>
-        {['To-do', 'In Progress', 'Complete'].map((status) => (
-          <Grid item xs={12} sm={4} key={status}>
-            <Typography variant="h6">{status}</Typography>
-            {sortAssignmentsByDueDate(status).map((assignment, index) => (
-              <Card key={index} style={{ marginBottom: '10px' }}>
-                <CardContent>
-                  <Typography variant="body1">{assignment.title}</Typography>
-                  <Typography variant="body2">
-                    Due: {new Date(assignment.dueDate).toLocaleDateString()}
-                  </Typography>
-                  {status !== 'Complete' && (
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      onClick={() =>
-                        handleStatusChange(assignment, status === 'To-do' ? 'In Progress' : 'Complete')
-                      }
-                      style={{ marginTop: '10px' }}
-                    >
-                      Move to {status === 'To-do' ? 'In Progress' : 'Complete'}
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </Grid>
-        ))}
-      </Grid>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Grid container spacing={3} style={{ marginTop: '20px' }}>
+          {['To-do', 'In Progress', 'Complete'].map((status) => (
+            <Grid item xs={12} sm={4} key={status}>
+              <Typography variant="h6">{status}</Typography>
+              <Droppable droppableId={status}>
+                {(provided) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={{ minHeight: '100px', padding: '10px', backgroundColor: '#f0f0f0' }}
+                  >
+                    {sortAssignmentsByDueDate(status).map((assignment, index) => (
+                      <Draggable key={assignment.title} draggableId={assignment.title} index={index}>
+                        {(provided) => (
+                          <Card
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={{
+                              marginBottom: '10px',
+                              ...provided.draggableProps.style,
+                            }}
+                          >
+                            <CardContent>
+                              <Typography variant="body1">{assignment.title}</Typography>
+                              <Typography variant="body2">
+                                Due: {new Date(assignment.dueDate).toLocaleDateString()}
+                              </Typography>
+                            </CardContent>
+                          </Card>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </Grid>
+          ))}
+        </Grid>
+      </DragDropContext>
     </div>
   );
 };
