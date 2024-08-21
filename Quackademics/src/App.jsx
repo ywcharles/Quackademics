@@ -13,15 +13,15 @@ function App() {
   return (
     <>
       <Navbar />
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <Routes>
-          <Route path="login" element={<Login />} />
-          <Route path="dashboard/home" element={<Home />} />
-          <Route path="dashboard/flashcards" element={<Flashcards />} />
-          <Route path="dashboard/pomodoro" element={<Pomodoro />} />
-          <Route path="dashboard/profile" element={<Profile />} />
-          <Route path="dashboard/rubberduck" element={<RubberDuck />} />
-          <Route path="dashboard/voicechannel" element={<VoiceChannel />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/home" element={<Home />} />
+          <Route exact path="/flashcards" element={<Flashcards />} />
+          <Route exact path="/pomodoro" element={<Pomodoro />} />
+          <Route exact path="/profile" element={<Profile />} />
+          <Route exact path="/rubberduck" element={<RubberDuck />} />
+          <Route exact path="/voicechannel" element={<VoiceChannel />} />
         </Routes>
       </BrowserRouter>
     </>
