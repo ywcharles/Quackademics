@@ -15,7 +15,6 @@ const UserProfile = () => {
         alignContent: "top",
         height: "70vh",
         width: "100%",
-        overflow: "scroll"
       }}>
 
         {/* Left column */}

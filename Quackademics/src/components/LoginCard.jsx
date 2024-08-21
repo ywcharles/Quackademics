@@ -8,7 +8,6 @@ const LoginCard = () => {
                 borderRadius: 2,
                 backgroundColor: "#363636",
                 width: "35vw",
-                // height: "60vh",
                 height: "100%",
                 display: "flex",
                 flexDirection: "column",
@@ -35,6 +34,7 @@ const LoginCard = () => {
                     required 
                     size= "small"
                     sx={{
+                        backgroundColor: "#464646",
                         width: "60%"
                     }}/>
                 <TextField 
@@ -46,6 +46,7 @@ const LoginCard = () => {
                     required
                     size="small"
                     sx={{
+                        backgroundColor: "#464646",
                         width: "60%",
                     }}/>
                 <Button type='submit' color='primary' variant="contained" sx={{ width: "30%", mt: 1 }} >Login</Button> 
@@ -61,7 +62,7 @@ const LoginCard = () => {
                     mb: 4
                 }}
             >
-                <Divider>new to the community</Divider>
+                <Divider variant="middle" flexItem sx={{ fontWeight: "bold", }}>new to the community</Divider>
                 <Button type='submit' color='primary' variant="contained" sx={{ width: "50%", mt: 4 }}>Create an account</Button> 
             </Box>
         </Box>

@@ -14,9 +14,8 @@ const ProfileCard = () => {
           color: "white",
           gap: 1,
           borderRadius: 2,
-          overflow: "auto",
           width: "100%",
-          height: "65%"
+          height: "65%",
         }}
       >
         <Avatar 
