@@ -32,7 +32,7 @@ function Navbar() {
               variant="h6"
               noWrap
               component="a"
-              href="/dashboard/home"
+              href="/home"
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },

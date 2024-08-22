@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 
-const Heatmap = () => {
+const OverrallStudyRanking = () => {
   return (
     <Box
       sx={{
@@ -12,12 +12,12 @@ const Heatmap = () => {
         color: "white",
         borderRadius: 2,
         width: "100%",
-        height: "60%"
+        height: "100%"
       }}
     >
-      Heatmap
+      Overrall Study Rankings Board
     </Box>
   )
 }
 
-export default Heatmap;
+export default OverrallStudyRanking;

@@ -1,5 +1,15 @@
+import { Box } from "@mui/material";
+
+import Hero from "../components/home/Hero";
+import Features from "../components/home/Features";
+
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <Box>
+      <Hero />
+      <Features />
+    </Box>
+  );
 };
 
 export default Home;

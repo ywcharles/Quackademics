@@ -1,5 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Flashcards from "./routes/Flashcards";
 import Pomodoro from "./routes/Pomodoro";
 import Profile from "./routes/Profile";
 import RubberDuck from "./routes/RubberDuck";
@@ -13,15 +14,16 @@ function App() {
   return (
     <>
       <Navbar />
-      <BrowserRouter>
+      <BrowserRouter basename="/">
         <Routes>
-          <Route path="login" element={<Login />} />
-          <Route path="dashboard/home" element={<Home />} />
-          <Route path="dashboard/pomodoro" element={<Pomodoro />} />
-          <Route path="dashboard/assignments" element={<Assignments />} />
-          <Route path="dashboard/profile" element={<Profile />} />
-          <Route path="dashboard/rubberduck" element={<RubberDuck />} />
-          <Route path="dashboard/voicechannel" element={<VoiceChannel />} />
+          <Route exact path="/login" element={<Login />} />
+          <Route exact path="/home" element={<Home />} />
+          <Route exact path="/flashcards" element={<Flashcards />} />
+          <Route exact path="/pomodoro" element={<Pomodoro />} />
+          <Route exact path="/assignments" element={<Assignments />} />
+          <Route exact path="/profile" element={<Profile />} />
+          <Route exact path="/rubberduck" element={<RubberDuck />} />
+          <Route exact path="/voicechannel" element={<VoiceChannel />} />
         </Routes>
       </BrowserRouter>
     </>

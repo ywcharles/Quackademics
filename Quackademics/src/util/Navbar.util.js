@@ -1,7 +1,12 @@
 export const navComponents = [
   {
+    title: "Flashcards",
+    href: "/flashcards",
+    description: "Flashcards for studying",
+  },
+  {
     title: "Pomodoro",
-    href: "/dashboard/pomodoro",
+    href: "/pomodoro",
     description: "Pomodoro timer",
   },
   {
@@ -11,17 +16,17 @@ export const navComponents = [
   },
   {
     title: "Rubber Duck",
-    href: "/dashboard/rubberduck",
+    href: "/rubberduck",
     description: "Rubber duck to talk to i guess",
   },
   {
     title: "Voice Channel",
-    href: "/dashboard/voicechannel",
+    href: "/voicechannel",
     description: "Voice channel to study with others",
   },
   {
     title: "Profile",
-    href: "/dashboard/Profile",
+    href: "/profile",
     description: "View your profile",
   },
 ];
