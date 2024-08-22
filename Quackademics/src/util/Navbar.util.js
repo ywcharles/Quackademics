@@ -6,7 +6,7 @@ export const navComponents = [
   },
   {
     title: "Assignments",
-    href: "/dashboard/assignments",
+    href: "/assignments",
     description: "Assignment Tracker",
   },
   {
