@@ -4,18 +4,38 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { createClient } from "@supabase/supabase-js";
 import React from "react";
 
 const LoginCard = () => {
     const [open, setOpen] = React.useState(false);
+    const [next, setNext] = React.useState(false);
+    const supabase = createClient
 
-    const handleClickOpen = () => {
+    const handleSignUpClickOpen = () => {
         setOpen(true);
     };
 
-    const handleClose = () => {
+    const handleSignUpClose = () => {
         setOpen(false);
     };
+
+    const handleSignUpSubmit = async (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const formJson = Object.fromEntries(formData.entries());
+        
+        const { username, email, password } = formJson;
+        const { data, error } = await supabase.from('users').insert([{ username, email, password }]);
+
+        if (error) {
+            console.error("Error creating an account:", error.message);
+            return;
+        }
+        
+        console.log("User created an account:", data[0]);
+        handleSignUpClose;
+    }
 
     return (
         <Box
@@ -78,24 +98,28 @@ const LoginCard = () => {
                 }}
             >
                 <Divider variant="middle" flexItem sx={{ fontWeight: "light" }}>new to the community</Divider>
-                <Button type='submit' color='primary' variant="contained" onClick={handleClickOpen} sx={{ width: "50%", mt: 4 }}>Create an account</Button> 
+                <Button type='submit' color='primary' variant="contained" onClick={handleSignUpClickOpen} sx={{ width: "50%", mt: 4 }}>Create an account</Button> 
                 <Dialog
                     open={open}
-                    onClose={handleClose}
+                    onClose={handleSignUpClose}
                     PaperProps={{
                         component: 'form',
-                        onSubmit: (event) => {
-                            event.preventDefault();
-                            const formData = new FormData(event.currentTarget);
-                            const formJson = Object.fromEntries(formData.entries());
-                            const email = formJson.email;
-                            console.log(email);
-                            handleClose();
-                        },
+                        onSubmit: handleSignUpSubmit
                     }}
                 >
                     <DialogTitle>Create an Account</DialogTitle>
                     <DialogContent>
+                        <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="name"
+                            name="username"
+                            label="Username"
+                            type=""
+                            fullWidth
+                            variant="standard"
+                        />
                         <TextField
                             autoFocus
                             required
@@ -118,7 +142,7 @@ const LoginCard = () => {
                             fullWidth
                             variant="standard"
                         />
-                        <Button type='submit' color='primary' variant="contained" onClick={handleClickOpen} sx={{ width: "50%", mt: 4 }}>Next</Button> 
+                        <Button type='submit' color='primary' variant="contained" sx={{ width: "100%", mt: 4 }}>sign up</Button> 
                     </DialogContent>
                 </Dialog>
             </Box>
