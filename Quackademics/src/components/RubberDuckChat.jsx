@@ -9,16 +9,19 @@ import {
   InputLabel,
 } from "@mui/material";
 
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
+
+import supabase from "../libs/supabaseAdmin";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
-// Color SCheme Orange: FBAF00, Yellow: FFD639, Brown: 93827F, Green: 92B4A7, Gray: 2F2F2F
+// Color Scheme Orange: FBAF00, Yellow: FFD639, Brown: 93827F, Green: 92B4A7, Gray: 2F2F2F
 
 const RubberDuckChat = () => {
   const [textFieldContent, setTextFieldContent] = useState("");
+  // TODO: Able to fetch userId
 
   const startSpeechRecognition = () => {
     recognition.start();
@@ -30,6 +33,18 @@ const RubberDuckChat = () => {
       console.error("Speech recognition error", event.error);
     };
   };
+
+  const insertQuack = async (userId, sessionText) => {
+    const date = new Date();
+    const currDateTime = date.toISOString().slice(0, 19).replace('T', ' ')
+    const { data, error } = await supabase
+      .from("rubber_duck_sessions")
+      .insert([{ user_id: userId, session_text: sessionText, created_at: currDateTime}])
+      .select();
+    
+    console.log(error)
+  };
+
   return (
     <Box
       sx={{
@@ -91,6 +106,7 @@ const RubberDuckChat = () => {
             Quack to Me
           </Button>
           <Button
+            onClick={() => insertQuack(session, user, textFieldContent)}
             sx={{ backgroundColor: "#2F2F2F", color: "white", width: "20%" }}
           >
             Save
