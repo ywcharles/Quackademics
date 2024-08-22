@@ -8,11 +8,13 @@ import VoiceChannel from "./routes/VoiceChannel";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import SpotifyOverlay from "./components/Spotify/SpotifyOverlay";
 
 function App() {
   return (
     <>
       <Navbar />
+      <SpotifyOverlay />
       <BrowserRouter basename="/">
         <Routes>
           <Route exact path="/login" element={<Login />} />
