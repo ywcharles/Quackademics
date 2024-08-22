@@ -1,7 +1,12 @@
-import LoginCard from "../components/LoginCard";
+import LoginCard from "../components/Login/LoginCard";
 
 const Login = () => {
-  return <div> <LoginCard/> </div>;
+  return (
+    <div>
+      {" "}
+      <LoginCard />{" "}
+    </div>
+  );
 };
 
 export default Login;

@@ -7,14 +7,14 @@ import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
 
 const LoginCard = () => {
-  const [open, setOpen] = React.useState(false);
+  const [createIsOpen, setCreateOpen] = React.useState(false);
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setCreateOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setCreateOpen(false);
   };
 
   return (
@@ -105,7 +105,7 @@ const LoginCard = () => {
           Create an account
         </Button>
         <Dialog
-          open={open}
+          open={createIsOpen}
           onClose={handleClose}
           PaperProps={{
             component: "form",
@@ -137,6 +137,17 @@ const LoginCard = () => {
               required
               margin="dense"
               id="name"
+              name="username"
+              label="Username"
+              type="username"
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
               name="password"
               label="Password"
               type="password"
@@ -160,4 +171,3 @@ const LoginCard = () => {
 };
 
 export default LoginCard;
-
