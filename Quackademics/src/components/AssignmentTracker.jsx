@@ -36,6 +36,11 @@ const AssignmentTracker = () => {
     setAssignments(updatedAssignments);
   };
 
+  const formatDate = (dateString) => {
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}/${year}`;
+  };
+
   return (
     <div>
       <Typography variant="h4" gutterBottom>Assignment Tracker</Typography>
@@ -100,7 +105,7 @@ const AssignmentTracker = () => {
                             <CardContent>
                               <Typography variant="body1">{assignment.title}</Typography>
                               <Typography variant="body2">
-                                Due: {new Date(assignment.dueDate).toLocaleDateString()}
+                                Due: {formatDate(assignment.dueDate)}
                               </Typography>
                             </CardContent>
                           </Card>
