@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { Card, CardContent, TextField, Button, Grid, Typography } from '@mui/material';
+import { Card, CardContent, TextField, Button, Grid, Typography, IconButton } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 import { columns } from '../util/AssignmentTracker.util';
 
 const AssignmentTracker = () => {
   const [assignments, setAssignments] = useState([]);
   const [newAssignment, setNewAssignment] = useState({ title: '', dueDate: '', status: 'To-do' });
+  const [sortDirections, setSortDirections] = useState({
+    'To-do': 'asc',
+    'In Progress': 'asc',
+    'Done': 'asc'
+  });
 
   const addAssignment = () => {
-    setAssignments([...assignments, { ...newAssignment }]);
+    setAssignments([...assignments, { ...newAssignment, id: Date.now().toString() }]);
     setNewAssignment({ title: '', dueDate: '', status: 'To-do' });
   };
 
@@ -17,19 +23,33 @@ const AssignmentTracker = () => {
     setNewAssignment({ ...newAssignment, [name]: value });
   };
 
-  const sortAssignmentsByDueDate = (status) => {
+  const sortAssignments = (status) => {
     return assignments
       .filter((assignment) => assignment.status === status)
-      .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+      .sort((a, b) => {
+        const dateA = new Date(a.dueDate);
+        const dateB = new Date(b.dueDate);
+        return sortDirections[status] === 'asc' ? dateA - dateB : dateB - dateA;
+      });
+  };
+
+  const toggleSort = (status) => {
+    setSortDirections(prev => ({
+      ...prev,
+      [status]: prev[status] === 'asc' ? 'desc' : 'asc'
+    }));
   };
 
   const onDragEnd = (result) => {
-    const { destination, source } = result;
+    const { destination, source, draggableId } = result;
 
     if (!destination) return;
 
     const updatedAssignments = Array.from(assignments);
-    const [movedAssignment] = updatedAssignments.splice(source.index, 1);
+    const [movedAssignment] = updatedAssignments.splice(
+      updatedAssignments.findIndex(a => a.id === draggableId),
+      1
+    );
     movedAssignment.status = destination.droppableId;
     updatedAssignments.splice(destination.index, 0, movedAssignment);
 
@@ -82,7 +102,12 @@ const AssignmentTracker = () => {
         <Grid container spacing={3} style={{ marginTop: '20px' }}>
           {columns.map((status) => (
             <Grid item xs={12} sm={4} key={status}>
-              <Typography variant="h6">{status}</Typography>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography variant="h6">{status}</Typography>
+                <IconButton onClick={() => toggleSort(status)} size="small">
+                  {sortDirections[status] === 'asc' ? <ArrowUp style={{ color: '#ffffff' }}/> : <ArrowDown style={{ color: '#ffffff' }}/>}
+                </IconButton>
+              </div>
               <Droppable droppableId={status}>
                 {(provided) => (
                   <div
@@ -90,8 +115,8 @@ const AssignmentTracker = () => {
                     ref={provided.innerRef}
                     style={{ minHeight: '100px', padding: '10px', backgroundColor: '#f0f0f0' }}
                   >
-                    {sortAssignmentsByDueDate(status).map((assignment, index) => (
-                      <Draggable key={assignment.title} draggableId={assignment.title} index={index}>
+                    {sortAssignments(status).map((assignment, index) => (
+                      <Draggable key={assignment.id} draggableId={assignment.id} index={index}>
                         {(provided) => (
                           <Card
                             ref={provided.innerRef}
