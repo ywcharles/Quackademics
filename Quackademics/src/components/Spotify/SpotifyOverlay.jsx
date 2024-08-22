@@ -1,11 +1,12 @@
 import { Button, Popover } from "@mui/material";
 import { useState, useEffect } from "react";
 
-const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
-const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
+const TOKEN = import.meta.env.VITE_SPOTIFY_TOKEN;
+
 const REDIRECT_URI = "http://localhost:80";
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-const TOKEN = process.env.SPOTIFY_TOKEN;
 
 const RESPONSE_TYPE = "token";
 
