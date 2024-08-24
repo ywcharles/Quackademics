@@ -2,8 +2,8 @@ import { Button, Popover } from "@mui/material";
 import { useState, useEffect } from "react";
 
 const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-const TOKEN = import.meta.env.VITE_SPOTIFY_TOKEN;
+// const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
+// const TOKEN = import.meta.env.VITE_SPOTIFY_TOKEN;
 
 const REDIRECT_URI = "http://localhost:80";
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
@@ -53,17 +53,6 @@ const SpotifyOverlay = () => {
 
   return (
     <>
-      {/* <iframe */}
-      {/*   style="border-radius:12px" */}
-      {/*   src="https://open.spotify.com/embed/playlist/0vvXsWCC9xrXsKd4FyS8kM?utm_source=generator" */}
-      {/*   width="100%" */}
-      {/*   height="352" */}
-      {/*   frameBorder="0" */}
-      {/*   allowfullscreen="" */}
-      {/*   allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" */}
-      {/*   loading="lazy" */}
-      {/* ></iframe> */}
-      <div></div>
       <Button aria-describedby={id} onClick={handleSpotifyClick}>
         Spotify
       </Button>
@@ -75,6 +64,16 @@ const SpotifyOverlay = () => {
         anchorOrigin={{ vertical: "top", horizontal: "bottom" }}
       >
         <div>
+          <iframe
+            style="border-radius:12px"
+            src="https://open.spotify.com/embed/playlist/0vvXsWCC9xrXsKd4FyS8kM?utm_source=generator&theme=0"
+            width="100%"
+            height="352"
+            frameBorder="0"
+            allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          ></iframe>
           <h1>Spotify Web Playback</h1>
           {!token ? (
             <a
