@@ -29,6 +29,11 @@ export const navComponents = [
     href: "/profile",
     description: "View your profile",
   },
+  {
+    title: "Notes",
+    href: "/notes",
+    description: "View and write your notes",
+  },
 ];
 
 export const loginPage = {
