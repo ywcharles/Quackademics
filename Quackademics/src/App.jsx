@@ -4,7 +4,6 @@ import Flashcards from "./routes/Flashcards";
 import Pomodoro from "./routes/Pomodoro";
 import Profile from "./routes/Profile";
 import RubberDuck from "./routes/RubberDuck";
-import VoiceChannel from "./routes/VoiceChannel";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -23,7 +22,6 @@ function App() {
           <Route exact path="/assignments" element={<Assignments />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/rubberduck" element={<RubberDuck />} />
-          <Route exact path="/voicechannel" element={<VoiceChannel />} />
         </Routes>
       </BrowserRouter>
     </>
