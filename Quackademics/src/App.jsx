@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Assignments from "./routes/Assignments";
+import Notes from "./routes/Notes";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
           <Route exact path="/assignments" element={<Assignments />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/rubberduck" element={<RubberDuck />} />
-          <Route exact path="/voicechannel" element={<VoiceChannel />} />
+          <Route exact path="/Notes" element={<Notes />} />
         </Routes>
       </BrowserRouter>
     </>
