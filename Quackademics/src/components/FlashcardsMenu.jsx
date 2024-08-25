@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, TextField, Typography, Dialog } from "@mui/material";
 import { AddCard } from "@mui/icons-material";
 import FlashcardBackground from "./FlashcardBackground";
-import FlashcardCreate from "./FlashcardCreate";
+import FlashcardSetCreate from "./FlashcardSetCreate";
 
 const FlashcardsMenu = () => {
     const [flashcards, setFlashcards] = useState(["Flashcard 1", "Flashcard 2"]);
@@ -106,7 +106,7 @@ const FlashcardsMenu = () => {
             open={open}
             onClose={handleClose}
             >
-                <FlashcardCreate close={handleClose}/>
+                <FlashcardSetCreate close={handleClose}/>
             </Dialog>
             
             <Box

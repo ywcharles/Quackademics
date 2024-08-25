@@ -1,11 +1,8 @@
-import React, { useState } from "react";
 import { Box, Button, Typography} from "@mui/material";
 
 const FlashcardCreate = ({close}) => {
-
-        const saveFlashcard = () => {
-            
-        }
+    const saveFlashcard = async (setName, tags) => {
+        };
 
     return (
         <Box
@@ -27,8 +24,8 @@ const FlashcardCreate = ({close}) => {
                 <textarea id="definition" style={{ height: "80%", width: "90%", resize: "none" }}/>
             </Box>
             <Box sx={{display: "flex", justifyContent: "end", alignItems: "end"}}>
-                <Button title="Save" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}}>Save</Button>
-                <Button title="Cancel" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}}>Cancel</Button>
+                <Button title="Save" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={saveFlashcard}>Save</Button>
+                <Button title="Cancel" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={close}>Cancel</Button>
             </Box>
         </Box>
     );
