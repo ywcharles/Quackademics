@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
-import AddCardIcon from '@mui/icons-material/AddCard';
+import { Box, Button, TextField, Typography, Dialog } from "@mui/material";
 import { AddCard } from "@mui/icons-material";
+import FlashcardBackground from "./FlashcardBackground";
+import FlashcardCreate from "./FlashcardCreate";
 
-const FlashcardElements = () => {
+const FlashcardsMenu = () => {
     const [flashcards, setFlashcards] = useState(["Flashcard 1", "Flashcard 2"]);
     const [currFlashcardSet, setCurrFlashcardSet] = useState("");
     const [searchInput, setSearchInput] = useState("");
-
+    const [open, setOpen] = React.useState(false);
 
     const rootElement = document.getElementById('root');
     rootElement.style.padding = "0";
@@ -26,14 +27,23 @@ const FlashcardElements = () => {
         flashcard.toLowerCase().includes(searchInput)
     )
 
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+      };
+
     return (
         <Box
             sx={{
                 display: "flex",
                 flexDirection: "row",
                 paddingTop: "6%",
-                width: "100vw",
-                height: "90vh"
+                width: "98vw",
+                height: "88vh",
+                ml: "1%"
             }}
         >
             <Box
@@ -77,7 +87,7 @@ const FlashcardElements = () => {
                 }}
                 >
                     <Button
-                        variant = "contained"
+                    variant = "contained"
                     sx={{
                         color: "white",
                         height: "100%",
@@ -86,11 +96,18 @@ const FlashcardElements = () => {
                         backgroundColor: "#6e6b6b",
                         overflow: "auto"
                     }}
+                    onClick={handleClickOpen}
                     >
                         <AddCard/>
                     </Button>
                 </Box>
             </Box>
+            <Dialog
+            open={open}
+            onClose={handleClose}
+            >
+                <FlashcardCreate close={handleClose}/>
+            </Dialog>
             
             <Box
                 sx={{
@@ -115,37 +132,13 @@ const FlashcardElements = () => {
                             {currFlashcardSet}
                         </Typography>
                     </Box>
-                    <Box
-                        sx={{
-                            position: "absolute", 
-                            height: "65vh",
-                            width: "57vw",
-                            top: "13%",
-                            backgroundColor: "#615f5f",
-                            border: "2px solid black",
-                            padding: 1,
-                            zIndex: 2,
-                            left: 50,
-                        }}
-                    />
-                    <Box
-                        sx={{
-                            position: "absolute", 
-                            height: "65vh",
-                            width: "57vw",
-                            top: "13%",
-                            backgroundColor: "#615f5f",
-                            border: "2px solid black",
-                            padding: 1,
-                            zIndex: 1,
-                            left: 100,
-                        }}
-                    />
+                    <FlashcardBackground/>
                 </Box>
+
             </Box>
             
         </Box>
     );
 };
 
-export default FlashcardElements;
+export default FlashcardsMenu;
