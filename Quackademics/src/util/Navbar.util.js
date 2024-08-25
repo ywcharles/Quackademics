@@ -20,14 +20,14 @@ export const navComponents = [
     description: "Rubber duck to talk to i guess",
   },
   {
-    title: "Profile",
-    href: "/profile",
-    description: "View your profile",
-  },
-  {
     title: "Notes",
     href: "/notes",
     description: "View and write your notes",
+  },
+  {
+    title: "Profile",
+    href: "/profile",
+    description: "View your profile",
   },
 ];
 
