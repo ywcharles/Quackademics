@@ -1,5 +1,10 @@
 export const navComponents = [
   {
+    title: "Profile",
+    href: "/profile",
+    description: "View your profile",
+  },
+  {
     title: "Flashcards",
     href: "/flashcards",
     description: "Flashcards for studying",
@@ -18,11 +23,6 @@ export const navComponents = [
     title: "Rubber Duck",
     href: "/rubberduck",
     description: "Rubber duck to talk to i guess",
-  },
-  {
-    title: "Profile",
-    href: "/profile",
-    description: "View your profile",
   },
 ];
 
