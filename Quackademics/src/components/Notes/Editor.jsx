@@ -1,6 +1,13 @@
 import React from "react";
 import {
   MDXEditor,
+  codeBlockPlugin,
+  sandpackPlugin,
+  codeMirrorPlugin,
+  toolbarPlugin,
+  ConditionalContents,
+  InsertCodeBlock,
+  InsertSandpack,
   headingsPlugin,
   listsPlugin,
   quotePlugin,
@@ -11,13 +18,13 @@ import {
 const Editor = () => {
   return (
     <MDXEditor
-      markdown={"# Hello World"}
-      plugin={[
-        headingsPlugin(),
-        listsPlugin(),
-        quotePlugin(),
-        thematicBreakPlugin(),
-        markdownShortcutPlugin(),
+      markdown="hello world"
+      plugins={[
+        headingsPlugin,
+        toolbarPlugin({
+          // toolbarContents: () => (
+          // ),
+        }),
       ]}
     />
   );
