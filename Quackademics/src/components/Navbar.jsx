@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   AppBar,
   Box,
@@ -8,12 +9,19 @@ import {
   Typography,
 } from "@mui/material";
 import { loginPage, navComponents } from "../util/Navbar.util";
+import { Brightness3Rounded, Brightness7Rounded } from "@mui/icons-material";
 
 function Navbar() {
+  const [themeMode, setThemeMode] = useState("dark");
+
+  const onToggleThemeClick = () => {
+    setThemeMode((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar sx={{ backgroundColor: "black" }}>
+        <AppBar sx={{ backgroundColor: "inherit" }}>
           <Toolbar>
             <IconButton
               sx={{ mr: 2 }}
@@ -46,15 +54,32 @@ function Navbar() {
               QUACKADEMICS
             </Typography>
             {navComponents.map((page) => (
-              <MenuItem key={page}>
-                <Button href={page.href} color="inherit">
-                  {page.title}
-                </Button>
-              </MenuItem>
+              <Box key={page} sx={{ marginLeft: "auto" }}>
+                <MenuItem>
+                  <Button href={page.href} color="inherit">
+                    {page.title}
+                  </Button>
+                </MenuItem>
+              </Box>
             ))}
-            <Button href={loginPage.href} color="inherit">
-              Login
-            </Button>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                marginRight: "auto",
+              }}
+            >
+              <IconButton onClick={onToggleThemeClick}>
+                {themeMode === "dark" ? (
+                  <Brightness3Rounded />
+                ) : (
+                  <Brightness7Rounded />
+                )}
+              </IconButton>
+              <Button href={loginPage.href} color="inherit">
+                Login
+              </Button>
+            </Box>
           </Toolbar>
         </AppBar>
       </Box>
