@@ -1,12 +1,8 @@
 import { Box, Typography, TextField, Button, Divider} from "@mui/material";
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { createClient } from "@supabase/supabase-js";
 import React from "react";
-import { useState } from "react";
 import supabase from "../libs/supabaseAdmin";
 
 
@@ -16,7 +12,7 @@ const SignUp = () => {
     const [username, setUsername] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
-    const [error, setError] = React.useState('');
+    const [emailError, setEmailError] = React.useState('');
 
     const handleSignUpClickOpen = () => {
         setOpen(true);
@@ -24,35 +20,48 @@ const SignUp = () => {
 
     const handleSignUpClose = () => {
         setOpen(false);
-        setError('');
+        setEmailError('');
+        setUsername('');
+        setEmail('');
+        setPassword('');
     };
 
     const handleSignUpSubmit = async (event) => {
         event.preventDefault();
 
-        while (!email.endsWith('@drexel.edu')) {
-            setError('Please use a valid email address (abc123@drexel.edu)');
+        if (!email.endsWith('@drexel.edu')) {
+            setEmailError('Please use a valid drexel.edu email address.');
+            return;
         }
 
+        console.log(username, email, password);
         try {
-            const { data, error } = await supabase.auth.signUp({
-                email,
-                password,
+            const { data, error } = await supabase.auth.signUp( {
+                email: email,
+                password: password,
                 options: {
                     data: {
-                        username,
+                        username: username
                     }
                 }
             });
-
+            console.log(data);
             if (error) {
-                setError(error.message);
+                alert(error.message);
             } else {
                 alert("Check your email for the verification link.");
+                const { data, error } = await supabase
+                .from('users')
+                .insert([
+                { username: username, email: email, password_hash: password },
+                ])
+                .select()
+        
+                handleSignUpClose();
             }
 
         } catch (error) {
-            alert(error.message);
+            setError("An error occurred during sign-up. Please try again.")
         }
     }
 
@@ -71,7 +80,7 @@ const SignUp = () => {
             <Button type='submit' color='primary' variant="contained" onClick={handleSignUpClickOpen} sx={{ width: "50%", mt: 4 }}>Create an account</Button> 
             <Dialog
                 open={open}
-                onClose={handleSignUpClose}
+                // onClose={handleSignUpClose}
                 PaperProps={{
                     component: 'form',
                     onSubmit: handleSignUpSubmit
@@ -83,7 +92,6 @@ const SignUp = () => {
                         autoFocus
                         required
                         margin="dense"
-                        id="name"
                         name="username"
                         label="Username"
                         type=""
@@ -95,21 +103,19 @@ const SignUp = () => {
                         autoFocus
                         required
                         margin="dense"
-                        id="name"
                         name="email"
                         label="Email Address"
                         type="email"
                         fullWidth
                         variant="standard"
                         onChange={(e) => setEmail(e.target.value)}
-                        error={!!error}
-                        helperText={error}
+                        error={!!emailError}
+                        helperText={emailError}
                     />
                     <TextField
                         autoFocus
                         required
                         margin="dense"
-                        id="name"
                         name="password"
                         label="Password"
                         type="password"
@@ -117,7 +123,7 @@ const SignUp = () => {
                         variant="standard"
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <Button type='submit' color='primary' variant="contained" sx={{ width: "100%", mt: 4 }} onClick={handleSignUpClose}>sign up</Button> 
+                    <Button type='submit' color='primary' variant="contained" sx={{ width: "100%", mt: 4 }}>sign up</Button> 
                 </DialogContent>
             </Dialog>
         </Box>
