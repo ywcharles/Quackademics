@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Assignments from "./routes/Assignments";
+import Notes from "./routes/Notes";
 
 function App() {
   return (
@@ -15,13 +16,16 @@ function App() {
       <Navbar />
       <BrowserRouter basename="/">
         <Routes>
-          <Route exact path="/login" element={<Login />} />
           <Route exact path="/home" element={<Home />} />
+
           <Route exact path="/flashcards" element={<Flashcards />} />
           <Route exact path="/pomodoro" element={<Pomodoro />} />
           <Route exact path="/assignments" element={<Assignments />} />
-          <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/rubberduck" element={<RubberDuck />} />
+          <Route exact path="/notes" element={<Notes />} />
+
+          <Route exact path="/profile" element={<Profile />} />
+          <Route exact path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </>
