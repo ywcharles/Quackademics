@@ -4,10 +4,10 @@ import Flashcards from "./routes/Flashcards";
 import Pomodoro from "./routes/Pomodoro";
 import Profile from "./routes/Profile";
 import RubberDuck from "./routes/RubberDuck";
-import VoiceChannel from "./routes/VoiceChannel";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Assignments from "./routes/Assignments";
 
 function App() {
   return (
@@ -19,9 +19,9 @@ function App() {
           <Route exact path="/home" element={<Home />} />
           <Route exact path="/flashcards" element={<Flashcards />} />
           <Route exact path="/pomodoro" element={<Pomodoro />} />
+          <Route exact path="/assignments" element={<Assignments />} />
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/rubberduck" element={<RubberDuck />} />
-          <Route exact path="/voicechannel" element={<VoiceChannel />} />
         </Routes>
       </BrowserRouter>
     </>
