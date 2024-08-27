@@ -6,13 +6,14 @@ import FlashcardBackground from "./FlashcardBackground";
 import FlashcardSetCreate from "./FlashcardSetCreate";
 import FlashcardSetEdit from "./FlashcardSetEdit";
 import FlashcardSetDelete from "./FlashcardSetDelete";
+import FlashcardsList from "./FlashcardsList";
 import EditIcon from '@mui/icons-material/Edit';
 import supabase from "../libs/supabaseAdmin";
 
 const FlashcardsMenu = () => {
     const [flashcardSets, setFlashcardSet] = useState([]);
     const [filteredFlashcardSet, setFilteredFlashcardSet] = useState([]);
-    const [currFlashcardSet, setCurrFlashcardSet] = useState({set_name: "", set_id:""});
+    const [currFlashcardSet, setCurrFlashcardSet] = useState({set_name: "", set_id: ""});
     const [createPromptOpen, setCreatePromptOpen] = useState(false);
     const [editPromptOpen, setEditPromptOpen] = useState(false);
     const [deletePromptOpen, setDeletePromptOpen] = useState(false);
@@ -212,8 +213,9 @@ const FlashcardsMenu = () => {
                     <FlashcardBackground/>
                 </Box>
 
+                <FlashcardsList currFlashcardSet={currFlashcardSet} />
+            //Insert flashcardmenu here
             </Box>
-            
         </Box>
     );
 };
