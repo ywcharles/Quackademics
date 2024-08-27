@@ -3,9 +3,9 @@ import { Box, Button, Typography} from "@mui/material";
 import supabase from "../libs/supabaseAdmin";
 
 //TODO: Make page parse user_id
-const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
-    const [setName, setSetName] = useState('');
-    const [tags, setTags] = useState('');
+const FlashcardSetEdit = ({close, refreshFlashcardSets, flashcardSet}) => {
+    const [setName, setSetName] = useState(flashcardSet.set_name);
+    const [tags, setTags] = useState(flashcardSet.tags);
     const [errorMessage, setErrorMessage] = useState('');
 
     const handleSetNameEntry = (event) => {
@@ -16,7 +16,7 @@ const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
         setTags(event.target.value);
     };
 
-    const createFlashcardSet = async () => {
+    const updateFlashcardSet = async () => {
         if(setName == ''){
             setErrorMessage("Set name cannot be blank.");
             return [];
@@ -24,18 +24,12 @@ const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
 
         const { data, error } = await supabase
             .from("flashcard_set")
-            .insert([
-                {
-                //Hardcoded user_id for now
-                  user_id: 42069,
-                  set_name: setName,
-                  tags: tags
-                },
-              ])
-              .select();
+            .update({ set_name: setName, tags: tags })
+            .eq("set_id", flashcardSet.set_id)
+            .select();
     
             if (error) {
-                console.error("Error inserting data:", error);
+                console.error("Error updating data:", error);
                 if(error.code == 23505){
                     setErrorMessage("The set name must be unique");
                 }
@@ -49,11 +43,10 @@ const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
             }
 
             return data;
-        
         };
 
-        const createProcess = async () => {
-            await createFlashcardSet();
+        const updateProcess = async () => {
+            await updateFlashcardSet();
             await refreshFlashcardSets();
             return;
         }
@@ -78,11 +71,11 @@ const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
             </Box>
             <Typography sx={{ color: "red", ml: 1}}> {errorMessage} </Typography>
             <Box sx={{display: "flex", justifyContent: "end", alignItems: "end"}}>
-                <Button title="Save" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={createProcess}>Save</Button>
+                <Button title="Save" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={updateProcess}>Save</Button>
                 <Button title="Cancel" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={close}>Cancel</Button>
             </Box>
         </Box>
     );
 };
 
-export default FlashcardSetCreate;
+export default FlashcardSetEdit;
