@@ -1,0 +1,1 @@
+export const columns = ['To-do', 'In Progress', 'Complete'];

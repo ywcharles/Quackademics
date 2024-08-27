@@ -10,14 +10,14 @@ export const navComponents = [
     description: "Pomodoro timer",
   },
   {
+    title: "Assignments",
+    href: "/assignments",
+    description: "Assignment Tracker",
+  },
+  {
     title: "Rubber Duck",
     href: "/rubberduck",
     description: "Rubber duck to talk to i guess",
-  },
-  {
-    title: "Voice Channel",
-    href: "/voicechannel",
-    description: "Voice channel to study with others",
   },
   {
     title: "Profile",
