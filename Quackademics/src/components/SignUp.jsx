@@ -45,9 +45,10 @@ const SignUp = () => {
                     }
                 }
             });
-            console.log(data);
+            console.log("data:", data);
             if (error) {
-                alert(error.message);
+                console.log("error:", error);
+                // alert(error.message);
             } else {
                 alert("Check your email for the verification link.");
                 const { data, error } = await supabase
@@ -61,7 +62,7 @@ const SignUp = () => {
             }
 
         } catch (error) {
-            setError("An error occurred during sign-up. Please try again.")
+            setEmailError("An error occurred during sign-up. Please try again.")
         }
     }
 
