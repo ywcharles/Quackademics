@@ -3,18 +3,23 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
+import bcryptjs from "bcryptjs";
 // import supabase from "../libs/supabaseAdmin";
 import { createClient } from "@supabase/supabase-js";
+
 import supabase from "../libs/supabaseAdmin";
 
 const SignUp = () => {
+  async function hashPassword(password) {
+    const salt = await bcryptjs.genSalt(10);
+    return await bcryptjs.hash(password, salt);
+  }
+
   const [open, setOpen] = React.useState(false);
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [emailError, setEmailError] = React.useState("");
-
-  const salt = "";
 
   const handleSignUpClickOpen = () => {
     setOpen(true);
@@ -38,45 +43,45 @@ const SignUp = () => {
     }
 
     try {
-      alert("Check your email for the verification link.");
-      const { data, error } = await supabase
-        .from("users")
-        .insert([{ username: username, email: email, password_hash: password }])
-        .select();
+      console.log(await hashPassword(password));
+      // alert("Check your email for the verification link.");
+      // const { data, error } = await supabase
+      //   .from("users")
+      //   .insert([{ username: username, email: email, password_hash: password }])
+      //   .select();
 
       handleSignUpClose();
     } catch (error) {
       setEmailError("An error occurred during sign-up. Please try again.");
-        console.log(username, email, password);
-        try {
-            const { data, error } = await supabase.auth.signUp( {
-                email: email,
-                password: password,
-                options: {
-                    data: {
-                        username: username
-                    }
-                }
-            });
-            console.log("data:", data);
-            if (error) {
-                console.log("error:", error);
-                // alert(error.message);
-            } else {
-                alert("Check your email for the verification link.");
-                const { data, error } = await supabase
-                .from('users')
-                .insert([
-                { username: username, email: email, password_hash: password },
-                ])
-                .select()
-        
-                handleSignUpClose();
-            }
+      console.log(username, email, password);
+      try {
+        const { data, error } = await supabase.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              username: username,
+            },
+          },
+        });
+        console.log("data:", data);
+        if (error) {
+          console.log("error:", error);
+          // alert(error.message);
+        } else {
+          alert("Check your email for the verification link.");
+          const { data, error } = await supabase
+            .from("users")
+            .insert([
+              { username: username, email: email, password_hash: password },
+            ])
+            .select();
 
-        } catch (error) {
-            setEmailError("An error occurred during sign-up. Please try again.")
+          handleSignUpClose();
         }
+      } catch (error) {
+        setEmailError("An error occurred during sign-up. Please try again.");
+      }
     }
   };
 
@@ -163,4 +168,3 @@ const SignUp = () => {
 };
 
 export default SignUp;
-
