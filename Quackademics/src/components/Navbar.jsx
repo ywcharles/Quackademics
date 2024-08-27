@@ -1,25 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   AppBar,
   Box,
   Button,
   IconButton,
-  MenuItem,
   Toolbar,
   Typography,
 } from "@mui/material";
 import { loginPage, navComponents } from "../util/Navbar.util";
 import { Brightness3Rounded, Brightness7Rounded } from "@mui/icons-material";
 
-function Navbar() {
-  const [themeMode, setThemeMode] = useState("dark");
-
+function Navbar(themeMode, setThemeMode) {
   const onToggleThemeClick = () => {
-    setThemeMode((prevTheme) => (prevTheme === "dark" ? "light" : "dark"));
+    console.log("mode");
+    setThemeMode((prevMode) => (prevMode === "dark" ? "light" : "dark"));
   };
 
   return (
     <>
+      <div>{themeMode}</div>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar sx={{ backgroundColor: "inherit" }}>
           <Toolbar>
@@ -54,13 +53,14 @@ function Navbar() {
               QUACKADEMICS
             </Typography>
             {navComponents.map((page) => (
-              <Box key={page} sx={{ marginLeft: "auto" }}>
-                <MenuItem>
-                  <Button href={page.href} color="inherit">
-                    {page.title}
-                  </Button>
-                </MenuItem>
-              </Box>
+              <Button
+                key={page}
+                href={page.href}
+                sx={{ marginLeft: "auto", color: "black" }}
+                color="inherit"
+              >
+                {page.title}
+              </Button>
             ))}
             <Box
               sx={{

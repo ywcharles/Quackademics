@@ -1,3 +1,4 @@
+import React from "react";
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Flashcards from "./routes/Flashcards";
@@ -11,16 +12,20 @@ import Assignments from "./routes/Assignments";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 
 function App() {
+  const [themeMode, setThemeMode] = React.useState("dark");
+
   const theme = createTheme({
     palette: {
-      mode: "dark",
+      mode: themeMode,
     },
   });
+
   return (
     <>
+      <div>{themeMode}</div>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Navbar />
+        <Navbar themeMode={themeMode} setThemeMode={setThemeMode} />
         <BrowserRouter basename="/">
           <Routes>
             <Route exact path="/login" element={<Login />} />
