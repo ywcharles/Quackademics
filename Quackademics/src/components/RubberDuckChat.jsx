@@ -9,16 +9,24 @@ import {
   InputLabel,
 } from "@mui/material";
 
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
+
+import supabase from "../libs/supabaseAdmin";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = new SpeechRecognition();
 
-// Color SCheme Orange: FBAF00, Yellow: FFD639, Brown: 93827F, Green: 92B4A7, Gray: 2F2F2F
+// Color Scheme Orange: FBAF00, Yellow: FFD639, Brown: 93827F, Green: 92B4A7, Gray: 2F2F2F
 
 const RubberDuckChat = () => {
   const [textFieldContent, setTextFieldContent] = useState("");
+  const [userQuacks, setUserQuacks] = useState([]);
+  const [selectedQuack, setSelectedQuack] = useState(null);
+  // TODO: Able to fetch userId
+  const user = 42069;
+  const date = new Date();
+  const currDateTime = date.toISOString().slice(0, 19).replace("T", " ");
 
   const startSpeechRecognition = () => {
     recognition.start();
@@ -30,6 +38,90 @@ const RubberDuckChat = () => {
       console.error("Speech recognition error", event.error);
     };
   };
+
+  const insertQuack = async (userId, sessionText) => {
+    const { data, error } = await supabase
+      .from("rubber_duck_sessions")
+      .insert([
+        {
+          user_id: userId,
+          session_text: sessionText,
+          created_at: currDateTime,
+        },
+      ])
+      .select();
+
+    if (error) {
+      console.error("Error inserting data:", error);
+      return [];
+    }
+
+    return data;
+  };
+
+  const updateQuack = async (sessionId, sessionText) => {
+    const { data, error } = await supabase
+      .from("rubber_duck_sessions")
+      .update({ session_text: sessionText, created_at: currDateTime })
+      .eq("session_id", sessionId)
+      .select();
+
+    if (error) {
+      console.error("Error updating data:", error);
+      return [];
+    }
+
+    return data;
+  };
+
+  const fetchUserQuacks = async (userId) => {
+    const { data, error } = await supabase
+      .from("rubber_duck_sessions")
+      .select("session_id, session_text, created_at")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+
+    return data;
+  };
+
+  const handleSaveClick = async () => {
+    if (selectedQuack && selectedQuack.session_id) {
+      await updateQuack(selectedQuack.session_id, textFieldContent);
+    } else {
+      const newQuack = await insertQuack(user, textFieldContent);
+      setSelectedQuack(newQuack[0]);
+    }
+
+    const quacks = await fetchUserQuacks(user);
+    setUserQuacks(quacks);
+  };
+
+  const handleSelectClick = (quack) => {
+    setSelectedQuack(quack);
+    setTextFieldContent(quack.session_text);
+
+    console.log(sessionId);
+  };
+
+  const handleClear = () => {
+    setTextFieldContent("");
+    setSelectedQuack(null);
+  };
+
+  useEffect(() => {
+    const loadQuacks = async () => {
+      const quacks = await fetchUserQuacks(user);
+      setUserQuacks(quacks);
+    };
+
+    loadQuacks();
+  }, [user]);
+
   return (
     <Box
       sx={{
@@ -69,7 +161,7 @@ const RubberDuckChat = () => {
       >
         <TextField
           value={textFieldContent}
-          disabled
+          onChange={(e) => setTextFieldContent(e.target.value)}
           multiline
           sx={{
             backgroundColor: "white",
@@ -91,18 +183,27 @@ const RubberDuckChat = () => {
             Quack to Me
           </Button>
           <Button
+            onClick={handleClear}
             sx={{ backgroundColor: "#2F2F2F", color: "white", width: "20%" }}
           >
-            Save
+            Clear
           </Button>
         </Box>
+        <Button
+          onClick={handleSaveClick}
+          sx={{ backgroundColor: "#2F2F2F", color: "white", width: "100%" }}
+        >
+          Save
+        </Button>
 
         <FormControl fullWidth>
           <InputLabel>Old conversations</InputLabel>
           <Select label="Old conversations">
-            <MenuItem>Merge sort</MenuItem>
-            <MenuItem>Servers and HTTP Requests</MenuItem>
-            <MenuItem>Nutrition</MenuItem>
+            {userQuacks.map((quack, index) => (
+              <MenuItem key={index} onClick={() => handleSelectClick(quack)}>
+                {quack.session_text.slice(0, 30)}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Box>
