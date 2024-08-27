@@ -20,11 +20,6 @@ export const navComponents = [
     description: "Rubber duck to talk to i guess",
   },
   {
-    title: "Voice Channel",
-    href: "/voicechannel",
-    description: "Voice channel to study with others",
-  },
-  {
     title: "Profile",
     href: "/profile",
     description: "View your profile",
