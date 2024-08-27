@@ -4,10 +4,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
 import bcryptjs from "bcryptjs";
-// import supabase from "../libs/supabaseAdmin";
-import { createClient } from "@supabase/supabase-js";
-
 import supabase from "../libs/supabaseAdmin";
+import { addUser } from "../supabase/AccountSupabase";
 
 const SignUp = () => {
   async function hashPassword(password) {
@@ -19,6 +17,7 @@ const SignUp = () => {
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [profilePicture, setProfilePicture] = React.useState("");
   const [emailError, setEmailError] = React.useState("");
 
   const handleSignUpClickOpen = () => {
@@ -36,52 +35,33 @@ const SignUp = () => {
   const handleSignUpSubmit = async (event) => {
     event.preventDefault();
 
-    // email verify
     if (!email.endsWith("@drexel.edu")) {
       setEmailError("Please use a valid drexel.edu email address.");
       return;
     }
 
-    try {
-      console.log(await hashPassword(password));
-      // alert("Check your email for the verification link.");
-      // const { data, error } = await supabase
-      //   .from("users")
-      //   .insert([{ username: username, email: email, password_hash: password }])
-      //   .select();
+    const hashedPassword = await hashPassword(password);
 
-      handleSignUpClose();
+    try {
+      alert("Check your email for the verification link.");
+
+      const userReq = await addUser(
+        username,
+        email,
+        hashedPassword,
+        profilePicture,
+      );
+
+      if (userReq) {
+        console.log("create error", userReq);
+        if (userReq.code === "23505")
+          setEmailError("Email already exists on system.");
+      } else {
+        handleSignUpClose();
+      }
     } catch (error) {
       setEmailError("An error occurred during sign-up. Please try again.");
-      console.log(username, email, password);
-      try {
-        const { data, error } = await supabase.auth.signUp({
-          email: email,
-          password: password,
-          options: {
-            data: {
-              username: username,
-            },
-          },
-        });
-        console.log("data:", data);
-        if (error) {
-          console.log("error:", error);
-          // alert(error.message);
-        } else {
-          alert("Check your email for the verification link.");
-          const { data, error } = await supabase
-            .from("users")
-            .insert([
-              { username: username, email: email, password_hash: password },
-            ])
-            .select();
-
-          handleSignUpClose();
-        }
-      } catch (error) {
-        setEmailError("An error occurred during sign-up. Please try again.");
-      }
+      console.log("error", error);
     }
   };
 
