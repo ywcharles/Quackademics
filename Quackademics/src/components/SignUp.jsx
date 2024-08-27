@@ -4,8 +4,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
 import bcryptjs from "bcryptjs";
-import supabase from "../libs/supabaseAdmin";
-import { addUser } from "../supabase/AccountSupabase";
+import supabase from "../../libs/supabaseAdmin";
+import { addUser } from "../../supabase/AccountSupabase";
 
 const SignUp = () => {
   async function hashPassword(password) {
