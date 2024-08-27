@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 
-import Hero from "../components/home/Hero";
-import Features from "../components/home/Features";
+import Hero from "../components/Home/Hero";
+import Features from "../components/Home/Features";
 
 const Home = () => {
   return (
