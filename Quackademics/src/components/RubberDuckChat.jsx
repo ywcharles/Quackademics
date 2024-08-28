@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 
 import React, { useEffect, useState } from "react";
-
 import supabase from "../libs/supabaseAdmin";
+
+import TagsContainer from "./TagsContainer";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -159,6 +160,7 @@ const RubberDuckChat = () => {
           height: 400,
         }}
       >
+        <TagsContainer></TagsContainer>
         <TextField
           value={textFieldContent}
           onChange={(e) => setTextFieldContent(e.target.value)}
@@ -170,6 +172,7 @@ const RubberDuckChat = () => {
             height: "80%",
           }}
         />
+        
         <Box
           sx={{
             display: "flex-inline",
