@@ -61,8 +61,10 @@ const FlashcardsMenu = () => {
     }
 
     const changeCard = (direction) => {
-        console.log("changing cards")
         let index = filteredFlashcards.findIndex((card) => card.flashcard_id === currFlashcard.flashcard_id);
+        if(index === -1){
+            return;
+        }
         console.log(index)
         if(direction === "next"){
             if(index === filteredFlashcards.length - 1){
@@ -202,12 +204,15 @@ const FlashcardsMenu = () => {
                         height: "100%",
                         width: "100%",
                         display: "flex",
-                        flexDirection: "row",
+                        flexDirection: "column",
                         overflow: "auto",
                         backgroundColor: "#615f5f",
                         padding: 1
                     }}
                 >
+                    <Typography sx={{ fontWeight: "bold", fontSize: 20 }}>
+                        Flashcard Sets
+                    </Typography>
                     <MenuList sx={{width: "100%"}}>
                         {filteredFlashcardSets.map((flashcardSet, index) => (
                             <MenuItem id="flashcard" key={index} 
@@ -266,7 +271,8 @@ const FlashcardsMenu = () => {
             <Dialog
             open={deletePromptOpen}
             >
-                <FlashcardSetDelete close={() => handleOpenDialog("delete")} set_id={currFlashcardSet.set_id} refreshFlashcardSets={refreshFlashcardSets}/>
+                <FlashcardSetDelete close={() => handleOpenDialog("delete")} set_id={currFlashcardSet.set_id} refreshFlashcardSets={refreshFlashcardSets}
+                                    refreshAllFlashcards={refreshAllFlashcards}/>
             </Dialog>
             <Box
                 sx={{
@@ -274,24 +280,22 @@ const FlashcardsMenu = () => {
                     flexDirection: "column"
                 }}
             >
-                <Box sx={{ overflowY: "scroll", height: "100vh", width: "80vw", left: "10%"}}>
-                    <Box sx={{ position: "relative", height: "80vh", width: "70vw", left: "10%"}}>
+                <Box sx={{ overflowY: "scroll", height: "100vh", width: "70vw", left: "10%"}}>
+                    <Box sx={{ position: "relative", height: "75vh", width: "89%", left: "10%"}}>
                         <Box
                             sx={{
                                 display:"flex", 
                                 flexDirection: "row",
                                 position: "absolute",
-                                height: "65vh",
-                                width: "57vw",
+                                height: "70%",
+                                width: "89%",
                                 top: "13%",
                                 backgroundColor: "#615f5f",
                                 border: "2px solid white",
-                                padding: 1,
-                                zIndex: 3,
                                 justifyContent: "center",
                                 alignItems: "center",
                             }}>
-                            <ArrowBackIosIcon onClick={() => changeCard("prev")}/>
+                            <ArrowBackIosIcon sx={{ml: 1}} onClick={() => changeCard("prev")}/>
                             <Box sx={{width: "100%", height:"100%"}}onClick={flipCard}>
                                 <Typography sx={{
                                     display:"flex",
@@ -305,9 +309,8 @@ const FlashcardsMenu = () => {
                                     {cardText}
                                 </Typography>
                             </Box>
-                            <ArrowForwardIosIcon onClick={() => changeCard("next")}/>
+                            <ArrowForwardIosIcon sx={{mr: 1}} onClick={() => changeCard("next")}/>
                         </Box>
-                        <FlashcardBackground/>
                     </Box>
                     <FlashcardsList currFlashcardSet={filteredFlashcards}
                                     currFlashcard={currFlashcard}

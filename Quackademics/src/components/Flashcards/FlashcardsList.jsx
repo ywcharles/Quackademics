@@ -53,7 +53,7 @@ const FlashcardsList = ({currFlashcardSet, currFlashcard, setCard, set_id, refre
         }
         else {
             await deleteFlashcard();
-            setCurrFlashcard([]);
+            setCard([]);
         }
         await refreshAllFlashcards();
         return;
