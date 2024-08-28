@@ -110,7 +110,6 @@ const SignUp = () => {
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
-            autoFocus
             required
             margin="dense"
             name="email"
@@ -123,7 +122,6 @@ const SignUp = () => {
             helperText={emailError}
           />
           <TextField
-            autoFocus
             required
             margin="dense"
             name="password"
