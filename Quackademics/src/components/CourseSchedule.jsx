@@ -1,10 +1,14 @@
-import { Box, Typography, Button, Card, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from "@mui/material";
+import { Box, Typography, Button, Card, Dialog, DialogTitle, DialogContent, TextField, DialogActions, IconButton } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useEffect, useState } from "react";
 import supabase from "../libs/supabaseAdmin";
 
 const CourseSchedule = () => {
     const [courses, setCourses] = useState([]);
     const [open, setOpen] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [currentCourseId, setCurrentCourseId] = useState(null);
     const [courseName, setCourseName] = useState("");
     const [courseCode, setCourseCode] = useState("");
     const [courseStartTime, setCourseStartTime] = useState("");
@@ -12,7 +16,23 @@ const CourseSchedule = () => {
     const [courseDays, setCourseDays] = useState("");
     const [error, setError] = useState("");
 
-    const handleOpenDialog = () => {
+    const handleOpenDialog = (course = null, isEditMode = false) => {
+        if (course && isEditMode) {
+            setEditMode(true);
+            setCurrentCourseId(course.course_id);
+            setCourseName(course.course_name);
+            setCourseCode(course.course_code);
+            setCourseStartTime(course.course_start_time);
+            setCourseEndTime(course.course_end_time);
+            setCourseDays(course.course_days);
+        } else {
+            setEditMode(false);
+            setCourseName("");
+            setCourseCode("");
+            setCourseStartTime("");
+            setCourseEndTime("");
+            setCourseDays("");
+        }
         setOpen(true);
     };
     
@@ -41,42 +61,75 @@ const CourseSchedule = () => {
         return data;
     }
 
-    const handleAddCourseSchedule = async () => {
+    const handleSaveCourse = async () => {
         if (!courseName || !courseCode || !courseStartTime || !courseEndTime || !courseDays) {
             setError("Please fill in all fields");
             return;
         }
 
         try {
-            const { data, error } = await supabase.from('courses').insert([
-              {
-                user_id: 42069, // replace this with the actual user id if available
-                course_name: courseName,
-                course_code: courseCode,
-                course_start_time: courseStartTime,
-                course_end_time: courseEndTime,
-                course_days: courseDays
-              },
-            ]).select();
-      
-            if (error) {
-              console.error('Error inserting course:', error);
-              setError("Failed to add course. Please try again.");
-              return;
+            if (editMode) {
+                const { data, error } = await supabase.from('courses').update({
+                    course_name: courseName,
+                    course_code: courseCode,
+                    course_start_time: courseStartTime,
+                    course_end_time: courseEndTime,
+                    course_days: courseDays
+                }).eq('course_id', currentCourseId).select();
+                
+                if (error) {
+                    console.error('Error updating course:', error);
+                    setError("Failed to update course. Please try again.");
+                    return;
+                }
+
+                console.log('Course updated:', data);
+            } else {
+                const { data, error } = await supabase.from('courses').insert([
+                    {
+                        user_id: 42069, // Replace with the actual user id if available
+                        course_name: courseName,
+                        course_code: courseCode,
+                        course_start_time: courseStartTime,
+                        course_end_time: courseEndTime,
+                        course_days: courseDays
+                    },
+                ]).select();
+                
+                if (error) {
+                    console.error('Error inserting course:', error);
+                    setError("Failed to add course. Please try again.");
+                    return;
+                }
+
+                console.log('Course added:', data);
             }
-      
-            console.log('Course added:', data);
             handleCloseDialog();
-      
             const updatedCourses = await fetchCourses(42069); // Replace with the actual user ID
             setCourses(updatedCourses);
-
-            handleCloseDialog();
-          } catch (error) {
+        } catch (error) {
             console.error('Unexpected error:', error);
             setError("Unexpected error occurred. Please try again.");
-          }
-        
+        }
+    }
+
+    const handleDeleteCourse = async (courseId) => {
+        try {
+            const { error } = await supabase.from('courses').delete().eq('course_id', courseId);
+            
+            if (error) {
+                console.error('Error deleting course:', error);
+                setError("Failed to delete course. Please try again.");
+                return;
+            }
+    
+            console.log('Course deleted:', courseId);
+            const updatedCourses = await fetchCourses(42069); // Replace with the actual user ID
+            setCourses(updatedCourses);
+        } catch (error) {
+            console.error('Unexpected error:', error);
+            setError("Unexpected error occurred. Please try again.");
+        }
     }
 
     useEffect(() => {
@@ -105,23 +158,45 @@ const CourseSchedule = () => {
             <Box
                 sx={{
                     height: "82%",
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignContent: "center",
+                    alignItems: "center",
+                    gap: 1,
                 }}
             >
                 {courses.map((course) => (
                     <Card
                         key={course.id}
                         sx={{
-                            padding: 2,
                             backgroundColor: "#424242",
                             color: "white",
                             borderRadius: 2,
+                            width: "80%",
+                            pt: 1, pb: 1,
+                            pr: 2, pl: 2,
+                            justifyContent: "space-between",
                         }}
                     >
-                    <Typography variant="body2">Code: {course.course_code}</Typography>
-                    <Typography variant="h6">{course.course_name}</Typography>
-                    <Typography variant="body2">Start Time: {course.course_start_time}</Typography>
-                    <Typography variant="body2">End Time: {course.course_end_time}</Typography>
-                    <Typography variant="body2">Days: {course.course_days}</Typography>
+                    <Box>
+                        <Typography variant="body2">{course.course_code}</Typography>
+                        <Typography variant="h6">{course.course_name}</Typography>
+                        <Typography variant="body2">Start Time: {course.course_start_time}</Typography>
+                        <Typography variant="body2">End Time: {course.course_end_time}</Typography>
+                        <Typography variant="body2">{course.course_days}</Typography>
+                    </Box>
+                    <Box>
+                        <IconButton onClick={ () => {
+                            handleOpenDialog(course, true);
+                        }} color="primary">
+                            <EditIcon />
+                        </IconButton>
+                        <IconButton onClick={() => handleDeleteCourse(course.course_id)} color="error">
+                            <DeleteIcon />
+                        </IconButton>
+                    </Box>
+                    
                     </Card>
                 ))}
             </Box>
@@ -139,7 +214,7 @@ const CourseSchedule = () => {
                 add a course
             </Button>
             <Dialog open={open} onClose={handleCloseDialog}>
-                <DialogTitle>Add a New Course</DialogTitle>
+                <DialogTitle>{editMode ? "Edit Course" : "Add a New Course"}</DialogTitle>
                 <DialogContent>
                 <TextField
                     autoFocus
@@ -147,6 +222,7 @@ const CourseSchedule = () => {
                     label="Course Code"
                     type="text"
                     fullWidth
+                    value={courseCode}
                     onChange={(e) => setCourseCode(e.target.value.toUpperCase())}
                 />
                 <TextField
@@ -154,6 +230,7 @@ const CourseSchedule = () => {
                     label="Course Name"
                     type="text"
                     fullWidth
+                    value={courseName}
                     onChange={(e) => setCourseName(e.target.value)}
                 />
                 <TextField
@@ -162,6 +239,7 @@ const CourseSchedule = () => {
                     helperText="HH:mm AM/PM"
                     type="time"
                     fullWidth
+                    value={courseStartTime}
                     onChange={(e) => setCourseStartTime(e.target.value)}
                     InputLabelProps={{
                     shrink: true,
@@ -173,6 +251,7 @@ const CourseSchedule = () => {
                     helperText="HH:mm AM/PM"
                     type="time"
                     fullWidth
+                    value={courseEndTime}
                     onChange={(e) => setCourseEndTime(e.target.value)}
                     InputLabelProps={{
                     shrink: true,
@@ -184,17 +263,18 @@ const CourseSchedule = () => {
                     type="text"
                     helperText="M T W Th F"
                     fullWidth
+                    value={courseDays}
                     onChange={(e) => setCourseDays(e.target.value)}
                 />
                 {error && <Typography color="error">{error}</Typography>}
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={handleCloseDialog} color="primary">
-                    Cancel
-                </Button>
-                <Button onClick={handleAddCourseSchedule} color="primary" variant="contained">
-                    Add Course
-                </Button>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleSaveCourse} color="primary" variant="contained">
+                        {editMode ? "Save Changes" : "Add Course"}
+                    </Button>
                 </DialogActions>
             </Dialog>
         </Box>
