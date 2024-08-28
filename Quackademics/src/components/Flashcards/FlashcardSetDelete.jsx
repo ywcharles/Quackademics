@@ -1,17 +1,25 @@
 import React, { useState } from "react";
 import { Box, Button, Typography} from "@mui/material";
-import supabase from "../libs/supabaseAdmin";
+import supabase from "../../libs/supabaseAdmin";
 
 //TODO: Make page parse user_id
-const FlashcardSetDelete = ({close, set_id, refreshFlashcardSets}) => {
+const FlashcardSetDelete = ({close, set_id, refreshFlashcardSets, refreshAllFlashcards}) => {
     const deleteFlashcardSet = async () => {
-        const {error} = await supabase
+        const {errorCards} = await supabase
+        .from("flashcards")
+        .delete()
+        .eq('set_id', set_id);
+
+        const {errorSet} = await supabase
         .from("flashcard_set")
         .delete()
         .eq('set_id', set_id);
 
-        if (error) {
-            console.error("Error inserting data:", error);
+        if (errorSet) {
+            console.error("Error deleting data:", errorSet);
+        }
+        if(errorCards) {
+            console.error("Error deleting data:", errorCards);
         }
 
         close();
@@ -21,6 +29,7 @@ const FlashcardSetDelete = ({close, set_id, refreshFlashcardSets}) => {
     const deleteProcess = async () => {
         await deleteFlashcardSet();
         await refreshFlashcardSets();
+        await refreshAllFlashcards();
         return;
     }
 

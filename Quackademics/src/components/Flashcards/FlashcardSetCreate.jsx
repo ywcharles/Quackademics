@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button, Typography} from "@mui/material";
-import supabase from "../libs/supabaseAdmin";
+import supabase from "../../libs/supabaseAdmin";
 
 //TODO: Make page parse user_id
 const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
@@ -23,40 +23,39 @@ const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
         }
 
         const { data, error } = await supabase
-            .from("flashcard_set")
-            .insert([
-                {
-                //Hardcoded user_id for now
-                  user_id: 42069,
-                  set_name: setName,
-                  tags: tags
-                },
-              ])
-              .select();
-    
-            if (error) {
-                console.error("Error inserting data:", error);
-                if(error.code == 23505){
-                    setErrorMessage("The set name must be unique");
-                }
-                return [];
-            }
-            else{
-                close();
-                if(errorMessage != ''){
-                    setErrorMessage('');
-                }
-            }
+        .from("flashcard_set")
+        .insert([
+            {
+            //Hardcoded user_id for now
+                user_id: 42069,
+                set_name: setName,
+                tags: tags
+            },
+            ])
+            .select();
 
-            return data;
-        
-        };
-
-        const createProcess = async () => {
-            await createFlashcardSet();
-            await refreshFlashcardSets();
-            return;
+        if (error) {
+            console.error("Error inserting data:", error);
+            if(error.code == 23505){
+                setErrorMessage("The set name must be unique");
+            }
+            return [];
         }
+        else{
+            close();
+            if(errorMessage != ''){
+                setErrorMessage('');
+            }
+        }
+
+        return data;
+    };
+
+    const createProcess = async () => {
+        await createFlashcardSet();
+        await refreshFlashcardSets();
+        return;
+    }
 
     return (
         <Box
