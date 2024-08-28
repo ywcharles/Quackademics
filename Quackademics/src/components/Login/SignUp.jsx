@@ -4,8 +4,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
 import bcryptjs from "bcryptjs";
-import supabase from "../../libs/supabaseAdmin";
 import { addUser } from "../../supabase/AccountSupabase";
+import ProfilePictureSetUp from "../Profile/ProfilePictureCard";
 
 const SignUp = () => {
   async function hashPassword(password) {
@@ -43,8 +43,6 @@ const SignUp = () => {
     const hashedPassword = await hashPassword(password);
 
     try {
-      alert("Check your email for the verification link.");
-
       const userReq = await addUser(
         username,
         email,
@@ -57,6 +55,7 @@ const SignUp = () => {
         if (userReq.code === "23505")
           setEmailError("Email already exists on system.");
       } else {
+        alert("Check your email for the verification link.");
         handleSignUpClose();
       }
     } catch (error) {
@@ -90,6 +89,7 @@ const SignUp = () => {
       </Button>
       <Dialog
         open={open}
+        onClose={handleSignUpClose}
         PaperProps={{
           component: "form",
           onSubmit: handleSignUpSubmit,
@@ -97,6 +97,7 @@ const SignUp = () => {
       >
         <DialogTitle>Create an Account</DialogTitle>
         <DialogContent>
+          <ProfilePictureSetUp setProfilePicture={setProfilePicture} />
           <TextField
             autoFocus
             required
