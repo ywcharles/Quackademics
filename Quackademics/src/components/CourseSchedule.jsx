@@ -1,5 +1,5 @@
 import { Box, Typography, Button, Card, Dialog, DialogTitle, DialogContent, TextField, DialogActions } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import supabase from "../libs/supabaseAdmin";
 
 const CourseSchedule = () => {
@@ -9,6 +9,7 @@ const CourseSchedule = () => {
     const [courseCode, setCourseCode] = useState("");
     const [courseStartTime, setCourseStartTime] = useState("");
     const [courseEndTime, setCourseEndTime] = useState("");
+    const [courseDays, setCourseDays] = useState("");
     const [error, setError] = useState("");
 
     const handleOpenDialog = () => {
@@ -16,16 +17,32 @@ const CourseSchedule = () => {
     };
     
     const handleCloseDialog = () => {
-    setOpen(false);
-    setCourseName("");
-    setCourseCode("");
-    setCourseStartTime("");
-    setCourseEndTime("");
-    setError("");
+        setOpen(false);
+        setCourseName("");
+        setCourseCode("");
+        setCourseStartTime("");
+        setCourseEndTime("");
+        setCourseDays("");
+        setError("");
     };
 
+    const fetchCourses = async (userId) => {
+        const { data, error } = await supabase
+        .from("courses")
+        .select("*")
+        .eq("user_id", userId)
+        .order("course_start_time", { ascending: true });
+    
+        if (error) {
+            console.error("Error fetching data:", error);
+            return [];
+        }
+        console.log("data:", data);
+        return data;
+    }
+
     const handleAddCourseSchedule = async () => {
-        if (!courseName || !courseCode || !courseStartTime || !courseEndTime) {
+        if (!courseName || !courseCode || !courseStartTime || !courseEndTime || !courseDays) {
             setError("Please fill in all fields");
             return;
         }
@@ -37,9 +54,10 @@ const CourseSchedule = () => {
                 course_name: courseName,
                 course_code: courseCode,
                 course_start_time: courseStartTime,
-                course_end_time: courseEndTime
+                course_end_time: courseEndTime,
+                course_days: courseDays
               },
-            ]);
+            ]).select();
       
             if (error) {
               console.error('Error inserting course:', error);
@@ -50,8 +68,10 @@ const CourseSchedule = () => {
             console.log('Course added:', data);
             handleCloseDialog();
       
-            // Optionally, refresh courses list or update state
-            setCourses([...courses, { id: data[0].id, name: courseName, code: courseCode, startTime: courseStartTime, endTime: courseEndTime }]);
+            const updatedCourses = await fetchCourses(42069); // Replace with the actual user ID
+            setCourses(updatedCourses);
+
+            handleCloseDialog();
           } catch (error) {
             console.error('Unexpected error:', error);
             setError("Unexpected error occurred. Please try again.");
@@ -59,6 +79,14 @@ const CourseSchedule = () => {
         
     }
 
+    useEffect(() => {
+        const loadData = async () => {
+            const data = await fetchCourses(42069); // hardcoded with test user
+            setCourses(data);
+          };
+          loadData();
+    }, []);
+    
     return (
         <Box
             sx={{
@@ -89,10 +117,11 @@ const CourseSchedule = () => {
                             borderRadius: 2,
                         }}
                     >
-                    <Typography variant="h6">{course.name}</Typography>
-                    <Typography variant="body2">Code: {course.code}</Typography>
-                    <Typography variant="body2">Start Time: {course.startTime}</Typography>
-                    <Typography variant="body2">End Time: {course.endTime}</Typography>
+                    <Typography variant="body2">Code: {course.course_code}</Typography>
+                    <Typography variant="h6">{course.course_name}</Typography>
+                    <Typography variant="body2">Start Time: {course.course_start_time}</Typography>
+                    <Typography variant="body2">End Time: {course.course_end_time}</Typography>
+                    <Typography variant="body2">Days: {course.course_days}</Typography>
                     </Card>
                 ))}
             </Box>
@@ -115,17 +144,17 @@ const CourseSchedule = () => {
                 <TextField
                     autoFocus
                     margin="dense"
+                    label="Course Code"
+                    type="text"
+                    fullWidth
+                    onChange={(e) => setCourseCode(e.target.value.toUpperCase())}
+                />
+                <TextField
+                    margin="dense"
                     label="Course Name"
                     type="text"
                     fullWidth
                     onChange={(e) => setCourseName(e.target.value)}
-                />
-                <TextField
-                    margin="dense"
-                    label="Course Code"
-                    type="text"
-                    fullWidth
-                    onChange={(e) => setCourseCode(e.target.value)}
                 />
                 <TextField
                     margin="dense"
@@ -148,6 +177,14 @@ const CourseSchedule = () => {
                     InputLabelProps={{
                     shrink: true,
                     }}
+                />
+                <TextField
+                    margin="dense"
+                    label="Course Days"
+                    type="text"
+                    helperText="M T W Th F"
+                    fullWidth
+                    onChange={(e) => setCourseDays(e.target.value)}
                 />
                 {error && <Typography color="error">{error}</Typography>}
                 </DialogContent>
