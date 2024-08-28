@@ -39,7 +39,7 @@ const ProfileCard = () => {
             Hi! My name is Kiki! Pretend there is some very interesting facts about me here.
           </Typography>
         </Box>
-        <Button variant="contained" color="secondary" size='small' sx={{ width: "100%"}}>Edit Profile</Button>
+        <Button variant="contained" color="secondary" size='small' sx={{ mb: 1, width: "95%"}}>Edit Profile</Button>
       </Box>
     </>
   )

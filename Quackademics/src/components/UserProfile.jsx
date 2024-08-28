@@ -5,6 +5,7 @@ import StatsGraph from "../components/StatsGraph";
 import Heatmap from "../components/Heatmap";
 import PomodoroRanking from "../components/PomodoroRanking";
 import OverrallStudyRanking from "../components/OverallStudyRanking";
+import CourseSchedule from "./CourseSchedule";
 
 const UserProfile = () => {
   return (
@@ -15,15 +16,15 @@ const UserProfile = () => {
         alignContent: "top",
         height: "70vh",
         width: "100%",
+        gap: 4
       }}>
-
         {/* Left column */}
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             gap: 4,
-            mr: 10,
+            mr:5,
             width: "25vw",
           }}>
           <ProfileCard />
@@ -63,21 +64,9 @@ const UserProfile = () => {
               }}>
                 <PomodoroRanking /> 
                 <OverrallStudyRanking/> 
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 1,
-                    width: "50%",
-                  }}>
-                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
-                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
-                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
-                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
-                    <Button variant="contained" color="primary" sx={{ height: "100%" }}>button</Button>
-                  </Box>
               </Box>
         </Box>
+        <Box sx={{ width: "50%", height: "100%" }}> <CourseSchedule /></Box>
     </Box>
     
   );
