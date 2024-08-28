@@ -11,7 +11,7 @@ const FlashcardSetDelete = ({close, set_id, refreshFlashcardSets}) => {
         .eq('set_id', set_id);
 
         if (error) {
-            console.error("Error inserting data:", error);
+            console.error("Error deleting data:", error);
         }
 
         close();

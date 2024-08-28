@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, TextField, Typography, Dialog, MenuList, MenuItem } from "@mui/material";
 import { AddCard } from "@mui/icons-material";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import FlashcardBackground from "./FlashcardBackground";
 import FlashcardSetCreate from "./FlashcardSetCreate";
 import FlashcardSetEdit from "./FlashcardSetEdit";
 import FlashcardSetDelete from "./FlashcardSetDelete";
 import FlashcardsList from "./FlashcardsList";
-import EditIcon from '@mui/icons-material/Edit';
 import supabase from "../libs/supabaseAdmin";
 
 const FlashcardsMenu = () => {
     const [flashcardSets, setFlashcardSet] = useState([]);
-    const [filteredFlashcardSet, setFilteredFlashcardSet] = useState([]);
+    const [allFlashcards, setAllFlashcards] = useState([]);
+    const [filteredFlashcards, setFilteredFlashcards] = useState([]);
+    const [filteredFlashcardSets, setfilteredFlashcardSets] = useState([]);
     const [currFlashcardSet, setCurrFlashcardSet] = useState({set_name: "", set_id: ""});
+    const [currFlashcard, setCurrFlashcard] = useState("");
+    const [cardSide, setCardSide] = useState("");
+    const [cardText, setCardText] = useState("");
     const [createPromptOpen, setCreatePromptOpen] = useState(false);
     const [editPromptOpen, setEditPromptOpen] = useState(false);
     const [deletePromptOpen, setDeletePromptOpen] = useState(false);
@@ -24,7 +31,7 @@ const FlashcardsMenu = () => {
     rootElement.style.height = "100vh";
 
     const searchInputChange = (event) => {
-        setFilteredFlashcardSet(
+        setfilteredFlashcardSets(
             flashcardSets.filter(entry =>
                 entry.set_name.toLowerCase().includes(event.target.value)
             )
@@ -33,25 +40,71 @@ const FlashcardsMenu = () => {
 
     const flashcardSetSelected = (flashcardSet) => {
         setCurrFlashcardSet(flashcardSet);
+        setFilteredFlashcards(allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id));
     };
 
-    const handleFlashcardCreateDialogue = () => {
-        setCreatePromptOpen(!createPromptOpen);
-    };
-
-    const handleFlashcardEditDialogue = () => {
-        setEditPromptOpen(!editPromptOpen);
+    const setCard = (flashcard) => {
+        setCurrFlashcard(flashcard);
+        setCardText(flashcard.term);
+        setCardSide("front");
+    }
+    
+    const flipCard = () => {
+        if(cardSide === "front"){
+            setCardText(currFlashcard.definition);
+            setCardSide("back");
+        }
+        else{
+            setCardText(currFlashcard.term);
+            setCardSide("front");
+        }
     }
 
-    const handleFlashcardDeleteDialogue = () => {
-        setDeletePromptOpen(!deletePromptOpen);
-    };
+    const changeCard = (direction) => {
+        console.log("changing cards")
+        let index = filteredFlashcards.findIndex((card) => card.flashcard_id === currFlashcard.flashcard_id);
+        console.log(index)
+        if(direction === "next"){
+            if(index === filteredFlashcards.length - 1){
+                index = 0;
+            }
+            else{
+                index = index + 1;
+            }
+        }
+        else{
+            if(index === 0){
+                index = filteredFlashcards.length - 1;
+            }
+            else{
+                index = index - 1;
+            }
+        }
+        console.log(index)
+        console.log(filteredFlashcards[index])
+        setCurrFlashcard(filteredFlashcards[index]);
+        setCardText(filteredFlashcards[index].term);
+        setCardSide("front");
+    }
+
+    const handleOpenDialog = (dialogType) => {
+        if(dialogType === "create"){
+            setCreatePromptOpen(!createPromptOpen);
+        }
+        else if (dialogType === "edit") {
+            setEditPromptOpen(!editPromptOpen);
+        }
+        else {
+            setDeletePromptOpen(!deletePromptOpen);
+        }
+    }
 
     const fetchFlashcardSets = async (userId) => {
         const { data, error } = await supabase
         .from("flashcard_set")
         .select("set_name, set_id, tags")
-        .eq("user_id", userId)
+        //Hardcoded user_id for now
+        .eq("user_id", 42069)
         .order("set_name", { ascending: true });
     
         if (error) {
@@ -60,31 +113,60 @@ const FlashcardsMenu = () => {
         }
 
         return data;
-    };
+    };  
+
+    const fetchAllFlashcards = async (setData) => {
+        let tempArr = [];
+
+        for(const flashcardSet of setData){
+            const { data, error } = await supabase
+            .from("flashcards")
+            .select("set_id, term, definition, flashcard_id")
+            .eq("set_id", flashcardSet.set_id);
+        
+            if (error) {
+                console.error("Error fetching data:", error);
+            }
+            else{
+                tempArr.push(...data)
+            }
+        };
+
+        return tempArr;
+    }
 
     const refreshFlashcardSets = async () => {
         const data = await fetchFlashcardSets(42069);
         setFlashcardSet(data);
         const searchValue = document.getElementById("search").value;
         if(searchValue != ''){
-            setFilteredFlashcardSet(
+            setfilteredFlashcardSets(
                 data.filter(entry =>
                     entry.set_name.toLowerCase().includes(searchValue)
                 )
             )
         }
         else{
-            setFilteredFlashcardSet(data);
+            setfilteredFlashcardSets(data);
         }
+        return;
+    };
+
+    const refreshAllFlashcards = async () => {
+        const cardData = await fetchAllFlashcards(flashcardSets);
+        setAllFlashcards(cardData);
+        setFilteredFlashcards(cardData.filter(flashcard => flashcard.set_id === currFlashcardSet.set_id));
         return;
     }
 
     //Hardcoded user_id for now
     useEffect(() => {
         const loadData = async () => {
-            const data = await fetchFlashcardSets(42069);
-            setFlashcardSet(data);
-            setFilteredFlashcardSet(data);
+            const setData = await fetchFlashcardSets(42069);
+            const cardData = await fetchAllFlashcards(setData);
+            setFlashcardSet(setData);
+            setfilteredFlashcardSets(setData);
+            setAllFlashcards(cardData);
           };
 
           loadData();
@@ -127,23 +209,22 @@ const FlashcardsMenu = () => {
                     }}
                 >
                     <MenuList sx={{width: "100%"}}>
-                        {filteredFlashcardSet.map((flashcardSet, index) => (
+                        {filteredFlashcardSets.map((flashcardSet, index) => (
                             <MenuItem id="flashcard" key={index} 
-                            sx={{padding: 0, 
-                                margin: 0, 
-                                mb: 1, 
+                            sx={{padding: 1, 
                                 width: "100%",
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
+                                border: "1px solid #ccc"
                             }}
                             onClick={() => flashcardSetSelected(flashcardSet)}>
                                 <Typography sx={{ fontWeight: "bold" }}>
                                     {flashcardSet.set_name}
                                 </Typography>
                                 <Box>
-                                    <EditIcon onClick={(handleFlashcardEditDialogue)} sx={{height: "30%"}}/>
-                                    <DeleteOutlineIcon onClick={(handleFlashcardDeleteDialogue)} sx={{height: "30%"}}/>
+                                    <EditIcon onClick={() => handleOpenDialog("edit")} sx={{height: "30%"}}/>
+                                    <DeleteOutlineIcon onClick={(() => handleOpenDialog("delete"))} sx={{height: "30%"}}/>
                                 </Box>
                             </MenuItem>
                         ))}    
@@ -166,7 +247,7 @@ const FlashcardsMenu = () => {
                         backgroundColor: "#6e6b6b",
                         overflow: "auto"
                     }}
-                    onClick={handleFlashcardCreateDialogue}
+                    onClick={() => handleOpenDialog("create")}
                     >
                         <AddCard/>
                     </Button>
@@ -175,17 +256,17 @@ const FlashcardsMenu = () => {
             <Dialog
             open={createPromptOpen}
             >
-                <FlashcardSetCreate close={handleFlashcardCreateDialogue} refreshFlashcardSets={refreshFlashcardSets}/>
+                <FlashcardSetCreate close={() => handleOpenDialog("create")} refreshFlashcardSets={refreshFlashcardSets}/>
             </Dialog>
             <Dialog
             open={editPromptOpen}
             >
-                <FlashcardSetEdit close={handleFlashcardEditDialogue} refreshFlashcardSets={refreshFlashcardSets} flashcardSet={currFlashcardSet}/>
+                <FlashcardSetEdit close={() => handleOpenDialog("edit")} refreshFlashcardSets={refreshFlashcardSets} flashcardSet={currFlashcardSet}/>
             </Dialog>
             <Dialog
             open={deletePromptOpen}
             >
-                <FlashcardSetDelete close={handleFlashcardDeleteDialogue} set_id={currFlashcardSet.set_id} refreshFlashcardSets={refreshFlashcardSets}/>
+                <FlashcardSetDelete close={() => handleOpenDialog("delete")} set_id={currFlashcardSet.set_id} refreshFlashcardSets={refreshFlashcardSets}/>
             </Dialog>
             <Box
                 sx={{
@@ -193,28 +274,48 @@ const FlashcardsMenu = () => {
                     flexDirection: "column"
                 }}
             >
-                <Box sx={{ position: "relative", height: "80vh", width: "70vw", left: "10%"}}>
-                    <Box
-                        sx={{
-                            position: "absolute",
-                            height: "65vh",
-                            width: "57vw",
-                            top: "13%",
-                            backgroundColor: "#615f5f",
-                            border: "2px solid white",
-                            padding: 1,
-                            zIndex: 3,
-                        }}
-                    >
-                        <Typography sx={{ fontWeight: "bold", color: 'white' }}>
-                            {currFlashcardSet.set_name}
-                        </Typography>
+                <Box sx={{ overflowY: "scroll", height: "100vh", width: "80vw", left: "10%"}}>
+                    <Box sx={{ position: "relative", height: "80vh", width: "70vw", left: "10%"}}>
+                        <Box
+                            sx={{
+                                display:"flex", 
+                                flexDirection: "row",
+                                position: "absolute",
+                                height: "65vh",
+                                width: "57vw",
+                                top: "13%",
+                                backgroundColor: "#615f5f",
+                                border: "2px solid white",
+                                padding: 1,
+                                zIndex: 3,
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}>
+                            <ArrowBackIosIcon onClick={() => changeCard("prev")}/>
+                            <Box sx={{width: "100%", height:"100%"}}onClick={flipCard}>
+                                <Typography sx={{
+                                    display:"flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",  
+                                    fontWeight: "bold", 
+                                    color: 'white', 
+                                    height:"100%", 
+                                    width:"100%",
+                                    fontSize: 24}}>
+                                    {cardText}
+                                </Typography>
+                            </Box>
+                            <ArrowForwardIosIcon onClick={() => changeCard("next")}/>
+                        </Box>
+                        <FlashcardBackground/>
                     </Box>
-                    <FlashcardBackground/>
+                    <FlashcardsList currFlashcardSet={filteredFlashcards}
+                                    currFlashcard={currFlashcard}
+                                    setCard={setCard}
+                                    set_id={currFlashcardSet.set_id}
+                                    refreshAllFlashcards={refreshAllFlashcards}
+                                     />
                 </Box>
-
-                <FlashcardsList currFlashcardSet={currFlashcardSet} />
-            //Insert flashcardmenu here
             </Box>
         </Box>
     );
