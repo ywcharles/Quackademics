@@ -10,7 +10,7 @@ import FlashcardSetCreate from "./FlashcardSetCreate";
 import FlashcardSetEdit from "./FlashcardSetEdit";
 import FlashcardSetDelete from "./FlashcardSetDelete";
 import FlashcardsList from "./FlashcardsList";
-import supabase from "../libs/supabaseAdmin";
+import supabase from "../../libs/supabaseAdmin";
 
 const FlashcardsMenu = () => {
     const [flashcardSets, setFlashcardSet] = useState([]);

@@ -3,7 +3,7 @@ import { Box, Button, Typography, MenuList, MenuItem, Dialog } from "@mui/materi
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import supabase from "../libs/supabaseAdmin";
+import supabase from "../../libs/supabaseAdmin";
 
 const FlashcardsList = ({currFlashcardSet, currFlashcard, setCard, set_id, refreshAllFlashcards}) => {
     const [createEditPromptOpen, setCreateEditPromptOpen] = useState(false);
