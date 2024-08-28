@@ -97,7 +97,7 @@ const SignUp = () => {
       >
         <DialogTitle>Create an Account</DialogTitle>
         <DialogContent>
-          <ProfilePictureSetUp />
+          <ProfilePictureSetUp setProfilePicture={setProfilePicture} />
           <TextField
             autoFocus
             required

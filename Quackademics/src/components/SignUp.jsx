@@ -90,7 +90,6 @@ const SignUp = () => {
       </Button>
       <Dialog
         open={open}
-        // onClose={handleSignUpClose}
         PaperProps={{
           component: "form",
           onSubmit: handleSignUpSubmit,
