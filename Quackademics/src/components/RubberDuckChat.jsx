@@ -24,8 +24,10 @@ const RubberDuckChat = () => {
   const [textFieldContent, setTextFieldContent] = useState("");
   const [userQuacks, setUserQuacks] = useState([]);
   const [selectedQuack, setSelectedQuack] = useState(null);
+
   // TODO: Able to fetch userId
   const user = 42069;
+
   const date = new Date();
   const currDateTime = date.toISOString().slice(0, 19).replace("T", " ");
 
@@ -105,8 +107,6 @@ const RubberDuckChat = () => {
   const handleSelectClick = (quack) => {
     setSelectedQuack(quack);
     setTextFieldContent(quack.session_text);
-
-    console.log(sessionId);
   };
 
   const handleClear = () => {
@@ -160,7 +160,7 @@ const RubberDuckChat = () => {
           height: 400,
         }}
       >
-        <TagsContainer></TagsContainer>
+        <TagsContainer sessionId = {selectedQuack? selectedQuack.session_id : 0}></TagsContainer>
         <TextField
           value={textFieldContent}
           onChange={(e) => setTextFieldContent(e.target.value)}

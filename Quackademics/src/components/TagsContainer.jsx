@@ -11,14 +11,15 @@ import {
 
 import supabase from "../libs/supabaseAdmin";
 
-const TagsContainer = () => {
+const TagsContainer = (props) => {
   //TO DO - Fetch user and session
   const user = 42069;
-  const activity = 40;
   const type = 3;
-
+  const activity = props.sessionId;
+  
   const [open, setOpen] = useState(false);
   const [tags, setTags] = useState([]);
+  const [sessionTags, setSessionTags] = useState([]);
 
   const fetchSessionTagIds = async () => {
     const { data, error } = await supabase
@@ -36,11 +37,11 @@ const TagsContainer = () => {
     return tagIds;
   };
 
-  const fetchSessionTags = async (tagIds) => {
+  const fetchSessionTags = async () => {
     const { data, error } = await supabase
       .from("tags")
       .select()
-      .in("tag_id", tagIds);
+      .eq("user_id", user);
 
     if (error) {
       console.error("Error fetching data:", error);
@@ -51,15 +52,17 @@ const TagsContainer = () => {
   };
 
   useEffect(() => {
+    console.log(props.sessionId);
     const loadTags = async () => {
       const tagIds = await fetchSessionTagIds();
+      setSessionTags(tagIds);
 
       const tags = await fetchSessionTags(tagIds);
       setTags(tags);
     };
 
     loadTags();
-  }, []);
+  }, [activity]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -89,11 +92,20 @@ const TagsContainer = () => {
           width: "95%",
         }}
       >
-        {tags.map((t) => (
-          <Box sx={{ backgroundColor: t.color, borderRadius: 1, padding: 0.5 }}>
-            {t.tag_name}
-          </Box>
-        ))}
+        {tags.map((t, index) => {
+          if (sessionTags.includes(t.tag_id)) {
+            return (
+              <Box
+                key={index}
+                sx={{ backgroundColor: t.color, borderRadius: 1, padding: 0.5 }}
+              >
+                {t.tag_name}
+              </Box>
+            );
+          } else {
+            null;
+          }
+        })}
       </Box>
 
       <Button sx={{ width: "5%" }} onClick={handleClickOpen}>
@@ -104,8 +116,9 @@ const TagsContainer = () => {
         <DialogTitle>Add New Tag</DialogTitle>
         <DialogContent>
           <Box>
-            {tags.map((t) => (
+            {tags.map((t, index) => (
               <Box
+                key={index} 
                 sx={{ backgroundColor: t.color, borderRadius: 1, padding: 0.5 }}
               >
                 {t.tag_name}
