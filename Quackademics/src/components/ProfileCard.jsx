@@ -16,6 +16,7 @@ const ProfileCard = () => {
           borderRadius: 2,
           width: "100%",
           height: "65%",
+          justifyContent: "space-between"
         }}
       >
         <Avatar 
@@ -27,14 +28,15 @@ const ProfileCard = () => {
             height: 130,
           }}
         />
+        <Typography variant="h6" sx={{ fontWeight: 'bold', height: "10%", width: "100%"}}>Kiki Lin</Typography>
+        <Typography variant="body1" sx={{ height: "10%", width: "100%"}}>Computer Science, 2020-2025 </Typography>
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            height: "100%"
+            height: "100%",
+            overflowY: "auto"
           }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold', overflow: "hidden"}}>Kiki Lin</Typography>
-          <Typography variant="body1" sx={{ overflow: "hidden"}}>Computer Science, 2020-2025 </Typography>
           <Typography variant="body2" sx={{ color: "lightgrey", overflow: "hidden", mt: 2}}>
             Hi! My name is Kiki! Pretend there is some very interesting facts about me here.
           </Typography>
