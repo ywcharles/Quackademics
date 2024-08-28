@@ -152,6 +152,7 @@ const CourseSchedule = () => {
                 width: "100%",
                 height: "100%",
                 gap: 2,
+                justifyContent: "space-between",
             }}
         >
             <Typography sx={{ fontWeight: "bold", color: "white", mt: 2 }}> Course Schedule </Typography>
@@ -164,6 +165,7 @@ const CourseSchedule = () => {
                     alignContent: "center",
                     alignItems: "center",
                     gap: 1,
+                    overflowY: "auto"
                 }}
             >
                 {courses.map((course) => (
@@ -176,27 +178,39 @@ const CourseSchedule = () => {
                             width: "80%",
                             pt: 1, pb: 1,
                             pr: 2, pl: 2,
-                            justifyContent: "space-between",
+                            overflow: "visible"
                         }}
                     >
-                    <Box>
-                        <Typography variant="body2">{course.course_code}</Typography>
-                        <Typography variant="h6">{course.course_name}</Typography>
-                        <Typography variant="body2">Start Time: {course.course_start_time}</Typography>
-                        <Typography variant="body2">End Time: {course.course_end_time}</Typography>
-                        <Typography variant="body2">{course.course_days}</Typography>
-                    </Box>
-                    <Box>
-                        <IconButton onClick={ () => {
-                            handleOpenDialog(course, true);
-                        }} color="primary">
-                            <EditIcon />
-                        </IconButton>
-                        <IconButton onClick={() => handleDeleteCourse(course.course_id)} color="error">
-                            <DeleteIcon />
-                        </IconButton>
-                    </Box>
-                    
+                        {/* Box for per course card */}
+                        <Box
+                            sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "space-between"
+                            }}
+                        >
+                            <Box sx={{ textAlign: "left" }}>
+                                <Typography variant="body2" >{course.course_code}</Typography>
+                                <Typography variant="h6">{course.course_name}</Typography>
+                                <Typography variant="body2">Start Time: {course.course_start_time}</Typography>
+                                <Typography variant="body2">End Time: {course.course_end_time}</Typography>
+                                <Typography variant="body2">{course.course_days}</Typography>
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: "flex", flexDirection: "column"
+                                }}
+                            >
+                                <IconButton onClick={ () => {
+                                    handleOpenDialog(course, true);
+                                }} color="primary">
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton onClick={() => handleDeleteCourse(course.course_id)} color="error">
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Box>
+                        </Box>
                     </Card>
                 ))}
             </Box>
@@ -207,7 +221,7 @@ const CourseSchedule = () => {
                     color: "white",
                     width: "95%",
                     borderRadius: 2,
-                    overflow: "auto",
+                    mb: 1
                 }}
                 onClick={handleOpenDialog}
             >
