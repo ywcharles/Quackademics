@@ -17,26 +17,25 @@ const AssignmentTracker = () => {
   });
 
   useEffect(() => {
-    const fetchAssignments = async () => {
-      const { data, error } = await supabase
-        .from('assignments')
-        .select('*')
-        .eq('user_id', user_id);
-
-      if (error) {
-        console.error('Error fetching assignments:', error);
-      } else {
-        const assignments = data.map((assignment) => ({
-          ...assignment,
-          dueDate: assignment.due_date,
-        }));
-        console.log(assignments)
-        setAssignments(assignments);
-      }
-    };
-
     fetchAssignments();
   }, []);
+
+  const fetchAssignments = async () => {
+    const { data, error } = await supabase
+      .from('assignments')
+      .select('*')
+      .eq('user_id', user_id);
+  
+    if (error) {
+      console.error('Error fetching assignments:', error);
+    } else {
+      const assignments = data.map((assignment) => ({
+        ...assignment,
+        dueDate: assignment.due_date,
+      }));
+      setAssignments(assignments);
+    }
+  };
 
   const addAssignment = async () => {
     const { data, error } = await supabase
@@ -54,10 +53,10 @@ const AssignmentTracker = () => {
     if (error) {
       console.error('Error adding assignment:', error);
     } else {
-      setAssignments([...assignments, ...data]);
       setNewAssignment({ title: '', dueDate: '', status: 'To-do' });
+      fetchAssignments();
     }
-  };
+  };  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,7 +65,7 @@ const AssignmentTracker = () => {
 
   const sortAssignments = (status) => {
     return assignments
-      .filter((assignment) => assignment.status === status)
+      .filter((assignment) => assignment && assignment.status === status)
       .sort((a, b) => {
         const dateA = new Date(a.dueDate);
         const dateB = new Date(b.dueDate);
