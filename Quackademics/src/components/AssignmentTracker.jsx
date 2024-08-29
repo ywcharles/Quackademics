@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, TextField, Button, Grid, Typography, IconButton } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { columns } from '../util/AssignmentTracker.util';
+import supabase from "../libs/supabaseAdmin";
+
+const user_id = 35;
 
 const AssignmentTracker = () => {
   const [assignments, setAssignments] = useState([]);
@@ -13,9 +16,47 @@ const AssignmentTracker = () => {
     'Done': 'asc'
   });
 
-  const addAssignment = () => {
-    setAssignments([...assignments, { ...newAssignment, id: Date.now().toString() }]);
-    setNewAssignment({ title: '', dueDate: '', status: 'To-do' });
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      const { data, error } = await supabase
+        .from('assignments')
+        .select('*')
+        .eq('user_id', user_id);
+
+      if (error) {
+        console.error('Error fetching assignments:', error);
+      } else {
+        const assignments = data.map((assignment) => ({
+          ...assignment,
+          dueDate: assignment.due_date,
+        }));
+        console.log(assignments)
+        setAssignments(assignments);
+      }
+    };
+
+    fetchAssignments();
+  }, []);
+
+  const addAssignment = async () => {
+    const { data, error } = await supabase
+      .from('assignments')
+      .insert([
+        { 
+          user_id,
+          title: newAssignment.title,
+          description: '',
+          due_date: newAssignment.dueDate,
+          status: newAssignment.status,
+        }
+      ]);
+  
+    if (error) {
+      console.error('Error adding assignment:', error);
+    } else {
+      setAssignments([...assignments, ...data]);
+      setNewAssignment({ title: '', dueDate: '', status: 'To-do' });
+    }
   };
 
   const handleChange = (e) => {
@@ -40,23 +81,40 @@ const AssignmentTracker = () => {
     }));
   };
 
-  const onDragEnd = (result) => {
+  const onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
-
+  
     if (!destination) return;
-
+  
     const updatedAssignments = Array.from(assignments);
     const [movedAssignment] = updatedAssignments.splice(
       updatedAssignments.findIndex(a => a.id === draggableId),
       1
     );
     movedAssignment.status = destination.droppableId;
-    updatedAssignments.splice(destination.index, 0, movedAssignment);
-
-    setAssignments(updatedAssignments);
+  
+    const { error } = await supabase
+      .from('assignments')
+      .update({ status: movedAssignment.status })
+      .eq('assignment_id', draggableId);
+  
+    if (error) {
+      console.error('Error updating assignment status:', error);
+    } else {
+      updatedAssignments.splice(destination.index, 0, movedAssignment);
+      setAssignments(updatedAssignments);
+    }
   };
-
+  
   const formatDate = (dateString) => {
+    if(!dateString) {
+      return 'N/A';
+    }
+
+    const parts = dateString.split('-');
+    if (parts.length !== 3) {
+      return 'Invalid Date';
+    }
     const [year, month, day] = dateString.split('-');
     return `${month}/${day}/${year}`;
   };
@@ -116,7 +174,7 @@ const AssignmentTracker = () => {
                     style={{ minHeight: '100px', padding: '10px', backgroundColor: '#f0f0f0' }}
                   >
                     {sortAssignments(status).map((assignment, index) => (
-                      <Draggable key={assignment.id} draggableId={assignment.id} index={index}>
+                      <Draggable key={assignment.assignment_id} draggableId={assignment.assignment_id.toString()} index={index}>
                         {(provided) => (
                           <Card
                             ref={provided.innerRef}
