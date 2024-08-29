@@ -100,11 +100,10 @@ const AssignmentTracker = () => {
     if (error) {
       console.error('Error updating assignment status:', error);
     } else {
-      updatedAssignments.splice(destination.index, 0, movedAssignment);
-      setAssignments(updatedAssignments);
+      fetchAssignments();
     }
   };
-  
+
   const formatDate = (dateString) => {
     if(!dateString) {
       return 'N/A';
