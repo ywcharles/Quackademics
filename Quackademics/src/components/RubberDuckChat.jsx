@@ -161,7 +161,9 @@ const RubberDuckChat = () => {
           height: 400,
         }}
       >
-        <TagsContainer type = {3} sessionId = {selectedQuack? selectedQuack.session_id : 0}></TagsContainer>
+        {selectedQuack && selectedQuack.session_id && (
+          <TagsContainer type={3} sessionId={selectedQuack.session_id} />
+        )}
         <TextField
           value={textFieldContent}
           onChange={(e) => setTextFieldContent(e.target.value)}
@@ -173,7 +175,7 @@ const RubberDuckChat = () => {
             height: "80%",
           }}
         />
-        
+
         <Box
           sx={{
             display: "flex-inline",

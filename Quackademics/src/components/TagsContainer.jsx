@@ -9,6 +9,7 @@ import {
   DialogTitle,
   TextField,
 } from "@mui/material";
+import { HexColorPicker } from "react-colorful";
 
 import supabase from "../libs/supabaseAdmin";
 
@@ -21,6 +22,8 @@ const TagsContainer = (props) => {
   const [open, setOpen] = useState(false);
   const [tags, setTags] = useState([]);
   const [sessionTags, setSessionTags] = useState([]);
+  const [newTagColor, setNewTagColor] = useState("#aabbcc");
+  const [newTagName, setNewTagName] = useState(null);
 
   const fetchSessionTagIds = async () => {
     const { data, error } = await supabase
@@ -85,6 +88,19 @@ const TagsContainer = (props) => {
     }
   };
 
+  const createTag = async () => {
+    const { data, error } = await supabase
+      .from("tags")
+      .insert([{ tag_name: newTagName, user_id: user, color: newTagColor }])
+      .select();
+
+    if (error) {
+      console.error("Error deleting data:", error);
+    }
+
+    return data;
+  };
+
   useEffect(() => {
     const loadTags = async () => {
       const tagIds = await fetchSessionTagIds();
@@ -130,6 +146,26 @@ const TagsContainer = (props) => {
 
     const updatedTags = await fetchSessionTags();
     setTags(updatedTags);
+  };
+
+  const handleNewTagChange = (event) => {
+    setNewTagName(event.target.value);
+  };
+
+  const handleAddNewTagClick = async () => {
+    const newTag = await createTag();
+
+    const addedTag = await addExistingTag(newTag[0].tag_id);
+    if (addedTag) {
+      const tagIds = await fetchSessionTagIds();
+      setSessionTags(tagIds);
+
+      const updatedTags = await fetchSessionTags();
+      setTags(updatedTags);
+    }
+
+    setNewTagColor("#aabbcc")
+    setNewTagName("")
   };
 
   return (
@@ -220,7 +256,20 @@ const TagsContainer = (props) => {
                 return null;
               }
             })}
-            <Button>+</Button>
+          </Box>
+          <p>Create New Tag</p>
+          <HexColorPicker color={newTagColor} onChange={setNewTagColor} />
+          <Box sx={{ display: "flex" }}>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="New Tag Name"
+              value={newTagName}
+              fullWidth
+              variant="standard"
+              onChange={handleNewTagChange}
+            />
+            <Button onClick={handleAddNewTagClick}>+</Button>
           </Box>
         </DialogContent>
         <DialogActions>
