@@ -38,6 +38,11 @@ const AssignmentTracker = () => {
   };
 
   const addAssignment = async () => {
+    if (newAssignment.title.trim() === '' || newAssignment.dueDate === '') {
+      alert('Please fill out both the Assignment Title and Due Date fields.');
+      return;
+    }
+
     const { data, error } = await supabase
       .from('assignments')
       .insert([
@@ -169,7 +174,8 @@ const AssignmentTracker = () => {
                   <div
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    style={{ minHeight: '100px', padding: '10px', backgroundColor: '#f0f0f0' }}
+                    style={{ minHeight: '100px', maxHeight: '375px',
+                      overflowY: 'auto', padding: '10px', backgroundColor: '#f0f0f0' }}
                   >
                     {sortAssignments(status).map((assignment, index) => (
                       <Draggable key={assignment.assignment_id} draggableId={assignment.assignment_id.toString()} index={index}>
