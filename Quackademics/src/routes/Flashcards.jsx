@@ -1,4 +1,4 @@
-import FlashcardsMenu from '../components/FlashcardsMenu';
+import FlashcardsMenu from '../components/Flashcards/FlashcardsMenu';
 
 const Flashcards = () => {
     
