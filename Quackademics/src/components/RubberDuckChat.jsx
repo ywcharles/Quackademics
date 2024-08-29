@@ -129,6 +129,7 @@ const RubberDuckChat = () => {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
         gap: 5,
         height: "80vh",
         width: "100vh",
@@ -160,7 +161,7 @@ const RubberDuckChat = () => {
           height: 400,
         }}
       >
-        <TagsContainer sessionId = {selectedQuack? selectedQuack.session_id : 0}></TagsContainer>
+        <TagsContainer type = {3} sessionId = {selectedQuack? selectedQuack.session_id : 0}></TagsContainer>
         <TextField
           value={textFieldContent}
           onChange={(e) => setTextFieldContent(e.target.value)}
