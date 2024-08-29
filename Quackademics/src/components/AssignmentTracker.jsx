@@ -124,7 +124,7 @@ const AssignmentTracker = () => {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>Assignment Tracker</Typography>
+      <Typography variant="h4" gutterBottom style={{paddingTop: '8%'}}>Assignment Tracker</Typography>
       <Card>
         <CardContent>
           <Grid container spacing={2}>
