@@ -153,19 +153,21 @@ const TagsContainer = (props) => {
   };
 
   const handleAddNewTagClick = async () => {
-    const newTag = await createTag();
+    if (newTagName !== "") {
+      const newTag = await createTag();
 
-    const addedTag = await addExistingTag(newTag[0].tag_id);
-    if (addedTag) {
-      const tagIds = await fetchSessionTagIds();
-      setSessionTags(tagIds);
+      const addedTag = await addExistingTag(newTag[0].tag_id);
+      if (addedTag) {
+        const tagIds = await fetchSessionTagIds();
+        setSessionTags(tagIds);
 
-      const updatedTags = await fetchSessionTags();
-      setTags(updatedTags);
+        const updatedTags = await fetchSessionTags();
+        setTags(updatedTags);
+      }
+
+      setNewTagColor("#aabbcc");
+      setNewTagName("");
     }
-
-    setNewTagColor("#aabbcc")
-    setNewTagName("")
   };
 
   return (
@@ -173,22 +175,26 @@ const TagsContainer = (props) => {
       sx={{
         display: "flex",
         width: "100%",
-        alignItems: "center",
+        height: "10%",
         justifyContent: "center",
         backgroundColor: "white",
         color: "black",
         marginX: 2,
+        paddingY: 2,
         borderRadius: 2,
       }}
     >
-      <Box sx={{ marginX: 2 }} onClick={handleClickOpen}>
+      <Box sx={{ marginX: 2, width: "15%"}} onClick={handleClickOpen}>
         Tags:
       </Box>
+
       <Box
         sx={{
           display: "flex",
           gap: 1,
-          width: "100%",
+          width: "85%",
+          flexWrap: "wrap",
+          overflowY: "scroll",
         }}
       >
         {tags.map((t, index) => {
@@ -206,11 +212,24 @@ const TagsContainer = (props) => {
           }
         })}
       </Box>
-      <Button onClick={handleClickOpen}>+</Button>
-      <Dialog open={open} onClose={handleClose}>
+
+      <Button sx={{width:"5%"}} onClick={handleClickOpen}>+</Button>
+      
+      <Dialog
+        sx={{
+          "& .MuiDialog-paper": {
+            width: "30%",
+            height: "80%",
+          },
+        }}
+        open={open}
+        onClose={handleClose}
+      >
         <DialogTitle>Tags</DialogTitle>
         <DialogContent>
-          <Box>
+          <Box
+            sx={{ display: "flex", gap: 1, width: "100%", flexWrap: "wrap" }}
+          >
             {tags.map((t, index) => {
               if (sessionTags.includes(t.tag_id)) {
                 return (
@@ -234,7 +253,9 @@ const TagsContainer = (props) => {
             })}
           </Box>
           <p>Add Tags</p>
-          <Box>
+          <Box
+            sx={{ display: "flex", gap: 1, width: "100%", flexWrap: "wrap" }}
+          >
             {tags.map((t, index) => {
               if (!sessionTags.includes(t.tag_id)) {
                 return (

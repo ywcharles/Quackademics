@@ -157,8 +157,8 @@ const RubberDuckChat = () => {
           padding: 2,
           borderRadius: 2,
           width: "100%",
-          maxWidth: 600,
-          height: 400,
+          maxWidth: 1000,
+          height: "80%",
         }}
       >
         {selectedQuack && selectedQuack.session_id && (
@@ -173,6 +173,7 @@ const RubberDuckChat = () => {
             borderRadius: 2,
             width: "100%",
             height: "80%",
+            overflowY: "scroll"
           }}
         />
 
