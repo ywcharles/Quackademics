@@ -56,6 +56,7 @@ function Navbar() {
             <Button href={loginPage.href} color="inherit">
               Login
             </Button>
+            <Box sx={{ flexGrow: 1 }} />
             <NotificationPopover />
           </Toolbar>
         </AppBar>
