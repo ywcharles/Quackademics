@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IconButton, Badge, Popover, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { IconButton, Badge, Popover, Typography, List, ListItem, ListItemText, Divider, Box } from '@mui/material';
 import { Bell } from 'lucide-react';
 import supabase from "../libs/supabaseAdmin";
 
@@ -77,25 +77,36 @@ const NotificationPopover = () => {
           vertical: 'top',
           horizontal: 'right',
         }}
+        PaperProps={{
+          style: {
+            width: '300px',
+            padding: '15px',
+            borderRadius: '10px',
+            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+          },
+        }}
       >
-        <Typography variant="h6" style={{ padding: '10px' }}>Upcoming Assignments</Typography>
+        <Typography variant="h6" style={{ fontWeight: 'bold', marginBottom: '10px' }}>Upcoming Assignments</Typography>
         <List>
           {Object.keys(dueAssignments).length > 0 ? (
             Object.keys(dueAssignments).map((day) => (
-              <React.Fragment key={day}>
-                <Typography variant="subtitle1" style={{ paddingLeft: '10px', paddingTop: '10px' }}>{day}:</Typography>
+              <Box key={day} style={{ marginBottom: '10px' }}>
+                <Typography variant="subtitle1" style={{ fontWeight: 'bold', color: '#333' }}>{day}:</Typography>
+                <Divider style={{ margin: '5px 0' }} />
                 {dueAssignments[day].map((assignment) => (
-                  <ListItem key={assignment.assignment_id}>
+                  <ListItem key={assignment.assignment_id} disableGutters>
                     <ListItemText
                       primary={assignment.title}
                       secondary={`Due: ${assignment.due_date}`}
+                      primaryTypographyProps={{ style: { fontSize: '14px', fontWeight: '500', color: '#555' } }}
+                      secondaryTypographyProps={{ style: { fontSize: '12px', color: '#888' } }}
                     />
                   </ListItem>
                 ))}
-              </React.Fragment>
+              </Box>
             ))
           ) : (
-            <Typography variant="body2" style={{ padding: '10px' }}>No assignments due in the next 7 days.</Typography>
+            <Typography variant="body2" style={{ padding: '10px', color: '#888' }}>No assignments due in the next 7 days.</Typography>
           )}
         </List>
       </Popover>
