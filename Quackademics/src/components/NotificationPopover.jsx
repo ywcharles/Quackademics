@@ -34,8 +34,10 @@ const NotificationPopover = () => {
   };
 
   const groupAssignmentsByDay = (assignments) => {
-    return assignments.reduce((acc, assignment) => {
-      const dueDate = new Date(assignment.due_date);
+    const sortedAssignments = assignments.sort((a, b) => new Date(a.due_date) - new Date(b.due_date));
+
+    return sortedAssignments.reduce((acc, assignment) => {
+      const dueDate = new Date(assignment.due_date + 'T00:00:00');
       const dayOfWeek = dueDate.toLocaleDateString('en-US', { weekday: 'long' });
 
       if (!acc[dayOfWeek]) {
