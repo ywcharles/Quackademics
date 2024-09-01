@@ -5,8 +5,7 @@ import { useUserSessionStore } from "../../stores/UserSessionStore";
 import { signInUser } from "../../supabase/AccountSupabase";
 
 const LoginCard = () => {
-  const userId = useUserSessionStore((state) => state.userId);
-  const setUserId = useUserSessionStore((state) => state.setUserId);
+  const { userId, setUserId } = useUserSessionStore();
 
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");

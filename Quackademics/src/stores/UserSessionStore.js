@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
 export const useUserSessionStore = create((set) => ({
-  userId: "",
+  userId: null,
   setUserId: (userId) => set(() => ({ userId: userId })),
 }));
