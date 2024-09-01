@@ -5,7 +5,6 @@ import { useUserSessionStore } from "../../stores/UserSessionStore";
 import { signInUser } from "../../supabase/AccountSupabase";
 
 const LoginCard = () => {
-  const userId = useUserSessionStore((state) => state.userId);
   const setUserId = useUserSessionStore((state) => state.setUserId);
 
   const [username, setUsername] = React.useState("");
@@ -14,7 +13,7 @@ const LoginCard = () => {
   const handleLoginClick = async () => {
     console.log("Username", username, "Password", password);
     const data = await signInUser(username, password);
-    if (data !== null) {
+    if (data !== null || data !== false) {
       console.log(data);
       setUserId(data);
     } else {
