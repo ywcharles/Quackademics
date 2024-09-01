@@ -5,20 +5,20 @@ import { useUserSessionStore } from "../../stores/UserSessionStore";
 import { signInUser } from "../../supabase/AccountSupabase";
 
 const LoginCard = () => {
+  const userId = useUserSessionStore((state) => state.userId);
   const setUserId = useUserSessionStore((state) => state.setUserId);
 
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   const handleLoginClick = async () => {
-    console.log("Username", username, "Password", password);
-    const data = await signInUser(username, password);
-    if (data !== null || data !== false) {
-      console.log(data);
-      setUserId(data);
-    } else {
-      console.log("login doesnt work");
-    }
+    await signInUser(username, password).then((result) => {
+      if (result !== null) {
+        setUserId(result);
+      } else {
+        alert("Login unsuccessful");
+      }
+    });
   };
 
   return (
@@ -34,6 +34,7 @@ const LoginCard = () => {
         gap: 2,
       }}
     >
+      <div>user{userId}</div>
       <Box
         sx={{
           width: "100%",

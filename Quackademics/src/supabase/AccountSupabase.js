@@ -32,13 +32,21 @@ export const signInUser = async (username, password) => {
     .select()
     .eq("username", username);
 
-  if (error) return false;
+  if (error !== null) return null;
 
-  if (data.length === 1) {
-    if (data.password_hash === hashPassword(password)) {
-      return data.user_id;
+  if (data.length !== 0) {
+    const user = data[0];
+    const result = await bcryptjs.compare(password, user.password_hash);
+    // if (err) {
+    //   return null;
+    // }
+    if (result === true) {
+      console.log("found");
+      return user.user_id;
+    } else {
+      return null;
     }
+  } else {
+    return null;
   }
-
-  return false;
 };
