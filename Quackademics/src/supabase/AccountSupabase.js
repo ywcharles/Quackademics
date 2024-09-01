@@ -26,24 +26,19 @@ export const addUser = async (username, email, password, profilePicture) => {
   if (error) return error;
 };
 
-export const checkIfUserExists = async (username) => {
+export const signInUser = async (username, password) => {
   const { data, error } = await supabase
     .from("users")
     .select()
-    .eq("username", "asdffffffffff");
+    .eq("username", username);
 
-  console.log("data", data);
-  console.log(data.length !== 0);
-  return data.length !== 0;
-};
+  if (error) return false;
 
-export const validatePassword = async (password) => {
-  const { data, error } = await supabase
-    .from("users")
-    .select()
-    .eq("password", "adsf");
-};
+  if (data.length === 1) {
+    if (data.password_hash === hashPassword(password)) {
+      return data.user_id;
+    }
+  }
 
-export const signInUser = async (user_id, password) => {
-  const { error } = await supabase.from("users");
+  return false;
 };
