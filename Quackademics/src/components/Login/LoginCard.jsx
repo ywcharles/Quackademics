@@ -2,10 +2,7 @@ import React from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import SignUp from "./SignUp";
 import { useUserSessionStore } from "../../stores/UserSessionStore";
-import {
-  checkIfUserExists,
-  validatePassword,
-} from "../../supabase/AccountSupabase";
+import { signInUser } from "../../supabase/AccountSupabase";
 
 const LoginCard = () => {
   const userId = useUserSessionStore((state) => state.userId);
@@ -16,10 +13,10 @@ const LoginCard = () => {
 
   const handleLoginClick = async () => {
     console.log("Username", username, "Password", password);
-    if (await checkIfUserExists(username)) {
-      await validatePassword(password);
-      // setUserId();
-      console.log("login works");
+    const data = await signInUser(username, password);
+    if (data !== null) {
+      console.log(data);
+      setUserId(data);
     } else {
       console.log("login doesnt work");
     }
