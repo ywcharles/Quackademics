@@ -22,9 +22,11 @@ import {
   linkDialogPlugin,
   tablePlugin,
   InsertTable,
+  BlockTypeSelect,
 } from "@mdxeditor/editor";
 import '@mdxeditor/editor/style.css'
 import { Box } from "@mui/material";
+
 
 
 const Editor = () => {
@@ -36,7 +38,7 @@ const Editor = () => {
         height: "90vh",
       }}>
       <MDXEditor
-        markdown="# Hello world"
+        markdown='#'
         plugins={[
           headingsPlugin(), 
           linkDialogPlugin(),
@@ -51,6 +53,7 @@ const Editor = () => {
                 <>
                     <UndoRedo />
                     <BoldItalicUnderlineToggles />
+                    <BlockTypeSelect />
                     <CreateLink />
                     <ListsToggle />
                     <InsertTable />
