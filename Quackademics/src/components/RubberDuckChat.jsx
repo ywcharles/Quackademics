@@ -10,8 +10,9 @@ import {
 } from "@mui/material";
 
 import React, { useEffect, useState } from "react";
-
 import supabase from "../libs/supabaseAdmin";
+
+import TagsContainer from "./TagsContainer";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -23,8 +24,10 @@ const RubberDuckChat = () => {
   const [textFieldContent, setTextFieldContent] = useState("");
   const [userQuacks, setUserQuacks] = useState([]);
   const [selectedQuack, setSelectedQuack] = useState(null);
+
   // TODO: Able to fetch userId
   const user = 42069;
+
   const date = new Date();
   const currDateTime = date.toISOString().slice(0, 19).replace("T", " ");
 
@@ -104,8 +107,6 @@ const RubberDuckChat = () => {
   const handleSelectClick = (quack) => {
     setSelectedQuack(quack);
     setTextFieldContent(quack.session_text);
-
-    console.log(sessionId);
   };
 
   const handleClear = () => {
@@ -128,6 +129,7 @@ const RubberDuckChat = () => {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
         gap: 5,
         height: "80vh",
         width: "100vh",
@@ -155,10 +157,13 @@ const RubberDuckChat = () => {
           padding: 2,
           borderRadius: 2,
           width: "100%",
-          maxWidth: 600,
-          height: 400,
+          maxWidth: 1000,
+          height: "80%",
         }}
       >
+        {selectedQuack && selectedQuack.session_id && (
+          <TagsContainer type={3} sessionId={selectedQuack.session_id} />
+        )}
         <TextField
           value={textFieldContent}
           onChange={(e) => setTextFieldContent(e.target.value)}
@@ -168,8 +173,10 @@ const RubberDuckChat = () => {
             borderRadius: 2,
             width: "100%",
             height: "80%",
+            overflowY: "scroll"
           }}
         />
+
         <Box
           sx={{
             display: "flex-inline",
