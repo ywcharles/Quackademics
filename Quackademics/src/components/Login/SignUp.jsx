@@ -3,16 +3,10 @@ import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import React from "react";
-import bcryptjs from "bcryptjs";
-import { addUser } from "../../supabase/AccountSupabase";
+import { addUser, hashPassword } from "../../supabase/AccountSupabase";
 import ProfilePictureSetUp from "../Profile/ProfilePictureCard";
 
 const SignUp = () => {
-  async function hashPassword(password) {
-    const salt = await bcryptjs.genSalt(10);
-    return await bcryptjs.hash(password, salt);
-  }
-
   const [open, setOpen] = React.useState(false);
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
