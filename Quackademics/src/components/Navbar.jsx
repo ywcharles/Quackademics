@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { loginPage, navComponents } from "../util/Navbar.util";
+import NotificationPopover from "./NotificationPopover.jsx";
 
 function Navbar() {
   return (
@@ -55,6 +56,8 @@ function Navbar() {
             <Button href={loginPage.href} color="inherit">
               Login
             </Button>
+            <Box sx={{ flexGrow: 1 }} />
+            <NotificationPopover />
           </Toolbar>
         </AppBar>
       </Box>
