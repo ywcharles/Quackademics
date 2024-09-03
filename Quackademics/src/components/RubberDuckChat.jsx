@@ -13,6 +13,7 @@ import React, { useEffect, useState } from "react";
 import supabase from "../libs/supabaseAdmin";
 
 import TagsContainer from "./TagsContainer";
+import {useUserSessionStore} from "../stores/UserSessionStore"
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -24,9 +25,7 @@ const RubberDuckChat = () => {
   const [textFieldContent, setTextFieldContent] = useState("");
   const [userQuacks, setUserQuacks] = useState([]);
   const [selectedQuack, setSelectedQuack] = useState(null);
-
-  // TODO: Able to fetch userId
-  const user = 42069;
+  const user = useUserSessionStore((state) => state.userId);
 
   const date = new Date();
   const currDateTime = date.toISOString().slice(0, 19).replace("T", " ");
@@ -173,7 +172,7 @@ const RubberDuckChat = () => {
             borderRadius: 2,
             width: "100%",
             height: "80%",
-            overflowY: "scroll"
+            overflowY: "scroll",
           }}
         />
 

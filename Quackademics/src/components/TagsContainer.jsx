@@ -12,10 +12,11 @@ import {
 import { HexColorPicker } from "react-colorful";
 
 import supabase from "../libs/supabaseAdmin";
+import { useUserSessionStore } from "../stores/UserSessionStore";
 
 const TagsContainer = (props) => {
   //TO DO - Fetch user
-  const user = 42069;
+  const user = useUserSessionStore((state) => state.userId);
   const type = props.type;
   const activity = props.sessionId;
 
