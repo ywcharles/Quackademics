@@ -6,10 +6,21 @@ export const useUserSessionStore = create(
     (set) => ({
       userId: null,
       setUserId: (userId) => set(() => ({ userId: userId })),
+
+      username: null,
+      setUsername: (username) => set(() => ({ username: username })),
+
+      profilePicture: null,
+      setProfilePicture: (profilePicture) =>
+        set(() => ({ profilePicture: profilePicture })),
+
+      loginSuccess: false,
+      setLoginSuccess: (loginSuccess) =>
+        set(() => ({ loginSuccess: loginSuccess })),
     }),
     {
-      name: "user-session-store", 
-      getStorage: () => localStorage, 
-    }
-  )
+      name: "user-session-store",
+      getStorage: () => localStorage,
+    },
+  ),
 );
