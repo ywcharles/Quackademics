@@ -1,5 +1,5 @@
 import "./App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Flashcards from "./routes/Flashcards";
 import Pomodoro from "./routes/Pomodoro";
 import Profile from "./routes/Profile";
@@ -15,6 +15,7 @@ function App() {
     <>
       <Navbar />
       <BrowserRouter basename="/">
+        <Navigate to="/home" />
         <Routes>
           <Route exact path="/home" element={<Home />} />
 
