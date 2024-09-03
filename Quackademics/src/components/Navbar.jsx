@@ -9,8 +9,16 @@ import {
 } from "@mui/material";
 import { loginPage, navComponents } from "../util/Navbar.util";
 import NotificationPopover from "./NotificationPopover.jsx";
+import { useUserSessionStore } from "../stores/UserSessionStore.js";
 
 function Navbar() {
+  const userId = useUserSessionStore((state) => state.userId);
+  const setUserId = useUserSessionStore((state) => state.setUserId);
+
+  const onSignOutClick = () => {
+    setUserId("");
+  };
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -53,9 +61,15 @@ function Navbar() {
                 </Button>
               </MenuItem>
             ))}
-            <Button href={loginPage.href} color="inherit">
-              Login
-            </Button>
+            {userId === null || userId === "" ? (
+              <Button href={loginPage.href} color="inherit">
+                Login
+              </Button>
+            ) : (
+              <Button href={"/home"} color="inherit" onClick={onSignOutClick}>
+                Sign Out
+              </Button>
+            )}
             <Box sx={{ flexGrow: 1 }} />
             <NotificationPopover />
           </Toolbar>

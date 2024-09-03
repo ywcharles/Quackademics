@@ -15,7 +15,7 @@ const LoginCard = () => {
     await signInUser(username, password).then((result) => {
       if (result !== null) {
         setUserId(result);
-        console.log(userId)
+        console.log(userId);
       } else {
         alert("Login unsuccessful");
       }
@@ -35,7 +35,6 @@ const LoginCard = () => {
         gap: 2,
       }}
     >
-      <div>user{userId}</div>
       <Box
         sx={{
           width: "100%",
