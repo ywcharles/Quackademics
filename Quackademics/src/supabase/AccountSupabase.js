@@ -10,6 +10,14 @@ const getCurrentTimestamp = () => {
   return new Date().toISOString().slice(0, 19).replace("T", " ");
 };
 
+export const getUsername = async (userId) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select()
+    .eq("user_id", userId);
+  return data[0].username.toString();
+};
+
 export const addUser = async (username, email, password, profilePicture) => {
   const { error } = await supabase.from("users").insert([
     {
@@ -37,11 +45,12 @@ export const signInUser = async (username, password) => {
   if (data.length !== 0) {
     const user = data[0];
     const result = await bcryptjs.compare(password, user.password_hash);
-    // if (err) {
-    //   return null;
-    // }
     if (result === true) {
-      return user.user_id;
+      return {
+        uid: user.user_id,
+        username: user.username,
+        pfp: user.profile_picture,
+      };
     } else {
       return null;
     }
