@@ -1,12 +1,11 @@
 import React from "react";
-import Editor from "../components/Notes/Editor";
+import NotesDoc from "../components/Notes/NotesDoc";
 import { Box } from "@mui/material";
 
 const Notes = () => {
   return (
     <div>
-      Notes
-      <Editor />
+      <NotesDoc />
     </div>
   );
 };
