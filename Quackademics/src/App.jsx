@@ -15,8 +15,8 @@ function App() {
     <>
       <Navbar />
       <BrowserRouter basename="/">
-        <Navigate to="/home" />
         <Routes>
+          <Route exact path="/" element={<Navigate to="/home" replace />} />
           <Route exact path="/home" element={<Home />} />
 
           <Route exact path="/flashcards" element={<Flashcards />} />
