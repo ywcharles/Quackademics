@@ -41,7 +41,6 @@ export const signInUser = async (username, password) => {
     //   return null;
     // }
     if (result === true) {
-      console.log("found");
       return user.user_id;
     } else {
       return null;
