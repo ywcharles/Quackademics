@@ -3,6 +3,7 @@ import { Box, Typography, TextField, Button } from "@mui/material";
 import SignUp from "./SignUp";
 import { useUserSessionStore } from "../../stores/UserSessionStore";
 import { signInUser } from "../../supabase/AccountSupabase";
+import { useNavigate } from "react-router-dom";
 
 const LoginCard = () => {
   const userId = useUserSessionStore((state) => state.userId);
@@ -11,11 +12,13 @@ const LoginCard = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
+  const navigate = useNavigate();
+
   const handleLoginClick = async () => {
     await signInUser(username, password).then((result) => {
       if (result !== null) {
         setUserId(result);
-        console.log(userId);
+        navigate("/home");
       } else {
         alert("Login unsuccessful");
       }
