@@ -1,21 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import SignUp from "./SignUp";
 import { useUserSessionStore } from "../../stores/UserSessionStore";
-import { signInUser } from "../../supabase/AccountSupabase";
+import { getUsername, signInUser } from "../../supabase/AccountSupabase";
+import { useNavigate } from "react-router-dom";
 
 const LoginCard = () => {
   const userId = useUserSessionStore((state) => state.userId);
   const setUserId = useUserSessionStore((state) => state.setUserId);
 
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const setProfilePicture = useUserSessionStore(
+    (state) => state.setProfilePicture,
+  );
+  const setGlobalUsername = useUserSessionStore((state) => state.setUsername);
+  const setLoginSuccess = useUserSessionStore((state) => state.setLoginSuccess);
+  const setShowWelcome = useUserSessionStore((state) => state.setShowWelcome);
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLoginClick = async () => {
-    await signInUser(username, password).then((result) => {
+    await signInUser(username, password).then(async (result) => {
       if (result !== null) {
-        setUserId(result);
-        console.log(userId)
+        console.log(result);
+        setLoginSuccess(true);
+        setShowWelcome(true);
+        setUserId(result.uid);
+        setGlobalUsername(result.username);
+        setProfilePicture(result.pfp);
+        navigate("/home");
       } else {
         alert("Login unsuccessful");
       }
@@ -35,7 +50,6 @@ const LoginCard = () => {
         gap: 2,
       }}
     >
-      <div>user{userId}</div>
       <Box
         sx={{
           width: "100%",
