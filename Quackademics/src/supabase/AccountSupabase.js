@@ -46,6 +46,10 @@ export const signInUser = async (username, password) => {
     const user = data[0];
     const result = await bcryptjs.compare(password, user.password_hash);
     if (result === true) {
+      const { errorLogin } = await supabase
+        .from("users")
+        .update({ last_login: getCurrentTimestamp() })
+        .eq("user_id", user.user_id);
       return {
         uid: user.user_id,
         username: user.username,
