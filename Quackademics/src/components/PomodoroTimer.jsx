@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Typography, Box } from '@mui/material';
+import { Button, Typography, Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { SentimentVeryDissatisfied, SentimentNeutral, SentimentSatisfied } from '@mui/icons-material';
 import { timeOptions } from '../util/Pomodoro.util';
 
 const PomodoroTimer = () => {
@@ -7,6 +8,8 @@ const PomodoroTimer = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
   const [selectedTime, setSelectedTime] = useState(25);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(null);
 
   useEffect(() => {
     let id;
@@ -18,7 +21,7 @@ const PomodoroTimer = () => {
     } else if (timeLeft === 0 && isRunning) {
       clearInterval(intervalId);
       setIsRunning(false);
-      alert('Time is up!');
+      setOpenDialog(true);
     }
     return () => clearInterval(id);
   }, [isRunning, timeLeft]);
@@ -44,6 +47,12 @@ const PomodoroTimer = () => {
     if (isRunning) {
       setIsRunning(false);
     }
+  };
+
+  const handleRatingSelect = (rating) => {
+    setSelectedRating(rating);
+    setOpenDialog(false);
+    console.log('Selected Rating:', rating);
   };
 
   return (
@@ -87,6 +96,26 @@ const PomodoroTimer = () => {
           </Button>
         ))}
       </Box>
+
+      <Dialog 
+        open={openDialog} 
+        onClose={() => {}}
+        disableEscapeKeyDown 
+        disableBackdropClick
+      >
+        <DialogTitle>Rate Your Pomodoro Session</DialogTitle>
+        <DialogContent sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+          <IconButton onClick={() => handleRatingSelect('unhappy')}>
+            <SentimentVeryDissatisfied fontSize="large" />
+          </IconButton>
+          <IconButton onClick={() => handleRatingSelect('neutral')}>
+            <SentimentNeutral fontSize="large" />
+          </IconButton>
+          <IconButton onClick={() => handleRatingSelect('happy')}>
+            <SentimentSatisfied fontSize="large" />
+          </IconButton>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
