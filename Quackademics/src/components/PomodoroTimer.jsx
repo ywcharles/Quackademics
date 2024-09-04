@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button, Typography, Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { SentimentVeryDissatisfied, SentimentNeutral, SentimentSatisfied } from '@mui/icons-material';
 import { timeOptions } from '../util/Pomodoro.util';
+import supabase from "../libs/supabaseAdmin";
+
+const user_id = 35;
 
 const PomodoroTimer = () => {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
@@ -49,10 +52,40 @@ const PomodoroTimer = () => {
     }
   };
 
-  const handleRatingSelect = (rating) => {
+  const calculateCycleCount = (rating) => {
+    const baseValue = selectedTime / 5;
+    let multiplier;
+
+    if (rating === 'unhappy') {
+      multiplier = 1;
+    } else if (rating === 'neutral') {
+      multiplier = 2;
+    } else if (rating === 'happy') {
+      multiplier = 3;
+    }
+
+    return baseValue * multiplier;
+  };
+
+  const handleRatingSelect = async (rating) => {
     setSelectedRating(rating);
     setOpenDialog(false);
-    console.log('Selected Rating:', rating);
+
+    const cycleCount = calculateCycleCount(rating);
+
+    const { error } = await supabase.from('pomodoro_sessions').insert([
+      {
+        user_id,
+        cycle_count: cycleCount,
+        created_at: new Date()
+      }
+    ]);
+
+    if (error) {
+      console.error('Error inserting session:', error);
+    } else {
+      console.log('Session saved successfully!');
+    }
   };
 
   return (
