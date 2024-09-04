@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { IconButton, Badge, Popover, Typography, List, ListItem, ListItemText, Divider, Box } from '@mui/material';
 import { Bell } from 'lucide-react';
 import supabase from "../libs/supabaseAdmin";
-
-const user_id = 35;
+import {useUserSessionStore} from "../stores/UserSessionStore";
 
 const NotificationPopover = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [dueAssignments, setDueAssignments] = useState({});
+  const user_id = useUserSessionStore((state) => state.userId);
 
   useEffect(() => {
     fetchDueAssignments();

@@ -12,8 +12,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { columns } from "../util/AssignmentTracker.util";
 import supabase from "../libs/supabaseAdmin";
-
-const user_id = 35;
+import {useUserSessionStore} from "../stores/UserSessionStore";
 
 const AssignmentTracker = () => {
   const [assignments, setAssignments] = useState([]);
@@ -27,6 +26,7 @@ const AssignmentTracker = () => {
     "In Progress": "asc",
     Done: "asc",
   });
+  const user_id = useUserSessionStore((state) => state.userId);
 
   useEffect(() => {
     fetchAssignments();
