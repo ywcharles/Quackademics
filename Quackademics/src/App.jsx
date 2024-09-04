@@ -1,4 +1,5 @@
 import "./App.css";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Flashcards from "./routes/Flashcards";
 import Pomodoro from "./routes/Pomodoro";
@@ -14,26 +15,26 @@ import { useUserSessionStore } from "./stores/UserSessionStore";
 
 function App() {
   const username = useUserSessionStore((state) => state.username);
-  const loginSuccess = useUserSessionStore((state) => state.loginSuccess);
+  const showWelcome = useUserSessionStore((state) => state.showWelcome);
   const profilePicture = useUserSessionStore((state) => state.profilePicture);
 
-  const setLoginSuccess = useUserSessionStore((state) => state.setLoginSuccess);
+  const setShowWelcome = useUserSessionStore((state) => state.setShowWelcome);
 
-  const handleClose = (event, reason) => {
+  const handleWelcomeClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setLoginSuccess(false);
+
+    setShowWelcome(false);
   };
 
   return (
     <>
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        open={loginSuccess}
-        onClose={handleClose}
-        autoHideDuration={2000}
-        // TransitionComponent={<Slide direction="up" />}
+        open={showWelcome}
+        onClose={handleWelcomeClose}
+        autoHideDuration={1000}
         message={
           <h3>
             <img
