@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Typography, Box } from '@mui/material';
+import { Button, Typography, Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { SentimentVeryDissatisfied, SentimentNeutral, SentimentSatisfied } from '@mui/icons-material';
 import { timeOptions } from '../util/Pomodoro.util';
+import supabase from "../libs/supabaseAdmin";
+
+const user_id = 35;
 
 const PomodoroTimer = () => {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
   const [selectedTime, setSelectedTime] = useState(25);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedRating, setSelectedRating] = useState(null);
 
   useEffect(() => {
     let id;
@@ -18,7 +24,7 @@ const PomodoroTimer = () => {
     } else if (timeLeft === 0 && isRunning) {
       clearInterval(intervalId);
       setIsRunning(false);
-      alert('Time is up!');
+      setOpenDialog(true);
     }
     return () => clearInterval(id);
   }, [isRunning, timeLeft]);
@@ -43,6 +49,42 @@ const PomodoroTimer = () => {
     setTimeLeft(minutes * 60);
     if (isRunning) {
       setIsRunning(false);
+    }
+  };
+
+  const calculateCycleCount = (rating) => {
+    const baseValue = selectedTime / 5;
+    let multiplier;
+
+    if (rating === 'unhappy') {
+      multiplier = 1;
+    } else if (rating === 'neutral') {
+      multiplier = 2;
+    } else if (rating === 'happy') {
+      multiplier = 3;
+    }
+
+    return baseValue * multiplier;
+  };
+
+  const handleRatingSelect = async (rating) => {
+    setSelectedRating(rating);
+    setOpenDialog(false);
+
+    const cycleCount = calculateCycleCount(rating);
+
+    const { error } = await supabase.from('pomodoro_sessions').insert([
+      {
+        user_id,
+        cycle_count: cycleCount,
+        created_at: new Date()
+      }
+    ]);
+
+    if (error) {
+      console.error('Error inserting session:', error);
+    } else {
+      console.log('Session saved successfully!');
     }
   };
 
@@ -87,6 +129,26 @@ const PomodoroTimer = () => {
           </Button>
         ))}
       </Box>
+
+      <Dialog 
+        open={openDialog} 
+        onClose={() => {}}
+        disableEscapeKeyDown 
+        disableBackdropClick
+      >
+        <DialogTitle>Rate Your Pomodoro Session</DialogTitle>
+        <DialogContent sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+          <IconButton onClick={() => handleRatingSelect('unhappy')}>
+            <SentimentVeryDissatisfied fontSize="large" />
+          </IconButton>
+          <IconButton onClick={() => handleRatingSelect('neutral')}>
+            <SentimentNeutral fontSize="large" />
+          </IconButton>
+          <IconButton onClick={() => handleRatingSelect('happy')}>
+            <SentimentSatisfied fontSize="large" />
+          </IconButton>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
