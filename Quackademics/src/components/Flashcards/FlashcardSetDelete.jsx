@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, Button, Typography} from "@mui/material";
 import supabase from "../../libs/supabaseAdmin";
 
-//TODO: Make page parse user_id
 const FlashcardSetDelete = ({close, set_id, refreshFlashcardSets, refreshAllFlashcards}) => {
     const deleteFlashcardSet = async () => {
         const {errorCards} = await supabase
