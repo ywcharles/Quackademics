@@ -18,7 +18,7 @@ function Navbar() {
 
   const onSignOutClick = () => {
     setLoginSuccess(false);
-    setUserId("");
+    setUserId(null);
   };
 
   return (
