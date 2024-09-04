@@ -14,6 +14,7 @@ const LoginCard = () => {
   );
   const setGlobalUsername = useUserSessionStore((state) => state.setUsername);
   const setLoginSuccess = useUserSessionStore((state) => state.setLoginSuccess);
+  const setShowWelcome = useUserSessionStore((state) => state.setShowWelcome);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +26,7 @@ const LoginCard = () => {
       if (result !== null) {
         console.log(result);
         setLoginSuccess(true);
+        setShowWelcome(true);
         setUserId(result.uid);
         setGlobalUsername(result.username);
         setProfilePicture(result.pfp);

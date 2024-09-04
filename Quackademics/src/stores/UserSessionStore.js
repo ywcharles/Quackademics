@@ -17,6 +17,10 @@ export const useUserSessionStore = create(
       loginSuccess: false,
       setLoginSuccess: (loginSuccess) =>
         set(() => ({ loginSuccess: loginSuccess })),
+
+      showWelcome: false,
+      setShowWelcome: (showWelcome) =>
+        set(() => ({ showWelcome: showWelcome })),
     }),
     {
       name: "user-session-store",

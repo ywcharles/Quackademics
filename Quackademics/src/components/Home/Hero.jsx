@@ -1,7 +1,9 @@
 import React from "react";
 import { Box, Avatar, Typography, Button } from "@mui/material";
+import { useUserSessionStore } from "../../stores/UserSessionStore";
 
 const Hero = () => {
+  const loginSuccess = useUserSessionStore((state) => state.loginSuccess);
   return (
     <Box
       sx={{
@@ -35,9 +37,16 @@ const Hero = () => {
             gap: 2,
           }}
         >
-          <Button variant="contained" color="primary" sx={{width: "50%"}} href="/login">
-            Login
-          </Button>
+          {!loginSuccess && (
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{ width: "50%" }}
+              href="/login"
+            >
+              Login
+            </Button>
+          )}
         </Box>
       </Box>
 
