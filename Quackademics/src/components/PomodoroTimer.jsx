@@ -3,8 +3,7 @@ import { Button, Typography, Box, Dialog, DialogContent, DialogTitle, IconButton
 import { SentimentVeryDissatisfied, SentimentNeutral, SentimentSatisfied } from '@mui/icons-material';
 import { timeOptions } from '../util/Pomodoro.util';
 import supabase from "../libs/supabaseAdmin";
-
-const user_id = 35;
+import {useUserSessionStore} from "../stores/UserSessionStore"
 
 const PomodoroTimer = () => {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
@@ -13,6 +12,7 @@ const PomodoroTimer = () => {
   const [selectedTime, setSelectedTime] = useState(25);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedRating, setSelectedRating] = useState(null);
+  const user_id = useUserSessionStore((state) => state.userId);
 
   useEffect(() => {
     let id;
