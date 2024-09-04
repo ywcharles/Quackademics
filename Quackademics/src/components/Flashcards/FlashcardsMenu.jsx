@@ -11,6 +11,7 @@ import FlashcardSetEdit from "./FlashcardSetEdit";
 import FlashcardSetDelete from "./FlashcardSetDelete";
 import FlashcardsList from "./FlashcardsList";
 import supabase from "../../libs/supabaseAdmin";
+import {useUserSessionStore} from "../../stores/UserSessionStore"
 
 const FlashcardsMenu = () => {
     const [flashcardSets, setFlashcardSet] = useState([]);
@@ -24,6 +25,7 @@ const FlashcardsMenu = () => {
     const [createPromptOpen, setCreatePromptOpen] = useState(false);
     const [editPromptOpen, setEditPromptOpen] = useState(false);
     const [deletePromptOpen, setDeletePromptOpen] = useState(false);
+    const userId = useUserSessionStore((state) => state.userId);
 
     const rootElement = document.getElementById('root');
     rootElement.style.padding = "0";
@@ -91,6 +93,10 @@ const FlashcardsMenu = () => {
 
     const handleOpenDialog = (dialogType) => {
         if(dialogType === "create"){
+            if(userId === null){
+                alert("User login required for flashcard creation");
+                return;
+            }
             setCreatePromptOpen(!createPromptOpen);
         }
         else if (dialogType === "edit") {
@@ -105,8 +111,7 @@ const FlashcardsMenu = () => {
         const { data, error } = await supabase
         .from("flashcard_set")
         .select("set_name, set_id, tags")
-        //Hardcoded user_id for now
-        .eq("user_id", 42069)
+        .eq("user_id", userId)
         .order("set_name", { ascending: true });
     
         if (error) {
@@ -138,7 +143,7 @@ const FlashcardsMenu = () => {
     }
 
     const refreshFlashcardSets = async () => {
-        const data = await fetchFlashcardSets(42069);
+        const data = await fetchFlashcardSets(userId);
         setFlashcardSet(data);
         const searchValue = document.getElementById("search").value;
         if(searchValue != ''){
@@ -161,10 +166,9 @@ const FlashcardsMenu = () => {
         return;
     }
 
-    //Hardcoded user_id for now
     useEffect(() => {
         const loadData = async () => {
-            const setData = await fetchFlashcardSets(42069);
+            const setData = await fetchFlashcardSets(userId);
             const cardData = await fetchAllFlashcards(setData);
             setFlashcardSet(setData);
             setfilteredFlashcardSets(setData);
