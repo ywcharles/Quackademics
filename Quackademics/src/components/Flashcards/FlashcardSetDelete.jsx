@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Typography} from "@mui/material";
 import supabase from "../../libs/supabaseAdmin";
 
-const FlashcardSetDelete = ({close, set_id, refreshFlashcardSets, refreshAllFlashcards}) => {
+const FlashcardSetDelete = ({close, set_id, refreshFlashcardSets, refreshAllFlashcards, setCurrFlashcardSet, setTagsVisible}) => {
     const deleteFlashcardSet = async () => {
         const {errorCards} = await supabase
         .from("flashcards")
@@ -21,6 +21,8 @@ const FlashcardSetDelete = ({close, set_id, refreshFlashcardSets, refreshAllFlas
             console.error("Error deleting data:", errorCards);
         }
 
+        setCurrFlashcardSet([])
+        setTagsVisible("hidden")
         close();
         return [];
     };

@@ -141,95 +141,97 @@ const FlashcardsList = ({currFlashcardSet, currFlashcard, setCard, set_id, refre
         return [];
     }
 
-    if(currFlashcardSet === undefined || set_id === "" ){
+    if(!set_id){
         return(<Box/>);
     }
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "100%", mt: 1  }}>
-            <Box sx={{ backgroundColor: "#615f5f", width: "80%" }}>
-                <Typography sx={{ fontWeight: "bold", mb: .5, mt: .5, fontSize: 20 }}>
-                    Flashcards
-                </Typography>
-                <AddCircleIcon onClick={() => handleOpenDialog("create")}/>
-            </Box>
-            <MenuList 
-                sx={{
-                    width: "80%",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    backgroundColor: "#615f5f",
-                    overflowY: "scroll"
-                }}>
-                {currFlashcardSet.map((flashcard, index) => (
-                    <MenuItem id="flashcard" key={index} 
-                    onClick={() => handleFlashcardMenuClick(flashcard)}
+        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", width: "100%", mt: 1, borderRadius: "8px",  }}>
+            <Box sx={{ backgroundColor: "#615f5f", width: "80%", borderRadius: "8px" }}>
+                <Box sx={{ backgroundColor: "#615f5f", width: "100%" }}>
+                    <Typography sx={{ fontWeight: "bold", mb: .5, mt: .5, fontSize: 20 }}>
+                        Flashcards
+                    </Typography>
+                    <AddCircleIcon onClick={() => handleOpenDialog("create")}/>
+                </Box>
+                <MenuList 
                     sx={{
-                        padding: 1,
-                        ml: 1, 
-                        mr: 2, 
-                        width: "98%",
+                        width: "100%",
                         display: "flex",
-                        border: "1px solid #ccc",
-                        justifyContent: "space-between",
-                        alignItems: "center",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        backgroundColor: "#615f5f",
+                        overflowY: "scroll"
                     }}>
-                        <Typography sx={{ fontWeight: "bold" }}>
-                            {flashcard.term}
-                        </Typography>
-                        <Typography>
-                            {flashcard.definition}
-                        </Typography>
-                        <Box>
-                            <EditIcon onClick={() => handleOpenDialog("edit")} sx={{height: "30%"}}/>
-                            <DeleteOutlineIcon onClick={() => handleOpenDialog("delete")} sx={{height: "30%"}}/>
-                        </Box>
-                    </MenuItem>
-                ))}    
-            </MenuList>
-            <Dialog
-            open={createEditPromptOpen}>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "20vw",
-                    backgroundColor: "#525252",
-                }}
-            >
-                <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}> Term </Typography>
-                <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "80%", width: "100%", mb: 1}}>
-                    <textarea id="term" value={term} onChange={handleTermEntry} style={{ height: "80%", width: "90%", resize: "none" }}/>
-                </Box>
+                    {currFlashcardSet.map((flashcard, index) => (
+                        <MenuItem id="flashcard" key={index} 
+                        onClick={() => handleFlashcardMenuClick(flashcard)}
+                        sx={{
+                            padding: 1,
+                            ml: 1, 
+                            mr: 2, 
+                            width: "95%",
+                            display: "flex",
+                            border: "1px solid #ccc",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}>
+                            <Typography sx={{ fontWeight: "bold" }}>
+                                {flashcard.term}
+                            </Typography>
+                            <Typography>
+                                {flashcard.definition}
+                            </Typography>
+                            <Box>
+                                <EditIcon onClick={() => handleOpenDialog("edit")} sx={{height: "30%"}}/>
+                                <DeleteOutlineIcon onClick={() => handleOpenDialog("delete")} sx={{height: "30%"}}/>
+                            </Box>
+                        </MenuItem>
+                    ))}    
+                </MenuList>
+                <Dialog
+                open={createEditPromptOpen}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "20vw",
+                        backgroundColor: "#525252",
+                    }}
+                >
+                    <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}> Term </Typography>
+                    <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "80%", width: "100%", mb: 1}}>
+                        <textarea id="term" value={term} onChange={handleTermEntry} style={{ height: "80%", width: "90%", resize: "none" }}/>
+                    </Box>
 
-                <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}> Definition </Typography>
-                <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "80%", width: "100%", mb: 1}}>
-                    <textarea id="definition" value={definition} onChange={handleDefintionEntry} style={{ height: "80%", width: "90%", resize: "none" }}/>
+                    <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}> Definition </Typography>
+                    <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "80%", width: "100%", mb: 1}}>
+                        <textarea id="definition" value={definition} onChange={handleDefintionEntry} style={{ height: "80%", width: "90%", resize: "none" }}/>
+                    </Box>
+                    <Typography sx={{ color: "red", ml: 1}}> {errorMessage} </Typography>
+                    <Box sx={{display: "flex", justifyContent: "end", alignItems: "end"}}>
+                        <Button title="Save" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={dialogProcess}>Save</Button>
+                        <Button title="Cancel" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={() => handleOpenDialog("create")} >Cancel</Button>
+                    </Box>
                 </Box>
-                <Typography sx={{ color: "red", ml: 1}}> {errorMessage} </Typography>
-                <Box sx={{display: "flex", justifyContent: "end", alignItems: "end"}}>
-                    <Button title="Save" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={dialogProcess}>Save</Button>
-                    <Button title="Cancel" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={() => handleOpenDialog("create")} >Cancel</Button>
+                </Dialog>
+                <Dialog
+                open={deletePromptOpen}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "20vw",
+                        backgroundColor: "#525252",
+                    }}
+                >
+                    <Typography sx={{ fontWeight: "bold", color: "white", padding: 1}}> Are you sure you want to delete the flashcard? </Typography>
+                    <Box sx={{display: "flex", justifyContent: "end", alignItems: "end"}}>
+                        <Button title="Delete" sx={{backgroundColor: "red", color:"white", mr: 1, mb: 1}} onClick={dialogProcess}>Delete</Button>
+                        <Button title="Cancel" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={() => handleOpenDialog("delete")}>Cancel</Button>
+                    </Box>
                 </Box>
+                </Dialog>
             </Box>
-            </Dialog>
-            <Dialog
-            open={deletePromptOpen}>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    width: "20vw",
-                    backgroundColor: "#525252",
-                }}
-            >
-                <Typography sx={{ fontWeight: "bold", color: "white", padding: 1}}> Are you sure you want to delete the flashcard? </Typography>
-                <Box sx={{display: "flex", justifyContent: "end", alignItems: "end"}}>
-                    <Button title="Delete" sx={{backgroundColor: "red", color:"white", mr: 1, mb: 1}} onClick={dialogProcess}>Delete</Button>
-                    <Button title="Cancel" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={() => handleOpenDialog("delete")}>Cancel</Button>
-                </Box>
-            </Box>
-            </Dialog>
         </Box>
     );
 }
