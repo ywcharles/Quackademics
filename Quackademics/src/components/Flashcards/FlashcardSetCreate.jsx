@@ -28,8 +28,7 @@ const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
         .insert([
             {
                 user_id: userId,
-                set_name: setName,
-                tags: tags
+                set_name: setName
             },
             ])
             .select();

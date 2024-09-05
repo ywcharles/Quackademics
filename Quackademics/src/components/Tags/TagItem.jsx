@@ -9,6 +9,40 @@ const TagItem = (props) => {
   const [title, setTitle] = useState("");
   const [tagType, setTagType] = useState("");
 
+  const setFlashcardTitle = async () => {
+    const { data, error } = await supabase
+    .from("flashcard_set")
+    .select("set_name")
+    .eq("set_id", props.searchId);
+
+    if (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+
+    setTitle(data[0].set_name);
+  }
+
+  const setDuckSessionTitle = async () => {
+    const { data, error } = await supabase
+      .from("rubber_duck_sessions")
+      .select("session_text")
+      .eq("session_id", props.searchId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+
+    const sessionText = data[0].session_text;
+    if (sessionText.length < 45){
+      setTitle(sessionText);
+    }else{
+      setTitle(sessionText.slice(0, 45) + "...");
+    }
+  }
+
   const fetchTitle = async () => {
     switch (props.type) {
       case 1:
@@ -17,42 +51,12 @@ const TagItem = (props) => {
         break;
       case 2:
         setTagType("Flashcards");
-
-        const { dataFC, errorFC } = await supabase
-        .from("flashcard_set")
-        .select("set_name")
-        .eq("set_id", props.searchId);
-        console.log(props.searchId)
-        console.log(dataFC)
-
-        if (errorFC) {
-          console.error("Error fetching data:", errorFC);
-          return [];
-        }
-
-        setTitle(dataFC.set_name);
+        await setFlashcardTitle();
         break;
 
       case 3:
         setTagType("RubberDuck");
-
-        const { data, error } = await supabase
-          .from("rubber_duck_sessions")
-          .select("session_text")
-          .eq("session_id", props.searchId)
-          .order("created_at", { ascending: false });
-
-        if (error) {
-          console.error("Error fetching data:", error);
-          return [];
-        }
-
-        const sessionText = data[0].session_text;
-        if (sessionText.length < 45){
-          setTitle(sessionText);
-        }else{
-          setTitle(sessionText.slice(0, 45) + "...");
-        }
+        setDuckSessionTitle();
         
         break;
 

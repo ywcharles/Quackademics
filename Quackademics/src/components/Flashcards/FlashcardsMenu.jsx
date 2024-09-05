@@ -12,8 +12,10 @@ import FlashcardsList from "./FlashcardsList";
 import supabase from "../../libs/supabaseAdmin";
 import {useUserSessionStore} from "../../stores/UserSessionStore"
 import TagsContainer from "../TagsContainer";
+import { useParams } from "react-router-dom";
 
 const FlashcardsMenu = () => {
+    const setId = useParams().setId;
     const [flashcardSets, setFlashcardSet] = useState([]);
     const [allFlashcards, setAllFlashcards] = useState([]);
     const [filteredFlashcards, setFilteredFlashcards] = useState([]);
@@ -45,6 +47,7 @@ const FlashcardsMenu = () => {
         setCurrFlashcardSet(flashcardSet);
         setTagsVisible("visible")
         setFilteredFlashcards(allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id));
+        setCard(allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id)[0])
     };
 
     const setCard = (flashcard) => {
@@ -69,7 +72,6 @@ const FlashcardsMenu = () => {
         if(index === -1){
             return;
         }
-        console.log(index)
         if(direction === "next"){
             if(index === filteredFlashcards.length - 1){
                 index = 0;
@@ -86,8 +88,6 @@ const FlashcardsMenu = () => {
                 index = index - 1;
             }
         }
-        console.log(index)
-        console.log(filteredFlashcards[index])
         setCurrFlashcard(filteredFlashcards[index]);
         setCardText(filteredFlashcards[index].term);
         setCardSide("front");
@@ -112,9 +112,23 @@ const FlashcardsMenu = () => {
     const fetchFlashcardSets = async (userId) => {
         const { data, error } = await supabase
         .from("flashcard_set")
-        .select("set_name, set_id, tags")
+        .select("set_name, set_id")
         .eq("user_id", userId)
         .order("set_name", { ascending: true });
+    
+        if (error) {
+            console.error("Error fetching data:", error);
+            return [];
+        }
+
+        return data;
+    };  
+
+    const fetchTaggedFlashcardSet = async () => {
+        const { data, error } = await supabase
+        .from("flashcard_set")
+        .select("set_name, set_id")
+        .eq("set_id", setId);
     
         if (error) {
             console.error("Error fetching data:", error);
@@ -172,12 +186,21 @@ const FlashcardsMenu = () => {
         if(!userId){
             return;
         }
+        
         const loadData = async () => {
             const setData = await fetchFlashcardSets(userId);
             const cardData = await fetchAllFlashcards(setData);
             setFlashcardSet(setData);
             setfilteredFlashcardSets(setData);
             setAllFlashcards(cardData);
+            
+            if(setId){
+                console.log(setId)
+                let taggedFlashcard = await fetchTaggedFlashcardSet();
+                flashcardSetSelected(taggedFlashcard[0]);
+                setFilteredFlashcards(cardData.filter(flashcard => flashcard.set_id === taggedFlashcard[0].set_id));
+                setCard(cardData.filter(flashcard => flashcard.set_id === taggedFlashcard[0].set_id)[0])
+            }
           };
 
           loadData();
@@ -310,8 +333,11 @@ const FlashcardsMenu = () => {
                     flexDirection: "column"
                 }}
             >
-                <Box sx={{ overflowY: "scroll", height: "100vh", width: "80vw", left: "10%"}}>
+                <Box sx={{ overflowY: "auto", height: "100vh", width: "80vw", left: "10%"}}>
                     <Box sx={{ position: "relative", height: "75vh", width: "89%", left: "10%"}}>
+                    <Typography sx={{ fontWeight: "bold", fontSize: 30, pr: 10 }}>
+                        {currFlashcardSet.set_name}
+                    </Typography>
                         <Box
                             sx={{
                                 display:"flex", 

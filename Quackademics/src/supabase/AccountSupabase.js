@@ -1,13 +1,10 @@
 import supabase from "../libs/supabaseAdmin";
 import bcryptjs from "bcryptjs";
+import { getCurrentTimestamp } from "../util/Data.util";
 
 export const hashPassword = async (password) => {
   const salt = await bcryptjs.genSalt(10);
   return await bcryptjs.hash(password, salt);
-};
-
-const getCurrentTimestamp = () => {
-  return new Date().toISOString().slice(0, 19).replace("T", " ");
 };
 
 export const getUsername = async (userId) => {

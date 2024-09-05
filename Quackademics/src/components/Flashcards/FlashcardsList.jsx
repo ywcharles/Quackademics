@@ -142,7 +142,6 @@ const FlashcardsList = ({currFlashcardSet, currFlashcard, setCard, set_id, refre
     }
 
     if(!set_id){
-        console.log(set_id)
         return(<Box/>);
     }
     return (
