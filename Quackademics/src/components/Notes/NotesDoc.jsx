@@ -25,45 +25,58 @@ import {
   BlockTypeSelect,
 } from "@mdxeditor/editor";
 import '@mdxeditor/editor/style.css'
-import { Box } from "@mui/material";
-
+import { Box, Container } from "@mui/material";
 
 
 const Editor = () => {
   return (
-    <Box
+    <Container
       sx={{
-        backgroundColor: "#FFFFFF",
-        width: "50vw",
-        height: "90vh",
-      }}>
-      <MDXEditor
-        markdown='#'
-        plugins={[
-          headingsPlugin(), 
-          linkDialogPlugin(),
-          linkPlugin,
-          listsPlugin(), 
-          quotePlugin(), 
-          markdownShortcutPlugin(),
-          tablePlugin(),
-          toolbarPlugin({
-            toolbarContents: () => {
-              return (
-                <>
+        display: 'flex',
+        flexDirection: 'column',
+        height: '92vh',
+        pt: "30px",
+        
+      }}
+    >
+      <Box
+        sx={{
+          flex: 1,
+          backgroundColor: "#FFFFFF",
+          width: "65vw",
+          minHeight: "100%",
+          overflow: "auto",
+        }}
+      >
+        <MDXEditor
+          markdown='#'
+          plugins={[
+            headingsPlugin(),
+            linkDialogPlugin(),
+            linkPlugin,
+            listsPlugin(),
+            quotePlugin(),
+            markdownShortcutPlugin(),
+            tablePlugin(),
+            toolbarPlugin({
+              toolbarContents: () => {
+                return (
+                  <>
                     <UndoRedo />
                     <BoldItalicUnderlineToggles />
                     <BlockTypeSelect />
                     <CreateLink />
                     <ListsToggle />
                     <InsertTable />
-                </>
-              )
-            }
-          }),
-        ]}
-      />
-    </Box>
+                  </>
+                )
+              }
+            }),
+          ]}
+        />
+      </Box>
+    </Container>
+
   );
 };
 
