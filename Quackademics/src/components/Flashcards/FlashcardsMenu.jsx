@@ -46,9 +46,16 @@ const FlashcardsMenu = () => {
 
     const flashcardSetSelected = (flashcardSet) => {
         setCurrFlashcardSet(flashcardSet);
-        setTagsVisible("visible")
-        setFilteredFlashcards(allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id));
-        setCard(allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id)[0])
+        setTagsVisible("visible");
+        let tempCards = allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id);
+        setFilteredFlashcards(tempCards);
+        try{
+            setCard(allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id)[0])
+        }
+        catch{
+            setCurrFlashcard([]);
+            setCardText("");
+        }
     };
 
     const setCard = (flashcard) => {
@@ -375,11 +382,11 @@ const FlashcardsMenu = () => {
                                     setCard={setCard}
                                     set_id={currFlashcardSet.set_id}
                                     refreshAllFlashcards={refreshAllFlashcards}
-                                     />
-                </Box>
-                <Box sx={{display:"flex", justifyContent: "center", alignItems: "center", mt: 1}}>
-                    <Box sx={{width: "70%", visibility: tagsVisible }}>
-                        <TagsContainer type={2} sessionId={currFlashcardSet.set_id}/>
+                    />
+                    <Box sx={{display:"flex", justifyContent: "center", alignItems: "center", mt: 1}}>
+                        <Box sx={{width: "70%", visibility: tagsVisible }}>
+                            <TagsContainer type={2} sessionId={currFlashcardSet.set_id}/>
+                        </Box>
                     </Box>
                 </Box>
             </Box>

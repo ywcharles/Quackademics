@@ -160,14 +160,16 @@ const FlashcardsList = ({currFlashcardSet, currFlashcard, setCard, set_id, refre
                         flexDirection: "column",
                         justifyContent: "center",
                         backgroundColor: "#615f5f",
-                        overflowY: "scroll"
+                        overflowY: "auto",
+                        borderRadius: "8px",
+                        mb: 2,
                     }}>
                     {currFlashcardSet.map((flashcard, index) => (
                         <MenuItem id="flashcard" key={index} 
                         onClick={() => handleFlashcardMenuClick(flashcard)}
                         sx={{
                             padding: 1,
-                            ml: 1, 
+                            ml: 2, 
                             mr: 2, 
                             width: "95%",
                             display: "flex",
