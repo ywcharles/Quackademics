@@ -115,12 +115,10 @@ const TagsContainer = (props) => {
   }, [activity]);
 
   const handleClickOpen = () => {
-    console.log("click open");
     setOpen(true);
   };
 
   const handleClose = () => {
-    console.log("click close");
     setOpen(false);
   };
 
@@ -202,7 +200,7 @@ const TagsContainer = (props) => {
           if (sessionTags.includes(t.tag_id)) {
             return (
               <Box
-                key={index}
+              key={`Displayed${index}`}
                 sx={{ backgroundColor: t.color, borderRadius: 1, padding: 0.5 }}
               >
                 {t.tag_name}
@@ -236,8 +234,8 @@ const TagsContainer = (props) => {
                 return (
                   <Button
                     id={t.tag_id}
-                    key={index}
                     onClick={handleDeleteTagClick}
+                    key={`Added${index}`}
                     sx={{
                       color: "black",
                       backgroundColor: t.color,
@@ -262,7 +260,7 @@ const TagsContainer = (props) => {
                 return (
                   <Button
                     id={t.tag_id}
-                    key={index}
+                    key={`Available${index}`}
                     onClick={handleAddTagClick}
                     sx={{
                       color: "black",
