@@ -60,15 +60,12 @@ const FlashcardSetEdit = ({close, refreshFlashcardSets, flashcardSet}) => {
                 backgroundColor: "#525252",
             }}
         >
-            <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}> Set name </Typography>
-            <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "80%", width: "100%", mb: 1}}>
+            <Typography sx={{ fontWeight: "bold", color: "white", ml: 1, fontSize: 28, textAlign: "center", padding: 1 }}> Edit Set </Typography>
+            <Typography sx={{ fontWeight: "bold", color: "white", ml: 1, mb: 1}}> Set name: </Typography>
+            <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "80%", width: "100%", mb: 2}}>
                 <input id="setName" value={setName} onChange={handleSetNameEntry} style={{ height: "80%", width: "90%", resize: "none" }}/>
             </Box>
 
-            <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}> Tags (comma separated) </Typography>
-            <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "80%", width: "100%", mb: 1}}>
-                <input id="tags" value={tags} onChange={handleTagsEntry} style={{ height: "80%", width: "90%", resize: "none" }}/>
-            </Box>
             <Typography sx={{ color: "red", ml: 1}}> {errorMessage} </Typography>
             <Box sx={{display: "flex", justifyContent: "end", alignItems: "end"}}>
                 <Button title="Save" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={updateProcess}>Save</Button>
