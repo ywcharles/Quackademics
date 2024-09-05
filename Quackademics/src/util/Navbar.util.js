@@ -20,6 +20,11 @@ export const navComponents = [
     description: "Rubber duck to talk to i guess",
   },
   {
+    title: "Tags",
+    href: "/tags",
+    description: "search or delete tags",
+  },
+  {
     title: "Notes",
     href: "/notes",
     description: "View and write your notes",
