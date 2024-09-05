@@ -32,8 +32,8 @@ const Heatmap = () => {
         data={data}
         xLabels={xLabels}
         yLabels={yLabels}
-        cellRender={(x, y, value) => (
-          <div title={`Pos(${x}, ${y}) = ${value}`}>{value}</div>
+        cellRender={(x, y) => (
+          <div title={`Pos(${x}, ${y})`}></div>
         )}
         xLabelsStyle={(index) => ({
           color: index % 2 ? "transparent" : "#777",
@@ -52,6 +52,7 @@ const Heatmap = () => {
         cellHeight="1.5rem"
         xLabelsPos="bottom"
         onClick={(x, y) => alert(`Clicked (${x}, ${y})`)}
+        square
       />
     </Box>
   );
