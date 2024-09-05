@@ -10,7 +10,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Assignments from "./routes/Assignments";
 import Notes from "./routes/Notes";
-import Tags from "./routes/Tags"
+import Tags from "./routes/Tags";
 import { Snackbar } from "@mui/material";
 import { useUserSessionStore } from "./stores/UserSessionStore";
 
@@ -55,10 +55,14 @@ function App() {
           <Route exact path="/flashcards/:setId?" element={<Flashcards />} />
           <Route exact path="/pomodoro" element={<Pomodoro />} />
           <Route exact path="/assignments" element={<Assignments />} />
-          <Route exact path="/rubberduck/:sessionId?" element={<RubberDuck />} />
+          <Route
+            exact
+            path="/rubberduck/:sessionId?"
+            element={<RubberDuck />}
+          />
           <Route exact path="/notes/:notesId?" element={<Notes />} />
           <Route exact path="/tags" element={<Tags />} />
-          
+
           <Route exact path="/profile" element={<Profile />} />
           <Route exact path="/login" element={<Login />} />
         </Routes>

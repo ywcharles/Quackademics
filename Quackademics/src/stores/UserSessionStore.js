@@ -20,10 +20,10 @@ export const useUserSessionStore = create(
       study: "",
       setStudy: (study) => set(() => ({ study: study })),
 
-      startYear: "",
+      startYear: null,
       setStartYear: (startYear) => set(() => ({ startYear: startYear })),
 
-      graduationYear: "",
+      graduationYear: null,
       setGraduationYear: (graduationYear) =>
         set(() => ({ graduationYear: graduationYear })),
 

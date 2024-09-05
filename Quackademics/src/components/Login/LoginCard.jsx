@@ -6,7 +6,6 @@ import { getUsername, signInUser } from "../../supabase/AccountSupabase";
 import { useNavigate } from "react-router-dom";
 
 const LoginCard = () => {
-  const userId = useUserSessionStore((state) => state.userId);
   const setUserId = useUserSessionStore((state) => state.setUserId);
 
   const setProfilePicture = useUserSessionStore(
@@ -15,6 +14,12 @@ const LoginCard = () => {
   const setGlobalUsername = useUserSessionStore((state) => state.setUsername);
   const setLoginSuccess = useUserSessionStore((state) => state.setLoginSuccess);
   const setShowWelcome = useUserSessionStore((state) => state.setShowWelcome);
+  const setBio = useUserSessionStore((state) => state.setBio);
+  const setStudy = useUserSessionStore((state) => state.setStudy);
+  const setStartYear = useUserSessionStore((state) => state.setStartYear);
+  const setGraduationYear = useUserSessionStore(
+    (state) => state.setGraduationYear,
+  );
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,11 +29,16 @@ const LoginCard = () => {
   const handleLoginClick = async () => {
     await signInUser(username, password).then(async (result) => {
       if (result !== null) {
+        console.log("result", result);
         setLoginSuccess(true);
         setShowWelcome(true);
         setUserId(result.uid);
         setGlobalUsername(result.username);
-        setProfilePicture(result.pfp);
+        setProfilePicture(result.profile_picture);
+        setBio(result.bio);
+        setStudy(result.study);
+        setStartYear(result.start_year);
+        setGraduationYear(result.graduation_year);
         navigate("/home");
       } else {
         alert("Login unsuccessful");

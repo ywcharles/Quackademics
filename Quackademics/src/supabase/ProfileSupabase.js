@@ -10,13 +10,14 @@ export const editProfile = async (
   const { error } = await supabase
     .from("users")
     .update({
-      bio: bio,
+      biography: bio,
       study: study,
       start_year: startYear,
       graduation_year: graduationYear,
     })
     .eq("user_id", userId);
 
+  console.log("error", error);
   if (error) return error;
 };
 
@@ -27,5 +28,13 @@ export const getProfile = async (userId) => {
     .eq("user_id", userId);
 
   if (error) return error;
-  return data;
+
+  const user = data[0];
+
+  return {
+    bio: user.bio,
+    study: user.study,
+    start_year: user.start_year,
+    graduation_year: user.graduation_year,
+  };
 };
