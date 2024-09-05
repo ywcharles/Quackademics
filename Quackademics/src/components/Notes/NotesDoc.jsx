@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDXEditor,
   codeBlockPlugin,
@@ -29,36 +29,26 @@ import { Box, Container, CardContent, Typography, Card, Divider, TextField, Butt
 import supabase from "../../libs/supabaseAdmin";
 
 const NotesDoc = () => {
-  // const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-
-  // // Fetch notes from Supabase
-  // useEffect(() => {
-  //   const fetchNotes = async () => {
-  //     const { data, error } = await supabase
-  //       .from('notes')
-  //       .select('*');
-
-  //     if (error) {
-  //       console.error('Error fetching notes:', error);
-  //     } else {
-  //       setNotes(data);
-  //     }
-  //   };
-
-  //   fetchNotes();
-  // }, []);
 
   // Handle search input change
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
   };
+ 
+  // not tested fetchNotes since theres no existing notes
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const { data, error } = await supabase.from('notes').select('*');
+    };
+    fetchNotes();
+  }, []);
 
-  // // Filter notes based on search query
-  // const filteredNotes = notes.filter(note =>
-  //   note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //   note.content.toLowerCase().includes(searchQuery.toLowerCase())
-  // );
+  const filteredNotes = notes.filter(note =>
+    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    note.content.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <Box 
@@ -70,7 +60,6 @@ const NotesDoc = () => {
         mt: "30px",
       }}
     >
-      {/* query notes and saved notes */}
       <Box
         sx={{
           display: "flex",
@@ -97,7 +86,16 @@ const NotesDoc = () => {
             height: "90%"
           }}
         >
-
+          {/* TODO: create cards for each saved notes */}
+          {/* might need fixing... since theres no notes, i haven't seen what these look like */}
+          {filteredNotes.map(note => (
+            <Card key={note.note_id} sx={{ marginBottom: 2 }}>
+              <CardContent>
+                <Typography variant="h6">{note.title}</Typography>
+                <Typography variant="body2">{note.content}</Typography>
+              </CardContent>
+            </Card>
+          ))}
         </Box>
 
         {/* Save and New Notes Button */}
@@ -111,7 +109,6 @@ const NotesDoc = () => {
           <Button variant="contained" color="primary" sx={{ width: "100%"}}>Save</Button>
           <Button variant="contained" color="primary" sx={{ width: "100%" }}>New Note</Button>
         </Box>
-        
       </Box>
       <Box
         sx={{
