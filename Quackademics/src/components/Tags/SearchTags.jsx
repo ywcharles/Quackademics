@@ -59,6 +59,9 @@ export const SearchTags = () => {
   };
 
   useEffect(() => {
+    if(!user){
+      return
+    }
     const loadTags = async () => {
       const tagIds = await fetchTags();
       setTags(tagIds);

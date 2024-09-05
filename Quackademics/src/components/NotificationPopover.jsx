@@ -10,6 +10,9 @@ const NotificationPopover = () => {
   const user_id = useUserSessionStore((state) => state.userId);
 
   useEffect(() => {
+    if(!user_id){
+      return;
+    }
     fetchDueAssignments();
   }, []);
 

@@ -169,6 +169,9 @@ const FlashcardsMenu = () => {
     }
 
     useEffect(() => {
+        if(!userId){
+            return;
+        }
         const loadData = async () => {
             const setData = await fetchFlashcardSets(userId);
             const cardData = await fetchAllFlashcards(setData);
