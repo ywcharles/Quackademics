@@ -24,7 +24,6 @@ const LoginCard = () => {
   const handleLoginClick = async () => {
     await signInUser(username, password).then(async (result) => {
       if (result !== null) {
-        console.log(result);
         setLoginSuccess(true);
         setShowWelcome(true);
         setUserId(result.uid);
