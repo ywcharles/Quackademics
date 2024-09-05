@@ -138,13 +138,13 @@ const PomodoroTimer = () => {
       >
         <DialogTitle>Rate Your Pomodoro Session</DialogTitle>
         <DialogContent sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-          <IconButton onClick={() => handleRatingSelect('unhappy')}>
+          <IconButton color='error' onClick={() => handleRatingSelect('unhappy')}>
             <SentimentVeryDissatisfied fontSize="large" />
           </IconButton>
           <IconButton onClick={() => handleRatingSelect('neutral')}>
             <SentimentNeutral fontSize="large" />
           </IconButton>
-          <IconButton onClick={() => handleRatingSelect('happy')}>
+          <IconButton color='success' onClick={() => handleRatingSelect('happy')}>
             <SentimentSatisfied fontSize="large" />
           </IconButton>
         </DialogContent>
