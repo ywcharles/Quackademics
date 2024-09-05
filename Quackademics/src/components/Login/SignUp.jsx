@@ -131,7 +131,7 @@ const SignUp = () => {
             variant="contained"
             sx={{ width: "100%", mt: 4 }}
           >
-            sign up
+            Sign Up
           </Button>
         </DialogContent>
       </Dialog>
