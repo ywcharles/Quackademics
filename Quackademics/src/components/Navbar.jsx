@@ -37,12 +37,12 @@ function Navbar() {
               color="inherit"
               aria-label="nav"
             >
-              {/* TODO: add logo  */}
               <img
                 style={{ width: "50px" }}
                 src="https://media.npr.org/assets/img/2013/06/04/ducky062way-cc767bbdf090919d6bbbed747dd19ab45e58e309.jpg?s=1100&c=50&f=jpeg"
               />
             </IconButton>
+
             <Typography
               variant="h6"
               noWrap
@@ -60,13 +60,18 @@ function Navbar() {
             >
               QUACKADEMICS
             </Typography>
-            {navComponents.map((page) => (
-              <MenuItem key={page}>
-                <Button href={page.href} color="inherit">
-                  {page.title}
-                </Button>
-              </MenuItem>
-            ))}
+
+            <Box sx={{ flexGrow: 1 }} />
+
+            {userId &&
+              navComponents.map((page) => (
+                <MenuItem key={page}>
+                  <Button href={page.href} color="inherit">
+                    {page.title}
+                  </Button>
+                </MenuItem>
+              ))}
+
             {userId === null || userId === "" ? (
               <Button href={loginPage.href} color="inherit">
                 Login
@@ -76,8 +81,8 @@ function Navbar() {
                 Sign Out
               </Button>
             )}
-            <Box sx={{ flexGrow: 1 }} />
-            <NotificationPopover />
+
+            {userId && <NotificationPopover />}
           </Toolbar>
         </AppBar>
       </Box>
