@@ -56,7 +56,7 @@ function App() {
           <Route exact path="/pomodoro" element={<Pomodoro />} />
           <Route exact path="/assignments" element={<Assignments />} />
           <Route exact path="/rubberduck/:sessionId?" element={<RubberDuck />} />
-          <Route exact path="/note/:notesId?" element={<Notes />} />
+          <Route exact path="/notes/:notesId?" element={<Notes />} />
           <Route exact path="/tags" element={<Tags />} />
           
           <Route exact path="/profile" element={<Profile />} />
