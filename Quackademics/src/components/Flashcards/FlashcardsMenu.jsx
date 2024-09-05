@@ -5,13 +5,13 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import FlashcardBackground from "./FlashcardBackground";
 import FlashcardSetCreate from "./FlashcardSetCreate";
 import FlashcardSetEdit from "./FlashcardSetEdit";
 import FlashcardSetDelete from "./FlashcardSetDelete";
 import FlashcardsList from "./FlashcardsList";
 import supabase from "../../libs/supabaseAdmin";
 import {useUserSessionStore} from "../../stores/UserSessionStore"
+import TagsContainer from "../TagsContainer";
 
 const FlashcardsMenu = () => {
     const [flashcardSets, setFlashcardSet] = useState([]);
@@ -25,6 +25,7 @@ const FlashcardsMenu = () => {
     const [createPromptOpen, setCreatePromptOpen] = useState(false);
     const [editPromptOpen, setEditPromptOpen] = useState(false);
     const [deletePromptOpen, setDeletePromptOpen] = useState(false);
+    const [tagsVisible, setTagsVisible] = useState("hidden");
     const userId = useUserSessionStore((state) => state.userId);
 
     const rootElement = document.getElementById('root');
@@ -42,6 +43,7 @@ const FlashcardsMenu = () => {
 
     const flashcardSetSelected = (flashcardSet) => {
         setCurrFlashcardSet(flashcardSet);
+        setTagsVisible("visible")
         setFilteredFlashcards(allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id));
     };
 
@@ -193,6 +195,7 @@ const FlashcardsMenu = () => {
                 sx={{
                     display: "flex",
                     flexDirection: "column",
+                    width: "15vw"
                 }}
             >
                 <TextField id="search" label="Search" variant="filled" onChange={searchInputChange}
@@ -296,7 +299,7 @@ const FlashcardsMenu = () => {
             }}
             >
                 <FlashcardSetDelete close={() => handleOpenDialog("delete")} set_id={currFlashcardSet.set_id} refreshFlashcardSets={refreshFlashcardSets}
-                                    refreshAllFlashcards={refreshAllFlashcards} setCurrFlashcardSet={setCurrFlashcardSet}/>
+                                    refreshAllFlashcards={refreshAllFlashcards} setCurrFlashcardSet={setCurrFlashcardSet} setTagsVisible={setTagsVisible}/>
             </Dialog>
             <Box
                 sx={{
@@ -304,7 +307,7 @@ const FlashcardsMenu = () => {
                     flexDirection: "column"
                 }}
             >
-                <Box sx={{ overflowY: "scroll", height: "100vh", width: "70vw", left: "10%"}}>
+                <Box sx={{ overflowY: "scroll", height: "100vh", width: "80vw", left: "10%"}}>
                     <Box sx={{ position: "relative", height: "75vh", width: "89%", left: "10%"}}>
                         <Box
                             sx={{
@@ -343,6 +346,11 @@ const FlashcardsMenu = () => {
                                     set_id={currFlashcardSet.set_id}
                                     refreshAllFlashcards={refreshAllFlashcards}
                                      />
+                </Box>
+                <Box sx={{display:"flex", justifyContent: "center", alignItems: "center", mt: 1}}>
+                    <Box sx={{width: "70%", visibility: tagsVisible }}>
+                        <TagsContainer type={2} sessionId={currFlashcardSet.set_id}/>
+                    </Box>
                 </Box>
             </Box>
         </Box>

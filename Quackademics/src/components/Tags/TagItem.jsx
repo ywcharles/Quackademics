@@ -17,6 +17,20 @@ const TagItem = (props) => {
         break;
       case 2:
         setTagType("Flashcards");
+
+        const { dataFC, errorFC } = await supabase
+        .from("flashcard_set")
+        .select("set_name")
+        .eq("set_id", props.searchId);
+        console.log(props.searchId)
+        console.log(dataFC)
+
+        if (errorFC) {
+          console.error("Error fetching data:", errorFC);
+          return [];
+        }
+
+        setTitle(dataFC.set_name);
         break;
 
       case 3:
