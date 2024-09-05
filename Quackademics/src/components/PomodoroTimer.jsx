@@ -6,7 +6,7 @@ import supabase from "../libs/supabaseAdmin";
 import {useUserSessionStore} from "../stores/UserSessionStore"
 
 const PomodoroTimer = () => {
-  const [timeLeft, setTimeLeft] = useState(1);
+  const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isRunning, setIsRunning] = useState(false);
   const [intervalId, setIntervalId] = useState(null);
   const [selectedTime, setSelectedTime] = useState(25);
