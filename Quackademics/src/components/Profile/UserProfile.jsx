@@ -1,10 +1,7 @@
 import React from "react";
 import ProfileCard from "./ProfileCard";
 import { Box, Button } from "@mui/material";
-import StatsGraph from "./StatsGraph";
 import Heatmap from "./Heatmap";
-import PomodoroRanking from "./PomodoroRanking";
-import OverrallStudyRanking from "./OverallStudyRanking";
 import CourseSchedule from "./CourseSchedule";
 
 const UserProfile = () => {
@@ -30,7 +27,6 @@ const UserProfile = () => {
         }}
       >
         <ProfileCard />
-        <StatsGraph />
       </Box>
 
       {/* Right Column */}
@@ -42,40 +38,8 @@ const UserProfile = () => {
           width: "100%",
         }}
       >
-        {/* tabs box */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 1,
-          }}
-        >
-          <Button variant="contained" color="primary" sx={{ width: "100%" }}>
-            Friends
-          </Button>
-          <Button variant="contained" color="primary" sx={{ width: "100%" }}>
-            Config
-          </Button>
-          <Button variant="contained" color="primary" sx={{ width: "100%" }}>
-            Scoreboard
-          </Button>
-        </Box>
-
         {/* heat map */}
         <Heatmap />
-
-        {/* Ranking boxes */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 2,
-            height: "45%",
-          }}
-        >
-          <PomodoroRanking />
-          <OverrallStudyRanking />
-        </Box>
       </Box>
       <Box sx={{ width: "50%", height: "100%" }}>
         {" "}
