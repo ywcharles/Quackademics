@@ -14,6 +14,7 @@ import {useUserSessionStore} from "../../stores/UserSessionStore"
 import TagsContainer from "../TagsContainer";
 import { useParams } from "react-router-dom";
 
+//A fair amount of code redundancy / duplication due to the nature of useEffect()/async functions
 const FlashcardsMenu = () => {
     const setId = useParams().setId;
     const [flashcardSets, setFlashcardSet] = useState([]);
@@ -195,9 +196,9 @@ const FlashcardsMenu = () => {
             setAllFlashcards(cardData);
             
             if(setId){
-                console.log(setId)
                 let taggedFlashcard = await fetchTaggedFlashcardSet();
-                flashcardSetSelected(taggedFlashcard[0]);
+                setCurrFlashcardSet(taggedFlashcard[0]);
+                setTagsVisible("visible")
                 setFilteredFlashcards(cardData.filter(flashcard => flashcard.set_id === taggedFlashcard[0].set_id));
                 setCard(cardData.filter(flashcard => flashcard.set_id === taggedFlashcard[0].set_id)[0])
             }
