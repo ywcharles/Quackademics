@@ -3,7 +3,6 @@ import { Box, Button, Typography} from "@mui/material";
 import supabase from "../../libs/supabaseAdmin";
 import {useUserSessionStore} from "../../stores/UserSessionStore"
 
-//TODO: Make page parse user_id
 const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
     const [setName, setSetName] = useState('');
     const [tags, setTags] = useState('');
@@ -65,6 +64,7 @@ const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
                 flexDirection: "column",
                 width: "20vw",
                 backgroundColor: "#525252",
+                borderRadius: "8px"
             }}
         >
             <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}> Set name </Typography>

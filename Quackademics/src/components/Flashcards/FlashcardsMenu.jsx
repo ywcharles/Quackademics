@@ -200,7 +200,8 @@ const FlashcardsMenu = () => {
                     width: "100%",
                     backgroundColor: "#525252",
                     mb: 1,
-                    ml: 1
+                    ml: 1,
+                    borderRadius: "8px"
                 }}
                 />
                 <Box
@@ -211,13 +212,14 @@ const FlashcardsMenu = () => {
                         flexDirection: "column",
                         overflow: "auto",
                         backgroundColor: "#615f5f",
-                        padding: 1
+                        padding: 1,
+                        borderRadius: "8px"
                     }}
                 >
                     <Typography sx={{ fontWeight: "bold", fontSize: 20 }}>
                         Flashcard Sets
                     </Typography>
-                    <MenuList sx={{width: "100%"}}>
+                    <MenuList sx={{width: "100%", height: "100%"}}>
                         {filteredFlashcardSets.map((flashcardSet, index) => (
                             <MenuItem id="flashcard" key={index} 
                             sx={{padding: 1, 
@@ -225,7 +227,7 @@ const FlashcardsMenu = () => {
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
-                                border: "1px solid #ccc"
+                                border: "1px solid #ccc",
                             }}
                             onClick={() => flashcardSetSelected(flashcardSet)}>
                                 <Typography sx={{ fontWeight: "bold" }}>
@@ -238,45 +240,63 @@ const FlashcardsMenu = () => {
                             </MenuItem>
                         ))}    
                     </MenuList>
-                </Box>
-                <Box
-                sx={{
-                    width: "100%",
-                    backgroundColor: "#615f5f",
-                    padding: 1
-                }}
-                >
-                    <Button
-                    variant = "contained"
+                    <Box
                     sx={{
-                        color: "white",
-                        height: "100%",
                         width: "100%",
-                        borderRadius: 2,
-                        backgroundColor: "#6e6b6b",
-                        overflow: "auto"
+                        backgroundColor: "#615f5f",
+                        borderRadius: "8px"
                     }}
-                    onClick={() => handleOpenDialog("create")}
                     >
-                        <AddCard/>
-                    </Button>
+                        <Button
+                        variant = "contained"
+                        sx={{
+                            color: "white",
+                            height: "100%",
+                            width: "100%",
+                            borderRadius: 2,
+                            backgroundColor: "#6e6b6b",
+                            overflow: "auto"
+                        }}
+                        onClick={() => handleOpenDialog("create")}
+                        >
+                            <AddCard/>
+                        </Button>
+                    </Box>
                 </Box>
             </Box>
             <Dialog
             open={createPromptOpen}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }}
             >
                 <FlashcardSetCreate close={() => handleOpenDialog("create")} refreshFlashcardSets={refreshFlashcardSets}/>
             </Dialog>
             <Dialog
             open={editPromptOpen}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }}
             >
                 <FlashcardSetEdit close={() => handleOpenDialog("edit")} refreshFlashcardSets={refreshFlashcardSets} flashcardSet={currFlashcardSet}/>
             </Dialog>
             <Dialog
             open={deletePromptOpen}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }}
             >
                 <FlashcardSetDelete close={() => handleOpenDialog("delete")} set_id={currFlashcardSet.set_id} refreshFlashcardSets={refreshFlashcardSets}
-                                    refreshAllFlashcards={refreshAllFlashcards}/>
+                                    refreshAllFlashcards={refreshAllFlashcards} setCurrFlashcardSet={setCurrFlashcardSet}/>
             </Dialog>
             <Box
                 sx={{
@@ -296,6 +316,7 @@ const FlashcardsMenu = () => {
                                 top: "13%",
                                 backgroundColor: "#615f5f",
                                 border: "2px solid white",
+                                borderRadius: "8px",
                                 justifyContent: "center",
                                 alignItems: "center",
                             }}>
