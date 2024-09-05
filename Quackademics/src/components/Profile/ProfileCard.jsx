@@ -10,21 +10,20 @@ import {
   Typography,
 } from "@mui/material";
 import { useUserSessionStore } from "../../stores/UserSessionStore";
-import ProfilePictureSetUp from "../Profile/ProfilePictureCard";
+import { editProfile } from "../../supabase/ProfileSupabase";
 
 const ProfileCard = () => {
   const username = useUserSessionStore((state) => state.username);
   const loadedProfilePicture = useUserSessionStore(
     (state) => state.profilePicture,
   );
-  const [profilePicture, setProfilePicture] = useState("");
 
   const [openDialog, setOpenDialog] = useState(false);
 
   const [bio, setBio] = useState("");
   const [study, setStudy] = useState("");
-  const [startYear, setStartYear] = useState("");
-  const [graduationYear, setGraduationYear] = useState("");
+  const [startYear, setStartYear] = useState(null);
+  const [graduationYear, setGraduationYear] = useState(null);
 
   const handleEditProfileOpen = () => {
     setOpenDialog(true);
@@ -38,7 +37,8 @@ const ProfileCard = () => {
     setGraduationYear("");
   };
 
-  const handleEditProfileSubmit = () => {
+  const handleEditProfileSubmit = async () => {
+    await editProfile(bio, study, startYear, graduationYear);
     console.log(bio, study, startYear, graduationYear);
   };
 
@@ -74,7 +74,7 @@ const ProfileCard = () => {
           @{username}
         </Typography>
         <Typography variant="body1" sx={{ height: "10%", width: "100%" }}>
-          Computer Science, 2020-2025{" "}
+          Computer Science, 2020-2025
         </Typography>
         <Box
           sx={{
@@ -88,60 +88,85 @@ const ProfileCard = () => {
             variant="body2"
             sx={{ color: "lightgrey", overflow: "hidden", mt: 2 }}
           >
-            Hi! My name is Kiki! Pretend there is some very interesting facts
-            about me here.
+            {bio}
           </Typography>
         </Box>
-        <Button
-          variant="contained"
-          color="secondary"
-          size="small"
-          sx={{ mb: 1, width: "95%" }}
-          onClick={handleEditProfileOpen}
-        >
-          Edit Profile
-        </Button>
-        <Dialog
-          open={openDialog}
-          onClose={handleEditProfileClose}
-          PaperProps={{
-            component: "form",
-            onSubmit: handleEditProfileSubmit,
-          }}
-        >
-          <DialogTitle>Create an Account</DialogTitle>
-          <DialogContent>
-            <ProfilePictureSetUp setProfilePicture={setProfilePicture} />
-            <TextField
-              autoFocus
-              required
-              margin="dense"
-              name="bio"
-              label="Bio"
-              fullWidth
-              variant="standard"
-              onChange={(e) => setBio(e.target.value)}
-            />
-            <TextField
-              required
-              margin="dense"
-              name="email"
-              label="Email Address"
-              fullWidth
-              variant="standard"
-              onChange={(e) => setStudy(e.target.value)}
-            />
-            <TextField
-              required
-              margin="dense"
-              name="gradYear"
-              label="GradYear"
-              fullWidth
-              variant="standard"
-              onChange={(e) => setGraduationYear(e.target.value)}
-            />
-          </DialogContent>
-        </Dialog>
+        <div>
+          <Dialog
+            open={openDialog}
+            onClose={handleEditProfileClose}
+            PaperProps={{
+              component: "form",
+              onSubmit: handleEditProfileSubmit,
+            }}
+          >
+            <DialogTitle>Edit Profile</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                required
+                margin="dense"
+                name="bio"
+                label="Bio"
+                fullWidth
+                variant="standard"
+                onChange={(e) => setBio(e.target.value)}
+              />
+              <TextField
+                required
+                margin="dense"
+                name="study"
+                label="Study"
+                fullWidth
+                variant="standard"
+                onChange={(e) => setStudy(e.target.value)}
+              />
+              <TextField
+                required
+                name="starting year"
+                label="Starting Year"
+                type="date"
+                fullWidth
+                variant="standard"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(e) => setStartYear(e.target.value)}
+              />
+              <TextField
+                required
+                margin="dense"
+                name="graduation year"
+                label="Graduation Year"
+                type="date"
+                fullWidth
+                variant="standard"
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(e) => setGraduationYear(e.target.value)}
+              />
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                onClick={handleEditProfileSubmit}
+                sx={{ width: "50%", mt: 4 }}
+              >
+                Save
+              </Button>
+            </DialogContent>
+          </Dialog>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            sx={{ mb: 1, width: "95%" }}
+            onClick={handleEditProfileOpen}
+          >
+            Edit Profile
+          </Button>
+        </div>
       </Box>
     </>
   );

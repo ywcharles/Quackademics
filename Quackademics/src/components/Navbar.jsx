@@ -13,11 +13,15 @@ import { useUserSessionStore } from "../stores/UserSessionStore.js";
 
 function Navbar() {
   const userId = useUserSessionStore((state) => state.userId);
+  const setProfilePicture = useUserSessionStore(
+    (state) => state.setProfilePicture,
+  );
   const setUserId = useUserSessionStore((state) => state.setUserId);
   const setLoginSuccess = useUserSessionStore((state) => state.setLoginSuccess);
 
   const onSignOutClick = () => {
     setLoginSuccess(false);
+    setProfilePicture(null);
     setUserId(null);
   };
 
