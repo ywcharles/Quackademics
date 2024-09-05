@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Box, Button, Typography} from "@mui/material";
 import supabase from "../../libs/supabaseAdmin";
+import {useUserSessionStore} from "../../stores/UserSessionStore"
 
 //TODO: Make page parse user_id
 const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
     const [setName, setSetName] = useState('');
     const [tags, setTags] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const userId = useUserSessionStore((state) => state.userId);
 
     const handleSetNameEntry = (event) => {
         setSetName(event.target.value);
@@ -26,8 +28,7 @@ const FlashcardSetCreate = ({close, refreshFlashcardSets}) => {
         .from("flashcard_set")
         .insert([
             {
-            //Hardcoded user_id for now
-                user_id: 42069,
+                user_id: userId,
                 set_name: setName,
                 tags: tags
             },

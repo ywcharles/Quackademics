@@ -9,11 +9,12 @@ import {
   InputLabel,
 } from "@mui/material";
 
+import { useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import supabase from "../libs/supabaseAdmin";
 
 import TagsContainer from "./TagsContainer";
-import {useUserSessionStore} from "../stores/UserSessionStore"
+import { useUserSessionStore } from "../stores/UserSessionStore";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -22,6 +23,7 @@ const recognition = new SpeechRecognition();
 // Color Scheme Orange: FBAF00, Yellow: FFD639, Brown: 93827F, Green: 92B4A7, Gray: 2F2F2F
 
 const RubberDuckChat = () => {
+  const searchId = useParams().sessionId;
   const [textFieldContent, setTextFieldContent] = useState("");
   const [userQuacks, setUserQuacks] = useState([]);
   const [selectedQuack, setSelectedQuack] = useState(null);
@@ -91,6 +93,20 @@ const RubberDuckChat = () => {
     return data;
   };
 
+  const fetchUrlQuack = async () => {
+    const { data, error } = await supabase
+      .from("rubber_duck_sessions")
+      .select()
+      .eq("session_id", searchId)
+
+    if (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+
+    return data;
+  };
+
   const handleSaveClick = async () => {
     if (selectedQuack && selectedQuack.session_id) {
       await updateQuack(selectedQuack.session_id, textFieldContent);
@@ -113,11 +129,23 @@ const RubberDuckChat = () => {
     setSelectedQuack(null);
   };
 
-  useEffect(() => {
+
+  // ToDo: Check if URL has an id and if so load it
+  useEffect(() => { 
     const loadQuacks = async () => {
       const quacks = await fetchUserQuacks(user);
+      console.log(searchId)
+      let urlQuack = null;
+      if (searchId){
+        urlQuack = await fetchUrlQuack()
+        setSelectedQuack(urlQuack[0])
+        setTextFieldContent(urlQuack[0].session_text)
+      }
+
       setUserQuacks(quacks);
     };
+
+    
 
     loadQuacks();
   }, [user]);

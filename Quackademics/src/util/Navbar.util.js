@@ -2,12 +2,12 @@ export const navComponents = [
   {
     title: "Flashcards",
     href: "/flashcards",
-    description: "Flashcards for studying",
+    description: "Flashcards Feynman",
   },
   {
     title: "Pomodoro",
     href: "/pomodoro",
-    description: "Pomodoro timer",
+    description: "Pomodoro Timer",
   },
   {
     title: "Assignments",
@@ -17,7 +17,12 @@ export const navComponents = [
   {
     title: "Rubber Duck",
     href: "/rubberduck",
-    description: "Rubber duck to talk to i guess",
+    description: "Rubber Duck Method",
+  },
+  {
+    title: "Tags",
+    href: "/tags",
+    description: "search or delete tags",
   },
   {
     title: "Notes",
