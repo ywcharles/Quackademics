@@ -5,7 +5,7 @@ export const editProfile = async (
   study,
   startYear,
   graduationYear,
-  uid,
+  userId,
 ) => {
   const { error } = await supabase
     .from("users")
@@ -15,7 +15,17 @@ export const editProfile = async (
       start_year: startYear,
       graduation_year: graduationYear,
     })
-    .eq("user_id", uid);
+    .eq("user_id", userId);
 
   if (error) return error;
+};
+
+export const getProfile = async (userId) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select()
+    .eq("user_id", userId);
+
+  if (error) return error;
+  return data;
 };
