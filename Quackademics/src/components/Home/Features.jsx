@@ -27,7 +27,7 @@ const Features = () => {
         }}
       >
         <FeatureCard
-          image="/Flashcards.jpg"
+          image="/Flashcards-sc.png"
           title="Flashcards"
           route="/flashcards"
         >
@@ -35,13 +35,17 @@ const Features = () => {
           test your knowledge, and track progress. Learn efficiently and
           effectively.
         </FeatureCard>
-        <FeatureCard image="/Pomodoro.jpg" title="Pomodoro" route="/pomodoro">
+        <FeatureCard
+          image="/Pomodoro-sc.png"
+          title="Pomodoro"
+          route="/pomodoro"
+        >
           Boost focus and productivity with our Pomodoro Timer. Work in timed
           intervals, take short breaks, and maximize your study sessions.
           Achieve more in less time.
         </FeatureCard>
         <FeatureCard
-          image="/Duckie.png"
+          image="/RubberDuck-sc.png"
           title="Rubber Duck"
           route="/rubberduck"
         >
@@ -49,13 +53,13 @@ const Features = () => {
           out loud to gain clarity and find solutions. Overcome challenges with
           ease and confidence.
         </FeatureCard>
-        <FeatureCard image="/babygirl.png" title="Notes" route="/notes">
+        <FeatureCard image="/Notes-sc.png" title="Notes" route="/notes">
           Take notes using our rich text editor based in Markdown. Visualize
           your notes with our side by side window pane. Add tags and or your
           courses to your notes and pull them up when you need.
         </FeatureCard>
         <FeatureCard
-          image="/Profile.png"
+          image="/Stats.png"
           title="Check Your Stats"
           route="/dashboard/Profile"
         >

@@ -36,7 +36,7 @@ function Navbar() {
             >
               <img
                 style={{ width: "50px", imageRendering: "pixelated" }}
-                src="/babyboy.png"
+                src="/babyboy_nobg.png"
               />
             </IconButton>
 
