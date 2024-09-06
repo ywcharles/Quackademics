@@ -324,7 +324,7 @@ const FlashcardsMenu = () => {
                                     setCard={setCard}
                                     set_id={currFlashcardSet.set_id}
                                     refreshAllFlashcards={refreshAllFlashcards}
-                                     />
+                    />
                 </Box>
             </Box>
         </Box>

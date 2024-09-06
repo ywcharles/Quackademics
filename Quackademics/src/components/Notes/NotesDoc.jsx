@@ -25,30 +25,129 @@ import {
   BlockTypeSelect,
 } from "@mdxeditor/editor";
 import '@mdxeditor/editor/style.css'
-import { Box, Container, CardContent, Typography, Card, Divider, TextField, Button } from "@mui/material";
+import { Box, Container, CardContent, Typography, Card, Divider, TextField, Button, Dialog } from "@mui/material";
 import supabase from "../../libs/supabaseAdmin";
+import "./Notes.css";
+import {useUserSessionStore} from "../../stores/UserSessionStore"
 
 const NotesDoc = () => {
   const [notes, setNotes] = useState([]);
+  const [filteredNotes, setFilteredNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [currNote, setCurrNote] = useState(null);
+  const [noteTitle, setNoteTitle] = useState("");
+  const userId = useUserSessionStore((state) => state.userId);
 
   // Handle search input change
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
+    setFilteredNotes(notes.filter(note => note.title.toLowerCase().includes(event.target.value)));
   };
- 
-  // not tested fetchNotes since theres no existing notes
-  useEffect(() => {
-    const fetchNotes = async () => {
-      const { data, error } = await supabase.from('notes').select('*');
-    };
-    fetchNotes();
-  }, []);
 
-  const filteredNotes = notes.filter(note =>
-    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    note.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleTitleChange = (event) => {
+    setNoteTitle(event.target.value);
+  };
+
+  const handleCardClick = (note) => {
+    setCurrNote(note)
+  }
+
+  const handleSaveClick = async () => {
+    if(!currNote){
+      alert("No note currently selected");
+      return;
+    }
+
+    setOpen(!open);
+    return;
+  };
+
+  const handleSaving = async () => {
+    if(notes.find(note => note.title === currNote.title)){
+      alert("Title name must be unique");
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("notes")
+      .update({ note_id: currNote.id, title: tags })
+      .eq("set_id", flashcardSet.set_id)
+      .select();
+
+    if (error) {
+        console.error("Error updating data:", error);
+    }
+
+    return;
+  }
+
+  const handleCancel = () => {
+    setOpen(!open);
+    setNoteTitle("");
+    return;
+  }
+
+  const handleNewNoteClick = async () => {
+    const { data, error } = await supabase
+    .from("notes")
+    .insert([
+      {
+        user_id: userId,
+        title: "New note"
+      }
+    ])
+    .select();
+
+    if (error) {
+        console.error("Error inserting data:", error);
+        return [];
+    }
+
+    setCurrNote(data);
+    console.log(data);
+    refreshNotes();
+  }
+
+  const refreshNotes = async () => {
+    let notes = await fetchNotes();
+    setNotes(notes);
+    if(searchQuery){
+      setFilteredNotes(
+        notes.filter(note =>
+        note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        note.content.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+    else{
+      setFilteredNotes(notes);
+    }
+  }
+
+  const fetchNotes = async () => {
+    const { data, error } = await supabase
+    .from("notes")
+    .select("*")
+    .eq("user_id", userId);
+
+    if (error) {
+      console.error("Error fetching data:", error);
+    }
+    else{
+      return data;
+    }
+  }
+
+  useEffect(() => {
+    const loadData = async () => {
+      const notes = await fetchNotes();
+      setNotes(notes);
+      setFilteredNotes(notes);
+      console.log(notes);
+    };
+
+    loadData();
+  }, [])
 
   return (
     <Box 
@@ -89,7 +188,7 @@ const NotesDoc = () => {
           {/* TODO: create cards for each saved notes */}
           {/* might need fixing... since theres no notes, i haven't seen what these look like */}
           {filteredNotes.map(note => (
-            <Card key={note.note_id} sx={{ marginBottom: 2 }}>
+            <Card key={note.note_id} sx={{ marginBottom: 2, backgroundColor: "#6e6b6b" }} onClick={() => handleCardClick(note)}>
               <CardContent>
                 <Typography variant="h6">{note.title}</Typography>
                 <Typography variant="body2">{note.content}</Typography>
@@ -106,8 +205,8 @@ const NotesDoc = () => {
             gap: 1
           }}
         >
-          <Button variant="contained" color="primary" sx={{ width: "100%"}}>Save</Button>
-          <Button variant="contained" color="primary" sx={{ width: "100%" }}>New Note</Button>
+          <Button variant="contained" color="primary" sx={{ width: "100%"}} onClick={handleSaveClick}>Save</Button>
+          <Button variant="contained" color="primary" sx={{ width: "100%" }} onClick={handleNewNoteClick}>New Note</Button>
         </Box>
       </Box>
       <Box
@@ -127,6 +226,7 @@ const NotesDoc = () => {
         >
           <MDXEditor
             markdown='#'
+            contentEditableClassName="MDXEditorClass"
             plugins={[
               headingsPlugin(),
               linkDialogPlugin(),
@@ -153,6 +253,26 @@ const NotesDoc = () => {
           />
         </Box>
       </Box>
+      <Dialog
+      open={open}>
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                width: "20vw",
+                backgroundColor: "#525252",
+            }}
+        >
+            <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}> Note title: </Typography>
+            <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "80%", width: "100%", mb: 1}}>
+                <input id="noteTitle" value={noteTitle} onChange={handleTitleChange} style={{ height: "80%", width: "90%", resize: "none" }}/>
+            </Box>
+            <Box sx={{display: "flex", justifyContent: "end", alignItems: "end"}}>
+                <Button title="Save" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={handleSaving}>Save</Button>
+                <Button title="Cancel" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={handleCancel}>Cancel</Button>
+            </Box>
+        </Box>
+      </Dialog>
     </Box>
   );
 };
