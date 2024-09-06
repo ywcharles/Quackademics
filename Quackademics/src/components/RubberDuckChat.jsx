@@ -29,14 +29,18 @@ const RubberDuckChat = () => {
   const [selectedQuack, setSelectedQuack] = useState(null);
   const user = useUserSessionStore((state) => state.userId);
 
+  const [isTalking, setIsTalking] = useState(false);
+
   const date = new Date();
   const currDateTime = date.toISOString().slice(0, 19).replace("T", " ");
 
   const startSpeechRecognition = () => {
+    setIsTalking(true);
     recognition.start();
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       setTextFieldContent((prevContent) => prevContent + transcript + " ");
+      setIsTalking(false);
     };
     recognition.onerror = (event) => {
       console.error("Speech recognition error", event.error);
@@ -97,7 +101,7 @@ const RubberDuckChat = () => {
     const { data, error } = await supabase
       .from("rubber_duck_sessions")
       .select()
-      .eq("session_id", searchId)
+      .eq("session_id", searchId);
 
     if (error) {
       console.error("Error fetching data:", error);
@@ -111,11 +115,10 @@ const RubberDuckChat = () => {
     if (selectedQuack && selectedQuack.session_id) {
       await updateQuack(selectedQuack.session_id, textFieldContent);
     } else {
-      if (textFieldContent && textFieldContent.length > 0){
+      if (textFieldContent && textFieldContent.length > 0) {
         const newQuack = await insertQuack(user, textFieldContent);
-      setSelectedQuack(newQuack[0]);
+        setSelectedQuack(newQuack[0]);
       }
-      
     }
 
     const quacks = await fetchUserQuacks(user);
@@ -132,23 +135,20 @@ const RubberDuckChat = () => {
     setSelectedQuack(null);
   };
 
-
   // ToDo: Check if URL has an id and if so load it
-  useEffect(() => { 
+  useEffect(() => {
     const loadQuacks = async () => {
       const quacks = await fetchUserQuacks(user);
-      console.log(searchId)
+      console.log(searchId);
       let urlQuack = null;
-      if (searchId){
-        urlQuack = await fetchUrlQuack()
-        setSelectedQuack(urlQuack[0])
-        setTextFieldContent(urlQuack[0].session_text)
+      if (searchId) {
+        urlQuack = await fetchUrlQuack();
+        setSelectedQuack(urlQuack[0]);
+        setTextFieldContent(urlQuack[0].session_text);
       }
 
       setUserQuacks(quacks);
     };
-
-    
 
     loadQuacks();
   }, [user]);
@@ -165,17 +165,12 @@ const RubberDuckChat = () => {
         width: "100vh",
       }}
     >
-      <Avatar
-        src={"/rubber_duck.jpeg"}
-        alt="quackquack"
-        sx={{
-          width: 300,
-          height: 300,
-          borderRadius: "50%",
-          objectFit: "cover",
-        }}
+      <img
+        width={500}
+        height={500}
+        style={{ imageRendering: "pixelated" }}
+        src={isTalking ? "/babyboy_talk.png" : "/babyboy_nobg.png"}
       />
-
       <Box
         sx={{
           display: "flex",

@@ -179,38 +179,43 @@ const TagsContainer = (props) => {
         justifyContent: "center",
         backgroundColor: "inherit",
         color: "black",
-        marginX: 2,
-        padding: 2,
+        // marginX: 2,
+        // padding: 2,
         borderRadius: 2,
       }}
     >
-      {(!sessionTags || sessionTags.length === 0) && (
-        <Typography sx={{ color: "gray" }}>Tags</Typography>
-      )}
-      <Box
-        sx={{
-          display: "flex",
-          gap: 1,
-          width: "100%",
-          flexWrap: "wrap",
-          overflowY: "auto",
-        }}
-        onClick={handleClickOpen}
-      >
-        {tags.map((t, index) => {
-          if (sessionTags.includes(t.tag_id)) {
-            return (
-              <Box
-                key={`Displayed${index}`}
-                sx={{ backgroundColor: t.color, borderRadius: 1, padding: 0.5 }}
-              >
-                {t.tag_name}
-              </Box>
-            );
-          } else {
-            return null;
-          }
-        })}
+      <Box onClick={handleClickOpen}>
+        {(!sessionTags || sessionTags.length === 0) && (
+          <Typography sx={{ color: "#A9A9A9" }}>Tags</Typography>
+        )}
+        <Box
+          sx={{
+            display: "flex",
+            gap: 1,
+            width: "100%",
+            flexWrap: "wrap",
+            overflowY: "auto",
+          }}
+        >
+          {tags.map((t, index) => {
+            if (sessionTags.includes(t.tag_id)) {
+              return (
+                <Box
+                  key={`Displayed${index}`}
+                  sx={{
+                    backgroundColor: t.color,
+                    borderRadius: 1,
+                    padding: 0.5,
+                  }}
+                >
+                  {t.tag_name}
+                </Box>
+              );
+            } else {
+              return null;
+            }
+          })}
+        </Box>
       </Box>
 
       <Dialog

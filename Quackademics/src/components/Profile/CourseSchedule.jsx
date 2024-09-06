@@ -197,9 +197,12 @@ const CourseSchedule = () => {
             width: "100%",
             display: "flex",
             flexDirection: "row",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
             alignContent: "center",
             alignItems: "center",
             overflowY: "auto",
+            rowGap: "10px",
           }}
         >
           {courses.map((course) => (

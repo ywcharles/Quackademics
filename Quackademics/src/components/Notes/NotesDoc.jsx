@@ -263,7 +263,13 @@ const NotesDoc = () => {
               sx={{ marginBottom: 2, backgroundColor: "#6e6b6b" }}
               onClick={() => handleCardClick(note)}
             >
-              <CardContent>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
                 <Typography variant="h6">{note.title}</Typography>
                 <Typography sx={{color: "white"}}>{note.course_name}</Typography>
                 <TagsContainer type={1} sessionId={note.note_id} />

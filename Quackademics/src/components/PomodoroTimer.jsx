@@ -111,11 +111,12 @@ const PomodoroTimer = () => {
         color: "white",
         padding: 4,
         borderRadius: 2,
-        height: "500px",
+        height: "200px",
         width: "500px",
+        mt: 15,
       }}
     >
-      <Typography variant="h2" sx={{ mt: 15, fontWeight: "bold" }}>
+      <Typography variant="h2" sx={{ fontWeight: "bold" }}>
         {`${Math.floor(timeLeft / 60)
           .toString()
           .padStart(2, "0")}:${(timeLeft % 60).toString().padStart(2, "0")}`}
@@ -123,21 +124,25 @@ const PomodoroTimer = () => {
       <Box sx={{ display: "flex", gap: 2 }}>
         <Button
           variant="contained"
-          color="secondary"
           onClick={handleStart}
           disabled={isRunning}
+          sx={{ backgroundColor: "#CF753E" }}
         >
           Start
         </Button>
         <Button
           variant="contained"
-          color="secondary"
           onClick={handleStop}
           disabled={!isRunning}
+          sx={{ backgroundColor: "#CF753E" }}
         >
           Stop
         </Button>
-        <Button variant="contained" color="secondary" onClick={handleReset}>
+        <Button
+          variant="contained"
+          onClick={handleReset}
+          sx={{ backgroundColor: "#CF753E" }}
+        >
           Reset
         </Button>
       </Box>
