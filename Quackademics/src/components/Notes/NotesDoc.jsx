@@ -48,15 +48,16 @@ const NotesDoc = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [open, setOpen] = useState(false);
   const [currNote, setCurrNote] = useState(null);
-  const [noteTitle, setNoteTitle] = useState("");
+  const [titleInput, setNoteTitleInput] = useState("");
   const userId = useUserSessionStore((state) => state.userId);
 
-  const handleDeleteNoteCard = async (cardId) => {
-    const { data, error } = await supabase
-      .from("notes")
-      .delete()
-      .eq("note_id", cardId);
-  };
+  // const handleDeleteNoteCard = async (noteId) => {
+  //   const { data, error } = await supabase
+  //     .from("notes")
+  //     .delete()
+  //     .eq("note_id", noteId);
+  //   console.log("error", error);
+  // };
 
   // Handle search input change
   const handleSearchChange = (event) => {
@@ -69,36 +70,33 @@ const NotesDoc = () => {
   };
 
   const handleTitleChange = (event) => {
-    setNoteTitle(event.target.value);
+    setNoteTitleInput(event.target.value);
   };
 
   const handleCardClick = (note) => {
     setCurrNote(note);
   };
 
-  const handleSaveClick = async () => {
-    if (!currNote) {
-      alert("No note currently selected");
-      return;
-    }
-
-    setNoteTitle(currNote.title);
+  const handleSaveClick = async (note) => {
+    console.log(note.title);
+    setNoteTitleInput(note.title);
     setOpen(!open);
     return;
   };
 
   const handleSaving = async () => {
-    console.log(currNote.title);
-    console.log(currNote);
+    console.log("input", titleInput);
+    console.log("title", currNote.title);
+    console.log("note", currNote);
 
-    if (notes.find((note) => note.title === noteTitle)) {
+    if (notes.find((note) => note.title === titleInput)) {
       alert("Title name must be unique");
       return;
     }
 
     const { data, error } = await supabase
       .from("notes")
-      .update({ note_id: currNote.note_id, title: noteTitle })
+      .update({ note_id: currNote.note_id, title: titleInput })
       .eq("note_id", currNote.note_id)
       .select();
 
@@ -113,7 +111,7 @@ const NotesDoc = () => {
 
   const handleCancel = () => {
     setOpen(!open);
-    setNoteTitle("");
+    setNoteTitleInput("");
     return;
   };
 
@@ -231,13 +229,13 @@ const NotesDoc = () => {
                     flexDirection: "column",
                   }}
                 >
-                  <IconButton color="primary">
+                  <IconButton
+                    onClick={() => handleSaveClick(note)}
+                    color="primary"
+                  >
                     <EditIcon />
                   </IconButton>
-                  <IconButton
-                    onClick={handleDeleteNoteCard(note.note_id)}
-                    color="error"
-                  >
+                  <IconButton color="error">
                     <DeleteIcon />
                   </IconButton>
                 </Box>
@@ -254,14 +252,6 @@ const NotesDoc = () => {
             gap: 1,
           }}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{ width: "100%" }}
-            onClick={handleSaveClick}
-          >
-            Save
-          </Button>
           <Button
             variant="contained"
             color="primary"
@@ -341,7 +331,7 @@ const NotesDoc = () => {
           >
             <input
               id="noteTitle"
-              value={noteTitle}
+              value={titleInput}
               onChange={handleTitleChange}
               style={{ height: "80%", width: "90%", resize: "none" }}
             />
