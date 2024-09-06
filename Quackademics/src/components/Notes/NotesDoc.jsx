@@ -227,7 +227,8 @@ const NotesDoc = () => {
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
+                    flexDirection: "row",
+                    justifyContent: "center",
                   }}
                 >
                   <IconButton
