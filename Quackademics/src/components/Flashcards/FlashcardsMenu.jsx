@@ -333,7 +333,8 @@ const FlashcardsMenu = () => {
             }}
             >
                 <FlashcardSetDelete close={() => handleOpenDialog("delete")} set_id={currFlashcardSet.set_id} refreshFlashcardSets={refreshFlashcardSets}
-                                    refreshAllFlashcards={refreshAllFlashcards} setCurrFlashcardSet={setCurrFlashcardSet} setTagsVisible={setTagsVisible}/>
+                                    refreshAllFlashcards={refreshAllFlashcards} setCurrFlashcardSet={setCurrFlashcardSet} setTagsVisible={setTagsVisible}
+                                    setCurrFlashcard={setCurrFlashcard} setCardText={setCardText}/>
             </Dialog>
             <Box
                 sx={{
