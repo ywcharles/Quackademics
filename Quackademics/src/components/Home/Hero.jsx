@@ -51,13 +51,14 @@ const Hero = () => {
       </Box>
 
       <Avatar
-        src={"/hero_duck.jpg"}
+        src={"/babyboy_glasses.png"}
         alt="quackquack"
         sx={{
           width: 350,
           height: 350,
           borderRadius: "50%",
           objectFit: "cover",
+          imageRendering: "pixelated",
         }}
       />
     </Box>
