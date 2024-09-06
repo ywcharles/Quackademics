@@ -14,8 +14,10 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import supabase from "../../libs/supabaseAdmin";
+import { useUserSessionStore } from "../../stores/UserSessionStore";
 
 const CourseSchedule = () => {
+  const userId = useUserSessionStore((state) => state.userId);
   const [courses, setCourses] = useState([]);
   const [open, setOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -110,7 +112,7 @@ const CourseSchedule = () => {
           .from("courses")
           .insert([
             {
-              user_id: 42069, // Replace with the actual user id if available
+              user_id: userId, // Replace with the actual user id if available
               course_name: courseName,
               course_code: courseCode,
               course_start_time: courseStartTime,
@@ -129,7 +131,7 @@ const CourseSchedule = () => {
         console.log("Course added:", data);
       }
       handleCloseDialog();
-      const updatedCourses = await fetchCourses(42069); // Replace with the actual user ID
+      const updatedCourses = await fetchCourses(userId);
       setCourses(updatedCourses);
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -151,7 +153,7 @@ const CourseSchedule = () => {
       }
 
       console.log("Course deleted:", courseId);
-      const updatedCourses = await fetchCourses(42069); // Replace with the actual user ID
+      const updatedCourses = await fetchCourses(userId);
       setCourses(updatedCourses);
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -161,188 +163,190 @@ const CourseSchedule = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const data = await fetchCourses(42069); // hardcoded with test user
+      const data = await fetchCourses(userId);
       setCourses(data);
     };
     loadData();
   }, []);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        backgroundColor: "#615f5f",
-        color: "white",
-        borderRadius: 2,
-        width: "100%",
-        height: "100%",
-        gap: 2,
-        justifyContent: "space-between",
-      }}
-    >
-      <Typography sx={{ fontWeight: "bold", color: "white", mt: 2 }}>
-        {" "}
-        Course Schedule{" "}
+    <>
+      <Typography
+        sx={{ fontWeight: "bold", color: "white", mt: 2, textAlign: "right" }}
+      >
+        Course Schedule
       </Typography>
       <Box
         sx={{
-          height: "82%",
-          width: "100%",
           display: "flex",
-          flexDirection: "row",
-          alignContent: "center",
+          flexDirection: "column",
           alignItems: "center",
-          gap: 1,
-          overflowY: "auto",
+          backgroundColor: "#615f5f",
+          color: "white",
+          borderRadius: 2,
+          width: "100%",
+          height: "fit-content",
+          p: "14px",
+          gap: 2,
+          justifyContent: "space-between",
         }}
       >
-        {courses.map((course) => (
-          <Card
-            key={course.id}
-            sx={{
-              backgroundColor: "#424242",
-              color: "white",
-              borderRadius: 2,
-              width: "80%",
-              pt: 1,
-              pb: 1,
-              pr: 2,
-              pl: 2,
-              overflow: "visible",
-            }}
-          >
-            {/* Box for per course card */}
-            <Box
+        <Box
+          sx={{
+            height: "82%",
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            alignContent: "center",
+            alignItems: "center",
+            overflowY: "auto",
+          }}
+        >
+          {courses.map((course) => (
+            <Card
+              key={course.id}
               sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
+                backgroundColor: "#424242",
+                color: "white",
+                borderRadius: 2,
+                width: "fit-content",
+                pt: 1,
+                pb: 1,
+                pr: 2,
+                pl: 2,
+                overflow: "visible",
               }}
             >
-              <Box sx={{ textAlign: "left" }}>
-                <Typography variant="body2">{course.course_code}</Typography>
-                <Typography variant="h6">{course.course_name}</Typography>
-                <Typography variant="body2">
-                  Start Time: {course.course_start_time}
-                </Typography>
-                <Typography variant="body2">
-                  End Time: {course.course_end_time}
-                </Typography>
-                <Typography variant="body2">{course.course_days}</Typography>
-              </Box>
+              {/* Box for per course card */}
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                 }}
               >
-                <IconButton
-                  onClick={() => {
-                    handleOpenDialog(course, true);
+                <Box sx={{ textAlign: "left" }}>
+                  <Typography variant="body2">{course.course_code}</Typography>
+                  <Typography variant="h6">{course.course_name}</Typography>
+                  <Typography variant="body2">
+                    Start Time: {course.course_start_time}
+                  </Typography>
+                  <Typography variant="body2">
+                    End Time: {course.course_end_time}
+                  </Typography>
+                  <Typography variant="body2">{course.course_days}</Typography>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
                   }}
-                  color="primary"
                 >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  onClick={() => handleDeleteCourse(course.course_id)}
-                  color="error"
-                >
-                  <DeleteIcon />
-                </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      handleOpenDialog(course, true);
+                    }}
+                    color="primary"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleDeleteCourse(course.course_id)}
+                    color="error"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
               </Box>
-            </Box>
-          </Card>
-        ))}
+            </Card>
+          ))}
+        </Box>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{
+            color: "white",
+            width: "95%",
+            borderRadius: 2,
+            mb: 1,
+          }}
+          onClick={handleOpenDialog}
+        >
+          add a course
+        </Button>
+        <Dialog open={open} onClose={handleCloseDialog}>
+          <DialogTitle>
+            {editMode ? "Edit Course" : "Add a New Course"}
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Course Code"
+              type="text"
+              fullWidth
+              value={courseCode}
+              onChange={(e) => setCourseCode(e.target.value.toUpperCase())}
+            />
+            <TextField
+              margin="dense"
+              label="Course Name"
+              type="text"
+              fullWidth
+              value={courseName}
+              onChange={(e) => setCourseName(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="Course Start Time"
+              helperText="HH:mm AM/PM"
+              type="time"
+              fullWidth
+              value={courseStartTime}
+              onChange={(e) => setCourseStartTime(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              margin="dense"
+              label="Course End Time"
+              helperText="HH:mm AM/PM"
+              type="time"
+              fullWidth
+              value={courseEndTime}
+              onChange={(e) => setCourseEndTime(e.target.value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+            <TextField
+              margin="dense"
+              label="Course Days"
+              type="text"
+              helperText="M T W Th F"
+              fullWidth
+              value={courseDays}
+              onChange={(e) => setCourseDays(e.target.value)}
+            />
+            {error && <Typography color="error">{error}</Typography>}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseDialog} color="primary">
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSaveCourse}
+              color="primary"
+              variant="contained"
+            >
+              {editMode ? "Save Changes" : "Add Course"}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
-      <Button
-        variant="contained"
-        color="secondary"
-        sx={{
-          color: "white",
-          width: "95%",
-          borderRadius: 2,
-          mb: 1,
-        }}
-        onClick={handleOpenDialog}
-      >
-        add a course
-      </Button>
-      <Dialog open={open} onClose={handleCloseDialog}>
-        <DialogTitle>
-          {editMode ? "Edit Course" : "Add a New Course"}
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Course Code"
-            type="text"
-            fullWidth
-            value={courseCode}
-            onChange={(e) => setCourseCode(e.target.value.toUpperCase())}
-          />
-          <TextField
-            margin="dense"
-            label="Course Name"
-            type="text"
-            fullWidth
-            value={courseName}
-            onChange={(e) => setCourseName(e.target.value)}
-          />
-          <TextField
-            margin="dense"
-            label="Course Start Time"
-            helperText="HH:mm AM/PM"
-            type="time"
-            fullWidth
-            value={courseStartTime}
-            onChange={(e) => setCourseStartTime(e.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <TextField
-            margin="dense"
-            label="Course End Time"
-            helperText="HH:mm AM/PM"
-            type="time"
-            fullWidth
-            value={courseEndTime}
-            onChange={(e) => setCourseEndTime(e.target.value)}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <TextField
-            margin="dense"
-            label="Course Days"
-            type="text"
-            helperText="M T W Th F"
-            fullWidth
-            value={courseDays}
-            onChange={(e) => setCourseDays(e.target.value)}
-          />
-          {error && <Typography color="error">{error}</Typography>}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSaveCourse}
-            color="primary"
-            variant="contained"
-          >
-            {editMode ? "Save Changes" : "Add Course"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+    </>
   );
 };
 
 export default CourseSchedule;
-
