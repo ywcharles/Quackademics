@@ -1,62 +1,200 @@
 import React, { useState, useEffect } from "react";
+import "@mdxeditor/editor/style.css";
 import {
-  MDXEditor,
-  codeBlockPlugin,
-  sandpackPlugin,
-  codeMirrorPlugin,
-  toolbarPlugin,
-  ConditionalContents,
-  InsertCodeBlock,
-  InsertSandpack,
-  headingsPlugin,
-  listsPlugin,
-  quotePlugin,
-  thematicBreakPlugin,
-  markdownShortcutPlugin,
-  UndoRedo,
-  BoldItalicUnderlineToggles,
-  CodeToggle,
-  linkPlugin,
-  CreateLink,
-  ListsToggle,
-  linkDialogPlugin,
-  tablePlugin,
-  InsertTable,
-  BlockTypeSelect,
-} from "@mdxeditor/editor";
-import '@mdxeditor/editor/style.css'
-import { Box, Container, CardContent, Typography, Card, Divider, TextField, Button } from "@mui/material";
+  Box,
+  CardContent,
+  Typography,
+  Card,
+  TextField,
+  Button,
+  Dialog,
+  IconButton,
+} from "@mui/material";
 import supabase from "../../libs/supabaseAdmin";
+import "./Notes.css";
+import { useUserSessionStore } from "../../stores/UserSessionStore";
+import { DeleteIcon, EditIcon } from "lucide-react";
+import MDEditor from "@uiw/react-md-editor";
+import TagsContainer from "../TagsContainer";
+import { useParams } from "react-router-dom";
 
 const NotesDoc = () => {
+  const searchId = useParams().notesId;
   const [notes, setNotes] = useState([]);
+  const [filteredNotes, setFilteredNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const [currNote, setCurrNote] = useState({
+    note_id: null,
+    course_id: null,
+    title: null,
+    content: null,
+  });
+  const [titleInput, setNoteTitleInput] = useState("");
+  const userId = useUserSessionStore((state) => state.userId);
+
+  const [markdownContent, setMarkdownContent] = useState(null);
+
+  const handleDeleteNoteCard = async (note) => {
+    const { data, error } = await supabase
+      .from("notes")
+      .delete()
+      .eq("note_id", note.note_id);
+    console.log("error", error);
+
+    const { errorTags } = await supabase
+      .from("tags_mapping")
+      .delete()
+      .eq("search_id", note.note_id)
+      .eq("type", 1);
+
+    if (errorTags) {
+      console.error("Error deleting data:", errorTags);
+    }
+
+    await refreshNotes();
+  };
 
   // Handle search input change
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
+    setFilteredNotes(
+      notes.filter((note) =>
+        note.title.toLowerCase().includes(event.target.value),
+      ),
+    );
   };
- 
-  // not tested fetchNotes since theres no existing notes
+
+  const handleTitleChange = (event) => {
+    setNoteTitleInput(event.target.value);
+  };
+
+  const handleCardClick = async (note) => {
+    setCurrNote(note);
+    const { data } = await supabase
+      .from("notes")
+      .select()
+      .eq("note_id", note.note_id);
+    if (data[0].content !== null) {
+      setMarkdownContent(data[0].content);
+    }
+    console.log(note.content);
+  };
+
+  const handleEditClick = async (note) => {
+    console.log(note.title);
+    setNoteTitleInput(note.title);
+    setOpen(!open);
+    return;
+  };
+
+  const handleSaving = async () => {
+    console.log("input", titleInput);
+    console.log("title", currNote.title);
+    console.log("note", currNote);
+    console.log(markdownContent);
+
+    const { data, error } = await supabase
+      .from("notes")
+      .update({
+        note_id: currNote.note_id,
+        title: titleInput,
+        content: markdownContent,
+      })
+      .eq("note_id", currNote.note_id)
+      .select();
+
+    if (error) {
+      console.error("Error updating data:", error);
+    }
+
+    await refreshNotes();
+    setOpen(!open);
+    return;
+  };
+
+  const handleCancel = () => {
+    setOpen(!open);
+    setNoteTitleInput("");
+    return;
+  };
+
+  const handleNewNoteClick = async () => {
+    const { data, error } = await supabase
+      .from("notes")
+      .insert([
+        {
+          user_id: userId,
+          title: "New note",
+        },
+      ])
+      .select();
+
+    if (error) {
+      console.error("Error inserting data:", error);
+      return [];
+    }
+
+    setCurrNote(data);
+    console.log(data);
+    refreshNotes();
+  };
+
+  const refreshNotes = async () => {
+    let notes = await fetchNotes();
+    setNotes(notes);
+    if (searchQuery) {
+      setFilteredNotes(
+        notes.filter(
+          (note) =>
+            note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            note.content.toLowerCase().includes(searchQuery.toLowerCase()),
+        ),
+      );
+    } else {
+      setFilteredNotes(notes);
+    }
+  };
+
+  const fetchNotes = async () => {
+    const { data, error } = await supabase
+      .from("notes")
+      .select("*")
+      .eq("user_id", userId);
+
+    if (error) {
+      console.error("Error fetching data:", error);
+    } else {
+      return data;
+    }
+  };
+
   useEffect(() => {
-    const fetchNotes = async () => {
-      const { data, error } = await supabase.from('notes').select('*');
+    const loadData = async () => {
+      const fetchedNotes = await fetchNotes();
+      setNotes(fetchedNotes);
+      setFilteredNotes(fetchedNotes);
+
+      if (searchId) {
+        let taggedNote = fetchedNotes.filter(
+          (note) => note.note_id == searchId,
+        )[0];
+        console.log(taggedNote);
+        setCurrNote(taggedNote);
+        await handleCardClick(taggedNote);
+      }
     };
-    fetchNotes();
+
+    loadData();
   }, []);
 
-  const filteredNotes = notes.filter(note =>
-    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    note.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <Box 
+    <Box
       sx={{
         display: "flex",
         flexDirection: "row",
-        height: '92vh',
-        width: "100%",
+        height: "700px",
+        width: "1300px",
         mt: "30px",
       }}
     >
@@ -66,8 +204,8 @@ const NotesDoc = () => {
           flexDirection: "column",
           backgroundColor: "#615f5f",
           height: "100%",
-          width: "50vw",
-          gap: 1
+          width: "15vw",
+          gap: 1,
         }}
       >
         {/* Search */}
@@ -83,16 +221,40 @@ const NotesDoc = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            height: "90%"
+            height: "90%",
           }}
         >
           {/* TODO: create cards for each saved notes */}
           {/* might need fixing... since theres no notes, i haven't seen what these look like */}
-          {filteredNotes.map(note => (
-            <Card key={note.note_id} sx={{ marginBottom: 2 }}>
+          {filteredNotes.map((note) => (
+            <Card
+              key={note.note_id}
+              sx={{ marginBottom: 2, backgroundColor: "#6e6b6b" }}
+              onClick={() => handleCardClick(note)}
+            >
               <CardContent>
                 <Typography variant="h6">{note.title}</Typography>
-                <Typography variant="body2">{note.content}</Typography>
+                <TagsContainer type={1} sessionId={note.note_id} />
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                  }}
+                >
+                  <IconButton
+                    onClick={() => handleEditClick(note)}
+                    color="primary"
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    onClick={() => handleDeleteNoteCard(note)}
+                    color="error"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
               </CardContent>
             </Card>
           ))}
@@ -103,56 +265,94 @@ const NotesDoc = () => {
           sx={{
             display: "flex",
             flexDirection: "row",
-            gap: 1
+            gap: 1,
           }}
         >
-          <Button variant="contained" color="primary" sx={{ width: "100%"}}>Save</Button>
-          <Button variant="contained" color="primary" sx={{ width: "100%" }}>New Note</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ width: "100%" }}
+            onClick={handleNewNoteClick}
+          >
+            New Note
+          </Button>
         </Box>
       </Box>
       <Box
         sx={{
-          display: 'flex',
+          display: "flex",
           flexDirection: "row",
+          width: "1300px",
         }}
       >
+        <MDEditor
+          value={markdownContent}
+          onChange={setMarkdownContent}
+          height="100%"
+          style={{
+            width: "-webkit-fill-available",
+          }}
+        />
+      </Box>
+      <Dialog open={open}>
         <Box
           sx={{
-            flex: 1,
-            backgroundColor: "#FFFFFF",
-            width: "65vw",
-            minHeight: "100%",
-            overflow: "auto",
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "#525252",
           }}
         >
-          <MDXEditor
-            markdown='#'
-            plugins={[
-              headingsPlugin(),
-              linkDialogPlugin(),
-              linkPlugin,
-              listsPlugin(),
-              quotePlugin(),
-              markdownShortcutPlugin(),
-              tablePlugin(),
-              toolbarPlugin({
-                toolbarContents: () => {
-                  return (
-                    <>
-                      <UndoRedo />
-                      <BoldItalicUnderlineToggles />
-                      <BlockTypeSelect />
-                      <CreateLink />
-                      <ListsToggle />
-                      <InsertTable />
-                    </>
-                  )
-                }
-              }),
-            ]}
-          />
+          <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}>
+            Note title:
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "80%",
+              width: "100%",
+              mb: 1,
+            }}
+          >
+            <input
+              id="noteTitle"
+              value={titleInput}
+              onChange={handleTitleChange}
+              style={{ height: "80%", width: "90%", resize: "none" }}
+            />
+          </Box>
+          <Box
+            sx={{ display: "flex", justifyContent: "end", alignItems: "end" }}
+          >
+            <TagsContainer type={1} sessionId={currNote.note_id} />
+            <Button
+              title="Save"
+              sx={{
+                backgroundColor: "cornflowerblue",
+                color: "white",
+                mr: 1,
+                mb: 1,
+              }}
+              onClick={handleSaving}
+            >
+              Save
+            </Button>
+            <Button
+              title="Cancel"
+              sx={{
+                backgroundColor: "cornflowerblue",
+                color: "white",
+                mr: 1,
+                mb: 1,
+              }}
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      </Dialog>
     </Box>
   );
 };

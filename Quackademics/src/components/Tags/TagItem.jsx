@@ -9,6 +9,20 @@ const TagItem = (props) => {
   const [title, setTitle] = useState("");
   const [tagType, setTagType] = useState("");
 
+  const setNotesTitle = async () => {
+    const { data, error } = await supabase
+    .from("notes")
+    .select("title")
+    .eq("note_id", props.searchId);
+
+    if (error) {
+      console.error("Error fetching data:", error);
+      return [];
+    }
+
+    setTitle(data[0].title);
+  }
+
   const setFlashcardTitle = async () => {
     const { data, error } = await supabase
     .from("flashcard_set")
@@ -47,7 +61,7 @@ const TagItem = (props) => {
     switch (props.type) {
       case 1:
         setTagType("Notes");
-
+        await setNotesTitle();
         break;
       case 2:
         setTagType("Flashcards");
@@ -57,7 +71,6 @@ const TagItem = (props) => {
       case 3:
         setTagType("RubberDuck");
         setDuckSessionTitle();
-        
         break;
 
       default:

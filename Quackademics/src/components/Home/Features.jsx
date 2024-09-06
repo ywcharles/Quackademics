@@ -26,25 +26,33 @@ const Features = () => {
           position: "relative",
         }}
       >
-        <FeatureCard image="/Flashcards.jpg" title="Flashcards" route="/dashboard/flashcards">
+        <FeatureCard
+          image="/Flashcards.jpg"
+          title="Flashcards"
+          route="/flashcards"
+        >
           Master your studies with our Flashcard feature. Create custom cards,
           test your knowledge, and track progress. Learn efficiently and
           effectively.
         </FeatureCard>
-        <FeatureCard image="/Pomodoro.jpg" title="Pomodoro" route="/dashboard/pomodoro">
+        <FeatureCard image="/Pomodoro.jpg" title="Pomodoro" route="/pomodoro">
           Boost focus and productivity with our Pomodoro Timer. Work in timed
           intervals, take short breaks, and maximize your study sessions.
           Achieve more in less time.
         </FeatureCard>
-        <FeatureCard image="/Duckie.png" title="Rubber Duck" route="/dashboard/rubberduck">
+        <FeatureCard
+          image="/Duckie.png"
+          title="Rubber Duck"
+          route="/rubberduck"
+        >
           Unstuck yourself with our Rubber Duck Method. Talk through problems
           out loud to gain clarity and find solutions. Overcome challenges with
           ease and confidence.
         </FeatureCard>
-        <FeatureCard image="/VC.png" title="Video Channels" route="/dashboard/voicechannel">
-          Study together, anytime, anywhere. Join live video study sessions with
-          friends. Enjoy focused study time with background music for added
-          concentration.
+        <FeatureCard image="/babygirl.png" title="Notes" route="/notes">
+          Take notes using our rich text editor based in Markdown. Visualize
+          your notes with our side by side window pane. Add tags and or your
+          courses to your notes and pull them up when you need.
         </FeatureCard>
         <FeatureCard
           image="/Profile.png"
