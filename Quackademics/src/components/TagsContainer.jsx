@@ -193,7 +193,7 @@ const TagsContainer = (props) => {
           gap: 1,
           width: "85%",
           flexWrap: "wrap",
-          overflowY: "scroll",
+          overflowY: "auto",
         }}
       >
         {tags.map((t, index) => {
