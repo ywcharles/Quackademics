@@ -51,13 +51,14 @@ const NotesDoc = () => {
   const [titleInput, setNoteTitleInput] = useState("");
   const userId = useUserSessionStore((state) => state.userId);
 
-  // const handleDeleteNoteCard = async (noteId) => {
-  //   const { data, error } = await supabase
-  //     .from("notes")
-  //     .delete()
-  //     .eq("note_id", noteId);
-  //   console.log("error", error);
-  // };
+  const handleDeleteNoteCard = async (note) => {
+    const { data, error } = await supabase
+      .from("notes")
+      .delete()
+      .eq("note_id", note.note_id);
+    console.log("error", error);
+    await refreshNotes();
+  };
 
   // Handle search input change
   const handleSearchChange = (event) => {
@@ -235,7 +236,10 @@ const NotesDoc = () => {
                   >
                     <EditIcon />
                   </IconButton>
-                  <IconButton color="error">
+                  <IconButton
+                    onClick={() => handleDeleteNoteCard(note)}
+                    color="error"
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </Box>
