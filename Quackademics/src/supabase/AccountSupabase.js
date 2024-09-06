@@ -1,13 +1,10 @@
 import supabase from "../libs/supabaseAdmin";
 import bcryptjs from "bcryptjs";
+import { getCurrentTimestamp } from "../util/Data.util";
 
 export const hashPassword = async (password) => {
   const salt = await bcryptjs.genSalt(10);
   return await bcryptjs.hash(password, salt);
-};
-
-const getCurrentTimestamp = () => {
-  return new Date().toISOString().slice(0, 19).replace("T", " ");
 };
 
 export const getUsername = async (userId) => {
@@ -34,6 +31,25 @@ export const addUser = async (username, email, password, profilePicture) => {
   if (error) return error;
 };
 
+export const reloadProfile = async (userId) => {
+  const { data, error } = await supabase
+    .from("users")
+    .select()
+    .eq("user_id", userId);
+  if (error !== null) return null;
+  if (data.length !== 0) {
+    const user = data[0];
+    return {
+      bio: user.biography,
+      study: user.study,
+      start_year: user.start_year,
+      graduation_year: user.graduation_year,
+    };
+  } else {
+    return null;
+  }
+};
+
 export const signInUser = async (username, password) => {
   const { data, error } = await supabase
     .from("users")
@@ -53,7 +69,11 @@ export const signInUser = async (username, password) => {
       return {
         uid: user.user_id,
         username: user.username,
-        pfp: user.profile_picture,
+        profile_picture: user.profile_picture,
+        bio: user.biography,
+        study: user.study,
+        start_year: user.start_year,
+        graduation_year: user.graduation_year,
       };
     } else {
       return null;

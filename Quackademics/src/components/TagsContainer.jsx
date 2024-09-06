@@ -8,6 +8,7 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
+  Typography,
 } from "@mui/material";
 import { HexColorPicker } from "react-colorful";
 
@@ -173,34 +174,32 @@ const TagsContainer = (props) => {
     <Box
       sx={{
         display: "flex",
-        width: "100%",
+        width: "90%",
         height: "10%",
         justifyContent: "center",
         backgroundColor: "white",
         color: "black",
         marginX: 2,
-        paddingY: 2,
+        padding: 2,
         borderRadius: 2,
       }}
     >
-      <Box sx={{ marginX: 2, width: "15%"}} onClick={handleClickOpen}>
-        Tags:
-      </Box>
-
+      {(!sessionTags || sessionTags.length === 0) && <Typography sx={{color:"gray"}}>Tags</Typography>}
       <Box
         sx={{
           display: "flex",
           gap: 1,
-          width: "85%",
+          width: "100%",
           flexWrap: "wrap",
-          overflowY: "scroll",
+          overflowY: "auto",
         }}
+        onClick={handleClickOpen}
       >
         {tags.map((t, index) => {
           if (sessionTags.includes(t.tag_id)) {
             return (
               <Box
-              key={`Displayed${index}`}
+                key={`Displayed${index}`}
                 sx={{ backgroundColor: t.color, borderRadius: 1, padding: 0.5 }}
               >
                 {t.tag_name}
@@ -212,8 +211,6 @@ const TagsContainer = (props) => {
         })}
       </Box>
 
-      <Button sx={{width:"5%"}} onClick={handleClickOpen}>+</Button>
-      
       <Dialog
         sx={{
           "& .MuiDialog-paper": {
@@ -227,7 +224,13 @@ const TagsContainer = (props) => {
         <DialogTitle>Tags</DialogTitle>
         <DialogContent>
           <Box
-            sx={{ display: "flex", gap: 1, width: "100%", flexWrap: "wrap" }}
+            sx={{
+              display: "flex",
+              gap: 1,
+              width: "100%",
+              flexWrap: "wrap",
+              overflowY: "auto",
+            }}
           >
             {tags.map((t, index) => {
               if (sessionTags.includes(t.tag_id)) {

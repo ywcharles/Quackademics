@@ -49,7 +49,6 @@ const SignUp = () => {
         if (userReq.code === "23505")
           setEmailError("Email already exists on system.");
       } else {
-        alert("Check your email for the verification link.");
         handleSignUpClose();
       }
     } catch (error) {

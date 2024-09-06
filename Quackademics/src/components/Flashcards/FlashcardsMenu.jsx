@@ -5,15 +5,18 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import FlashcardBackground from "./FlashcardBackground";
 import FlashcardSetCreate from "./FlashcardSetCreate";
 import FlashcardSetEdit from "./FlashcardSetEdit";
 import FlashcardSetDelete from "./FlashcardSetDelete";
 import FlashcardsList from "./FlashcardsList";
 import supabase from "../../libs/supabaseAdmin";
 import {useUserSessionStore} from "../../stores/UserSessionStore"
+import TagsContainer from "../TagsContainer";
+import { useParams } from "react-router-dom";
 
+//A fair amount of code redundancy / duplication due to the nature of useEffect()/async functions
 const FlashcardsMenu = () => {
+    const setId = useParams().setId;
     const [flashcardSets, setFlashcardSet] = useState([]);
     const [allFlashcards, setAllFlashcards] = useState([]);
     const [filteredFlashcards, setFilteredFlashcards] = useState([]);
@@ -25,6 +28,7 @@ const FlashcardsMenu = () => {
     const [createPromptOpen, setCreatePromptOpen] = useState(false);
     const [editPromptOpen, setEditPromptOpen] = useState(false);
     const [deletePromptOpen, setDeletePromptOpen] = useState(false);
+    const [tagsVisible, setTagsVisible] = useState("hidden");
     const userId = useUserSessionStore((state) => state.userId);
 
     const rootElement = document.getElementById('root');
@@ -42,7 +46,16 @@ const FlashcardsMenu = () => {
 
     const flashcardSetSelected = (flashcardSet) => {
         setCurrFlashcardSet(flashcardSet);
-        setFilteredFlashcards(allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id));
+        setTagsVisible("visible");
+        let tempCards = allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id);
+        setFilteredFlashcards(tempCards);
+        try{
+            setCard(allFlashcards.filter(flashcard => flashcard.set_id === flashcardSet.set_id)[0])
+        }
+        catch{
+            setCurrFlashcard([]);
+            setCardText("");
+        }
     };
 
     const setCard = (flashcard) => {
@@ -67,7 +80,6 @@ const FlashcardsMenu = () => {
         if(index === -1){
             return;
         }
-        console.log(index)
         if(direction === "next"){
             if(index === filteredFlashcards.length - 1){
                 index = 0;
@@ -84,8 +96,6 @@ const FlashcardsMenu = () => {
                 index = index - 1;
             }
         }
-        console.log(index)
-        console.log(filteredFlashcards[index])
         setCurrFlashcard(filteredFlashcards[index]);
         setCardText(filteredFlashcards[index].term);
         setCardSide("front");
@@ -110,9 +120,23 @@ const FlashcardsMenu = () => {
     const fetchFlashcardSets = async (userId) => {
         const { data, error } = await supabase
         .from("flashcard_set")
-        .select("set_name, set_id, tags")
+        .select("set_name, set_id")
         .eq("user_id", userId)
         .order("set_name", { ascending: true });
+    
+        if (error) {
+            console.error("Error fetching data:", error);
+            return [];
+        }
+
+        return data;
+    };  
+
+    const fetchTaggedFlashcardSet = async () => {
+        const { data, error } = await supabase
+        .from("flashcard_set")
+        .select("set_name, set_id")
+        .eq("set_id", setId);
     
         if (error) {
             console.error("Error fetching data:", error);
@@ -170,12 +194,21 @@ const FlashcardsMenu = () => {
         if(!userId){
             return;
         }
+        
         const loadData = async () => {
             const setData = await fetchFlashcardSets(userId);
             const cardData = await fetchAllFlashcards(setData);
             setFlashcardSet(setData);
             setfilteredFlashcardSets(setData);
             setAllFlashcards(cardData);
+            
+            if(setId){
+                let taggedFlashcard = await fetchTaggedFlashcardSet();
+                setCurrFlashcardSet(taggedFlashcard[0]);
+                setTagsVisible("visible")
+                setFilteredFlashcards(cardData.filter(flashcard => flashcard.set_id === taggedFlashcard[0].set_id));
+                setCard(cardData.filter(flashcard => flashcard.set_id === taggedFlashcard[0].set_id)[0])
+            }
           };
 
           loadData();
@@ -196,6 +229,7 @@ const FlashcardsMenu = () => {
                 sx={{
                     display: "flex",
                     flexDirection: "column",
+                    width: "15vw"
                 }}
             >
                 <TextField id="search" label="Search" variant="filled" onChange={searchInputChange}
@@ -203,7 +237,8 @@ const FlashcardsMenu = () => {
                     width: "100%",
                     backgroundColor: "#525252",
                     mb: 1,
-                    ml: 1
+                    ml: 1,
+                    borderRadius: "8px"
                 }}
                 />
                 <Box
@@ -214,13 +249,14 @@ const FlashcardsMenu = () => {
                         flexDirection: "column",
                         overflow: "auto",
                         backgroundColor: "#615f5f",
-                        padding: 1
+                        padding: 1,
+                        borderRadius: "8px"
                     }}
                 >
                     <Typography sx={{ fontWeight: "bold", fontSize: 20 }}>
                         Flashcard Sets
                     </Typography>
-                    <MenuList sx={{width: "100%"}}>
+                    <MenuList sx={{width: "100%", height: "100%"}}>
                         {filteredFlashcardSets.map((flashcardSet, index) => (
                             <MenuItem id="flashcard" key={index} 
                             sx={{padding: 1, 
@@ -228,7 +264,7 @@ const FlashcardsMenu = () => {
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center",
-                                border: "1px solid #ccc"
+                                border: "1px solid #ccc",
                             }}
                             onClick={() => flashcardSetSelected(flashcardSet)}>
                                 <Typography sx={{ fontWeight: "bold" }}>
@@ -241,45 +277,64 @@ const FlashcardsMenu = () => {
                             </MenuItem>
                         ))}    
                     </MenuList>
-                </Box>
-                <Box
-                sx={{
-                    width: "100%",
-                    backgroundColor: "#615f5f",
-                    padding: 1
-                }}
-                >
-                    <Button
-                    variant = "contained"
+                    <Box
                     sx={{
-                        color: "white",
-                        height: "100%",
                         width: "100%",
-                        borderRadius: 2,
-                        backgroundColor: "#6e6b6b",
-                        overflow: "auto"
+                        backgroundColor: "#615f5f",
+                        borderRadius: "8px"
                     }}
-                    onClick={() => handleOpenDialog("create")}
                     >
-                        <AddCard/>
-                    </Button>
+                        <Button
+                        variant = "contained"
+                        sx={{
+                            color: "white",
+                            height: "100%",
+                            width: "100%",
+                            borderRadius: 2,
+                            backgroundColor: "#6e6b6b",
+                            overflow: "auto"
+                        }}
+                        onClick={() => handleOpenDialog("create")}
+                        >
+                            <AddCard/>
+                        </Button>
+                    </Box>
                 </Box>
             </Box>
             <Dialog
             open={createPromptOpen}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }}
             >
                 <FlashcardSetCreate close={() => handleOpenDialog("create")} refreshFlashcardSets={refreshFlashcardSets}/>
             </Dialog>
             <Dialog
             open={editPromptOpen}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }}
             >
                 <FlashcardSetEdit close={() => handleOpenDialog("edit")} refreshFlashcardSets={refreshFlashcardSets} flashcardSet={currFlashcardSet}/>
             </Dialog>
             <Dialog
             open={deletePromptOpen}
+            PaperProps={{
+                style: {
+                    backgroundColor: 'transparent',
+                    boxShadow: 'none',
+                },
+            }}
             >
                 <FlashcardSetDelete close={() => handleOpenDialog("delete")} set_id={currFlashcardSet.set_id} refreshFlashcardSets={refreshFlashcardSets}
-                                    refreshAllFlashcards={refreshAllFlashcards}/>
+                                    refreshAllFlashcards={refreshAllFlashcards} setCurrFlashcardSet={setCurrFlashcardSet} setTagsVisible={setTagsVisible}
+                                    setCurrFlashcard={setCurrFlashcard} setCardText={setCardText}/>
             </Dialog>
             <Box
                 sx={{
@@ -287,8 +342,11 @@ const FlashcardsMenu = () => {
                     flexDirection: "column"
                 }}
             >
-                <Box sx={{ overflowY: "scroll", height: "100vh", width: "70vw", left: "10%"}}>
+                <Box sx={{ overflowY: "auto", height: "100vh", width: "80vw", left: "10%"}}>
                     <Box sx={{ position: "relative", height: "75vh", width: "89%", left: "10%"}}>
+                    <Typography sx={{ fontWeight: "bold", fontSize: 30, pr: 10 }}>
+                        {currFlashcardSet.set_name}
+                    </Typography>
                         <Box
                             sx={{
                                 display:"flex", 
@@ -299,6 +357,7 @@ const FlashcardsMenu = () => {
                                 top: "13%",
                                 backgroundColor: "#615f5f",
                                 border: "2px solid white",
+                                borderRadius: "8px",
                                 justifyContent: "center",
                                 alignItems: "center",
                             }}>
@@ -325,6 +384,11 @@ const FlashcardsMenu = () => {
                                     set_id={currFlashcardSet.set_id}
                                     refreshAllFlashcards={refreshAllFlashcards}
                     />
+                    <Box sx={{display:"flex", justifyContent: "center", alignItems: "center", mt: 1}}>
+                        <Box sx={{width: "70%", visibility: tagsVisible }}>
+                            <TagsContainer type={2} sessionId={currFlashcardSet.set_id}/>
+                        </Box>
+                    </Box>
                 </Box>
             </Box>
         </Box>

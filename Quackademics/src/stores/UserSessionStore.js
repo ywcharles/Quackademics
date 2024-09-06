@@ -14,6 +14,19 @@ export const useUserSessionStore = create(
       setProfilePicture: (profilePicture) =>
         set(() => ({ profilePicture: profilePicture })),
 
+      bio: "",
+      setBio: (bio) => set(() => ({ bio: bio })),
+
+      study: "",
+      setStudy: (study) => set(() => ({ study: study })),
+
+      startYear: null,
+      setStartYear: (startYear) => set(() => ({ startYear: startYear })),
+
+      graduationYear: null,
+      setGraduationYear: (graduationYear) =>
+        set(() => ({ graduationYear: graduationYear })),
+
       loginSuccess: false,
       setLoginSuccess: (loginSuccess) =>
         set(() => ({ loginSuccess: loginSuccess })),

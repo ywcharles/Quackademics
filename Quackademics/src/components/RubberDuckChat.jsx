@@ -111,8 +111,11 @@ const RubberDuckChat = () => {
     if (selectedQuack && selectedQuack.session_id) {
       await updateQuack(selectedQuack.session_id, textFieldContent);
     } else {
-      const newQuack = await insertQuack(user, textFieldContent);
+      if (textFieldContent && textFieldContent.length > 0){
+        const newQuack = await insertQuack(user, textFieldContent);
       setSelectedQuack(newQuack[0]);
+      }
+      
     }
 
     const quacks = await fetchUserQuacks(user);
