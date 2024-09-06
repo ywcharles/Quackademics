@@ -1,37 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  MDXEditor,
-  codeBlockPlugin,
-  sandpackPlugin,
-  codeMirrorPlugin,
-  toolbarPlugin,
-  ConditionalContents,
-  InsertCodeBlock,
-  InsertSandpack,
-  headingsPlugin,
-  listsPlugin,
-  quotePlugin,
-  thematicBreakPlugin,
-  markdownShortcutPlugin,
-  UndoRedo,
-  BoldItalicUnderlineToggles,
-  CodeToggle,
-  linkPlugin,
-  CreateLink,
-  ListsToggle,
-  linkDialogPlugin,
-  tablePlugin,
-  InsertTable,
-  BlockTypeSelect,
-} from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
 import {
   Box,
-  Container,
   CardContent,
   Typography,
   Card,
-  Divider,
   TextField,
   Button,
   Dialog,
@@ -41,6 +14,7 @@ import supabase from "../../libs/supabaseAdmin";
 import "./Notes.css";
 import { useUserSessionStore } from "../../stores/UserSessionStore";
 import { DeleteIcon, EditIcon } from "lucide-react";
+import MDEditor from "@uiw/react-md-editor";
 
 const NotesDoc = () => {
   const [notes, setNotes] = useState([]);
@@ -50,6 +24,8 @@ const NotesDoc = () => {
   const [currNote, setCurrNote] = useState(null);
   const [titleInput, setNoteTitleInput] = useState("");
   const userId = useUserSessionStore((state) => state.userId);
+
+  const [markdownContent, setMarkdownContent] = useState(null);
 
   const handleDeleteNoteCard = async (note) => {
     const { data, error } = await supabase
@@ -74,11 +50,19 @@ const NotesDoc = () => {
     setNoteTitleInput(event.target.value);
   };
 
-  const handleCardClick = (note) => {
+  const handleCardClick = async (note) => {
     setCurrNote(note);
+    const { data } = await supabase
+      .from("notes")
+      .select()
+      .eq("note_id", note.note_id);
+    if (data[0].content !== null) {
+      setMarkdownContent(data[0].content);
+    }
+    console.log(note.content);
   };
 
-  const handleSaveClick = async (note) => {
+  const handleEditClick = async (note) => {
     console.log(note.title);
     setNoteTitleInput(note.title);
     setOpen(!open);
@@ -89,15 +73,15 @@ const NotesDoc = () => {
     console.log("input", titleInput);
     console.log("title", currNote.title);
     console.log("note", currNote);
-
-    if (notes.find((note) => note.title === titleInput)) {
-      alert("Title name must be unique");
-      return;
-    }
+    console.log(markdownContent);
 
     const { data, error } = await supabase
       .from("notes")
-      .update({ note_id: currNote.note_id, title: titleInput })
+      .update({
+        note_id: currNote.note_id,
+        title: titleInput,
+        content: markdownContent,
+      })
       .eq("note_id", currNote.note_id)
       .select();
 
@@ -232,7 +216,7 @@ const NotesDoc = () => {
                   }}
                 >
                   <IconButton
-                    onClick={() => handleSaveClick(note)}
+                    onClick={() => handleEditClick(note)}
                     color="primary"
                   >
                     <EditIcon />
@@ -273,43 +257,7 @@ const NotesDoc = () => {
           flexDirection: "row",
         }}
       >
-        <Box
-          sx={{
-            flex: 1,
-            backgroundColor: "#FFFFFF",
-            width: "65vw",
-            minHeight: "100%",
-            overflow: "auto",
-          }}
-        >
-          <MDXEditor
-            markdown="#"
-            contentEditableClassName="MDXEditorClass"
-            plugins={[
-              headingsPlugin(),
-              linkDialogPlugin(),
-              linkPlugin,
-              listsPlugin(),
-              quotePlugin(),
-              markdownShortcutPlugin(),
-              tablePlugin(),
-              toolbarPlugin({
-                toolbarContents: () => {
-                  return (
-                    <>
-                      <UndoRedo />
-                      <BoldItalicUnderlineToggles />
-                      <BlockTypeSelect />
-                      <CreateLink />
-                      <ListsToggle />
-                      <InsertTable />
-                    </>
-                  );
-                },
-              }),
-            ]}
-          />
-        </Box>
+        <MDEditor value={markdownContent} onChange={setMarkdownContent} />
       </Box>
       <Dialog open={open}>
         <Box
@@ -321,8 +269,7 @@ const NotesDoc = () => {
           }}
         >
           <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}>
-            {" "}
-            Note title:{" "}
+            Note title:
           </Typography>
           <Box
             sx={{
