@@ -34,11 +34,9 @@ const ProfilePictureCard = ({ setProfilePicture }) => {
             <img
               src={pfp.src}
               alt={`Profile ${pfp.pfpNum}`}
-              style={{
-                width: "auto",
-                height: "auto",
-                display: "block",
-              }}
+              width={32}
+              height={32}
+              style={{ imageRendering: "pixelated" }}
             />
           </ImageListItem>
         ))}
@@ -48,4 +46,3 @@ const ProfilePictureCard = ({ setProfilePicture }) => {
 };
 
 export default ProfilePictureCard;
-
