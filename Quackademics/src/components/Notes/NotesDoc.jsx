@@ -41,13 +41,16 @@ import supabase from "../../libs/supabaseAdmin";
 import "./Notes.css";
 import { useUserSessionStore } from "../../stores/UserSessionStore";
 import { DeleteIcon, EditIcon } from "lucide-react";
+import TagsContainer from "../TagsContainer";
+import { useParams } from "react-router-dom";
 
 const NotesDoc = () => {
+  const searchId = useParams().notesId;
   const [notes, setNotes] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const [currNote, setCurrNote] = useState(null);
+  const [currNote, setCurrNote] = useState({note_id: null, course_id: null, title: null, content: null});
   const [titleInput, setNoteTitleInput] = useState("");
   const userId = useUserSessionStore((state) => state.userId);
 
@@ -168,10 +171,15 @@ const NotesDoc = () => {
 
   useEffect(() => {
     const loadData = async () => {
-      const notes = await fetchNotes();
-      setNotes(notes);
-      setFilteredNotes(notes);
-      console.log(notes);
+      const fetchedNotes = await fetchNotes();
+      setNotes(fetchedNotes);
+      setFilteredNotes(fetchedNotes);
+
+      if(searchId){
+        let taggedNote = fetchedNotes.filter(note => note.note_id == searchId)[0];
+        console.log(taggedNote)
+        setCurrNote(taggedNote)
+    }
     };
 
     loadData();
@@ -316,7 +324,7 @@ const NotesDoc = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "20vw",
+            width: "50vw",
             backgroundColor: "#525252",
           }}
         >
@@ -344,6 +352,7 @@ const NotesDoc = () => {
           <Box
             sx={{ display: "flex", justifyContent: "end", alignItems: "end" }}
           >
+            <TagsContainer type={1} sessionId={currNote.note_id}/>
             <Button
               title="Save"
               sx={{
