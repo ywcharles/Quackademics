@@ -7,7 +7,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import { loginPage, navComponents } from "../util/Navbar.util";
+import { loginPage, profilePage, navComponents } from "../util/Navbar.util";
 import NotificationPopover from "./NotificationPopover.jsx";
 import { useUserSessionStore } from "../stores/UserSessionStore.js";
 
@@ -75,9 +75,14 @@ function Navbar() {
                 Login
               </Button>
             ) : (
-              <Button href={"/home"} color="inherit" onClick={onSignOutClick}>
-                Sign Out
-              </Button>
+              <>
+                <Button href={profilePage.href} color="inherit">
+                  Profile
+                </Button>
+                <Button href={"/home"} color="inherit" onClick={onSignOutClick}>
+                  Sign Out
+                </Button>
+              </>
             )}
             {userId && <NotificationPopover />}
           </Toolbar>
