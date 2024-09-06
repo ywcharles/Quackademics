@@ -15,7 +15,7 @@ import { reloadProfile } from "../../supabase/AccountSupabase";
 
 const formatStudyBio = (study, start, end) => {
   if (start && end) {
-    return study + " " + start.split("-")[0] + " - " + end.split("-")[0];
+    return study + " | " + start.split("-")[0] + " - " + end.split("-")[0];
   }
 };
 
@@ -81,12 +81,12 @@ const ProfileCard = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          backgroundColor: "#615f5f",
-          color: "white",
+          // backgroundColor: "#615f5f",
+          color: "inherit",
           gap: 1,
           borderRadius: 2,
           width: "100%",
-          height: "65%",
+          height: "fit-content",
           justifyContent: "space-between",
         }}
       >
@@ -95,34 +95,47 @@ const ProfileCard = () => {
           alt={username + "_pfp"} // alt content should be person's name they input
           sx={{
             mt: 2,
-            width: 130,
-            height: 130,
+            width: 350,
+            height: 350,
           }}
         />
         <Typography
           variant="h6"
-          sx={{ fontWeight: "bold", height: "10%", width: "100%" }}
+          sx={{
+            fontWeight: "bold",
+            height: "10%",
+            width: "100%",
+            textAlign: "left",
+          }}
         >
           @{username}
         </Typography>
-        <Typography variant="body1" sx={{ height: "10%", width: "100%" }}>
+        <Typography
+          variant="body1"
+          sx={{ height: "10%", width: "100%", textAlign: "left" }}
+        >
           {formatStudyBio(loadedStudy, loadedStartYear, loadedGraduationYear)}
         </Typography>
-        <Box
+        <Typography
+          variant="body2"
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            overflowY: "auto",
+            color: "lightgrey",
+            mt: 2,
+            width: "100%",
+            textAlign: "left",
           }}
         >
-          <Typography
-            variant="body2"
-            sx={{ color: "lightgrey", overflow: "hidden", mt: 2 }}
-          >
-            {loadedBio}
-          </Typography>
-        </Box>
+          {loadedBio}
+        </Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          size="small"
+          sx={{ mt: 2, mb: 1, width: "95%" }}
+          onClick={handleEditProfileOpen}
+        >
+          Edit Profile
+        </Button>
         <Dialog
           open={openDialog}
           onClose={handleEditProfileClose}
@@ -188,15 +201,6 @@ const ProfileCard = () => {
             </Button>
           </DialogContent>
         </Dialog>
-        <Button
-          variant="contained"
-          color="secondary"
-          size="small"
-          sx={{ mb: 1, width: "95%" }}
-          onClick={handleEditProfileOpen}
-        >
-          Edit Profile
-        </Button>
       </Box>
     </>
   );
