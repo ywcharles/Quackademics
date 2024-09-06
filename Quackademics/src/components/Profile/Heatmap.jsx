@@ -32,38 +32,55 @@ const Heatmap = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      let { data, error } = await supabase
+      let { data: pomodoroData, error: pomodoroError } = await supabase
         .from('pomodoro_sessions')
         .select('cycle_count, created_at')
         .eq('user_id', user_id);
 
-      if (error) {
-        console.error("Error fetching data:", error);
-      } else {
-        const processedData = new Array(7).fill(0).map(() => new Array(52).fill(0));
+      if (pomodoroError) {
+        console.error("Error fetching pomodoro sessions:", pomodoroError);
+        return;
+      }
 
-        data.forEach((session) => {
-          const date = new Date(session.created_at);
-          const weekOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 1)) / (7 * 24 * 60 * 60 * 1000));
-          const dayOfWeek = date.getDay();
+      let { data: rubberDuckData, error: rubberDuckError } = await supabase
+        .from('rubber_duck_sessions')
+        .select('created_at')
+        .eq('user_id', user_id);
 
-          processedData[dayOfWeek][weekOfYear] += session.cycle_count;
-        });
+      if (rubberDuckError) {
+        console.error("Error fetching rubber duck sessions:", rubberDuckError);
+        return;
+      }
 
-        for (let week = 26; week <= 35; week++) {
-          for (let day = 0; day < 7; day++) {
-            if (processedData[day][week] === 0) {
-              processedData[day][week] = Math.floor(Math.random() * 5) + 1;
-            }
+      const processedData = new Array(7).fill(0).map(() => new Array(52).fill(0));
+
+      pomodoroData.forEach((session) => {
+        const date = new Date(session.created_at);
+        const weekOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 1)) / (7 * 24 * 60 * 60 * 1000));
+        const dayOfWeek = date.getDay();
+        processedData[dayOfWeek][weekOfYear] += session.cycle_count;
+      });
+
+      rubberDuckData.forEach((session) => {
+        const date = new Date(session.created_at);
+        const weekOfYear = Math.floor((date - new Date(date.getFullYear(), 0, 1)) / (7 * 24 * 60 * 60 * 1000));
+        const dayOfWeek = date.getDay();
+        processedData[dayOfWeek][weekOfYear] += 1;
+      });
+
+      for (let week = 26; week <= 35; week++) {
+        for (let day = 0; day < 7; day++) {
+          if (processedData[day][week] === 0) {
+            processedData[day][week] = Math.floor(Math.random() * 5) + 1;
           }
         }
-
-        setHeatmapData(processedData);
       }
+
+      setHeatmapData(processedData);
     };
 
     fetchData();
-  }, []);
+  }, [user_id]);
 
   return (
     <>
