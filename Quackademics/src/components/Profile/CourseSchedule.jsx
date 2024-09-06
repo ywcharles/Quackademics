@@ -223,6 +223,7 @@ const CourseSchedule = () => {
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
+                  width: "250px",
                 }}
               >
                 <Box sx={{ textAlign: "left" }}>
