@@ -29,12 +29,13 @@ export const navComponents = [
     href: "/notes",
     description: "View and write your notes",
   },
-  {
-    title: "Profile",
-    href: "/profile",
-    description: "View your profile",
-  },
 ];
+
+export const profilePage = {
+  title: "Profile",
+  href: "/profile",
+  description: "View your profile",
+};
 
 export const loginPage = {
   title: "Login",
