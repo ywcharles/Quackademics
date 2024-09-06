@@ -17,12 +17,17 @@ import { DeleteIcon, EditIcon } from "lucide-react";
 import MDEditor from "@uiw/react-md-editor";
 import TagsContainer from "../TagsContainer";
 import { useParams } from "react-router-dom";
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
 
 const NotesDoc = () => {
   const searchId = useParams().notesId;
   const [notes, setNotes] = useState([]);
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [courses, setCourses] = useState([]);
   const [open, setOpen] = useState(false);
   const [currNote, setCurrNote] = useState({
     note_id: null,
@@ -31,10 +36,16 @@ const NotesDoc = () => {
     content: null,
   });
   const [titleInput, setNoteTitleInput] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const userId = useUserSessionStore((state) => state.userId);
 
   const [markdownContent, setMarkdownContent] = useState(null);
 
+  const handleCourseSelection = (event) => {
+    console.log(event.target.value)
+    setSelectedCourse(event.target.value);
+  };
+      
   const handleDeleteNoteCard = async (note) => {
     const { data, error } = await supabase
       .from("notes")
@@ -60,7 +71,9 @@ const NotesDoc = () => {
     setSearchQuery(event.target.value);
     setFilteredNotes(
       notes.filter((note) =>
-        note.title.toLowerCase().includes(event.target.value),
+        note.title.toLowerCase().includes(event.target.value.toLowerCase()) ||
+        (note.content ?? '').toLowerCase().includes(event.target.value.toLowerCase()) ||
+        (note.course_name ?? '').toLowerCase().includes(event.target.value.toLowerCase())
       ),
     );
   };
@@ -100,6 +113,8 @@ const NotesDoc = () => {
         note_id: currNote.note_id,
         title: titleInput,
         content: markdownContent,
+        course_id: selectedCourse.course_id,
+        course_name: selectedCourse.course_name
       })
       .eq("note_id", currNote.note_id)
       .select();
@@ -148,7 +163,8 @@ const NotesDoc = () => {
         notes.filter(
           (note) =>
             note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            note.content.toLowerCase().includes(searchQuery.toLowerCase()),
+            note.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            note.course_name.toLowerCase().includes(searchQuery.toLowerCase())
         ),
       );
     } else {
@@ -169,11 +185,26 @@ const NotesDoc = () => {
     }
   };
 
+  const fetchCourses = async () => {
+    const { data, error } = await supabase
+      .from("courses")
+      .select("*")
+      .eq("user_id", userId);
+
+    if (error) {
+      console.error("Error fetching data:", error);
+    } else {
+      return data;
+    }
+  }
+
   useEffect(() => {
     const loadData = async () => {
       const fetchedNotes = await fetchNotes();
+      const fetchedCourses = await fetchCourses();
       setNotes(fetchedNotes);
       setFilteredNotes(fetchedNotes);
+      setCourses(fetchedCourses);
 
       if (searchId) {
         let taggedNote = fetchedNotes.filter(
@@ -234,6 +265,7 @@ const NotesDoc = () => {
             >
               <CardContent>
                 <Typography variant="h6">{note.title}</Typography>
+                <Typography sx={{color: "white"}}>{note.course_name}</Typography>
                 <TagsContainer type={1} sessionId={note.note_id} />
                 <Box
                   sx={{
@@ -311,7 +343,7 @@ const NotesDoc = () => {
               justifyContent: "center",
               alignItems: "center",
               height: "80%",
-              width: "100%",
+              width: "20vw",
               mb: 1,
             }}
           >
@@ -322,10 +354,22 @@ const NotesDoc = () => {
               style={{ height: "80%", width: "90%", resize: "none" }}
             />
           </Box>
+          <InputLabel sx={{color: "white", ml: 1}}>Course:</InputLabel>
+            <FormControl fullWidth>
+            <Select
+              id="course"
+              value={selectedCourse}
+              onChange={handleCourseSelection}
+              sx={{width: "90%", height: "5vh", ml: 1, mb: 1, color: "white"}}
+            >
+              {courses.map((course) => (
+              <MenuItem key={(course.course_id)} value={course}>{course.course_name}</MenuItem>
+              ))}
+            </Select>
+            </FormControl>
           <Box
             sx={{ display: "flex", justifyContent: "end", alignItems: "end" }}
           >
-            <TagsContainer type={1} sessionId={currNote.note_id} />
             <Button
               title="Save"
               sx={{
