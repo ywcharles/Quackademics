@@ -34,16 +34,14 @@ const UserProfile = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          gap: 4,
           width: "100%",
         }}
       >
         {/* heat map */}
         <Heatmap />
-      </Box>
-      <Box sx={{ width: "50%", height: "100%" }}>
-        {" "}
-        <CourseSchedule />
+        <Box sx={{ width: "100%", height: "100%" }}>
+          <CourseSchedule />
+        </Box>
       </Box>
     </Box>
   );
