@@ -51,6 +51,13 @@ const NotesDoc = () => {
   const [noteTitle, setNoteTitle] = useState("");
   const userId = useUserSessionStore((state) => state.userId);
 
+  const handleDeleteNoteCard = async (cardId) => {
+    const { data, error } = await supabase
+      .from("notes")
+      .delete()
+      .eq("note_id", cardId);
+  };
+
   // Handle search input change
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -227,7 +234,10 @@ const NotesDoc = () => {
                   <IconButton color="primary">
                     <EditIcon />
                   </IconButton>
-                  <IconButton color="error">
+                  <IconButton
+                    onClick={handleDeleteNoteCard(note.note_id)}
+                    color="error"
+                  >
                     <DeleteIcon />
                   </IconButton>
                 </Box>
