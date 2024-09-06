@@ -36,7 +36,19 @@ const NotesDoc = () => {
       .delete()
       .eq("note_id", note.note_id);
     console.log("error", error);
+
+    const {errorTags} = await supabase
+        .from("tags_mapping")
+        .delete()
+        .eq('search_id', note.note_id)
+        .eq('type', 1);
+
+      if (errorTags) {
+          console.error("Error deleting data:", errorTags);
+      }
+
     await refreshNotes();
+
   };
 
   // Handle search input change
@@ -161,8 +173,9 @@ const NotesDoc = () => {
 
       if(searchId){
         let taggedNote = fetchedNotes.filter(note => note.note_id == searchId)[0];
-        console.log(taggedNote)
-        setCurrNote(taggedNote)
+        console.log(taggedNote);
+        setCurrNote(taggedNote);
+        await handleCardClick(taggedNote);
     }
     };
 
@@ -185,7 +198,7 @@ const NotesDoc = () => {
           flexDirection: "column",
           backgroundColor: "#615f5f",
           height: "100%",
-          width: "50vw",
+          width: "15vw",
           gap: 1,
         }}
       >
@@ -272,7 +285,6 @@ const NotesDoc = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            width: "50vw",
             backgroundColor: "#525252",
           }}
         >
