@@ -95,8 +95,9 @@ const ProfileCard = () => {
           alt={username + "_pfp"} // alt content should be person's name they input
           sx={{
             mt: 2,
-            width: 350,
-            height: 350,
+            width: 500,
+            height: 500,
+            imageRendering: "pixelated",
           }}
         />
         <Typography

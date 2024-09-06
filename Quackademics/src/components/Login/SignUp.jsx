@@ -69,7 +69,7 @@ const SignUp = () => {
       }}
     >
       <Divider variant="middle" flexItem sx={{ fontWeight: "light" }}>
-        new to the community
+        New to the community? Sign up!
       </Divider>
       <Button
         type="submit"
