@@ -58,27 +58,33 @@ const NotesDoc = () => {
       alert("No note currently selected");
       return;
     }
-
+    
+    setNoteTitle(currNote.title)
     setOpen(!open);
     return;
   };
 
   const handleSaving = async () => {
-    if(notes.find(note => note.title === currNote.title)){
+    console.log(currNote.title)
+    console.log(currNote)
+
+    if(notes.find(note => note.title === noteTitle)){
       alert("Title name must be unique");
       return;
     }
 
     const { data, error } = await supabase
       .from("notes")
-      .update({ note_id: currNote.id, title: tags })
-      .eq("set_id", flashcardSet.set_id)
+      .update({ note_id: currNote.note_id, title: noteTitle })
+      .eq("note_id", currNote.note_id)
       .select();
 
     if (error) {
         console.error("Error updating data:", error);
     }
 
+    await refreshNotes();
+    setOpen(!open)
     return;
   }
 
