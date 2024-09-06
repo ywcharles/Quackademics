@@ -24,11 +24,23 @@ import {
   InsertTable,
   BlockTypeSelect,
 } from "@mdxeditor/editor";
-import '@mdxeditor/editor/style.css'
-import { Box, Container, CardContent, Typography, Card, Divider, TextField, Button, Dialog } from "@mui/material";
+import "@mdxeditor/editor/style.css";
+import {
+  Box,
+  Container,
+  CardContent,
+  Typography,
+  Card,
+  Divider,
+  TextField,
+  Button,
+  Dialog,
+  IconButton,
+} from "@mui/material";
 import supabase from "../../libs/supabaseAdmin";
 import "./Notes.css";
-import {useUserSessionStore} from "../../stores/UserSessionStore"
+import { useUserSessionStore } from "../../stores/UserSessionStore";
+import { DeleteIcon, EditIcon } from "lucide-react";
 
 const NotesDoc = () => {
   const [notes, setNotes] = useState([]);
@@ -42,7 +54,11 @@ const NotesDoc = () => {
   // Handle search input change
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
-    setFilteredNotes(notes.filter(note => note.title.toLowerCase().includes(event.target.value)));
+    setFilteredNotes(
+      notes.filter((note) =>
+        note.title.toLowerCase().includes(event.target.value),
+      ),
+    );
   };
 
   const handleTitleChange = (event) => {
@@ -50,25 +66,25 @@ const NotesDoc = () => {
   };
 
   const handleCardClick = (note) => {
-    setCurrNote(note)
-  }
+    setCurrNote(note);
+  };
 
   const handleSaveClick = async () => {
-    if(!currNote){
+    if (!currNote) {
       alert("No note currently selected");
       return;
     }
-    
-    setNoteTitle(currNote.title)
+
+    setNoteTitle(currNote.title);
     setOpen(!open);
     return;
   };
 
   const handleSaving = async () => {
-    console.log(currNote.title)
-    console.log(currNote)
+    console.log(currNote.title);
+    console.log(currNote);
 
-    if(notes.find(note => note.title === noteTitle)){
+    if (notes.find((note) => note.title === noteTitle)) {
       alert("Title name must be unique");
       return;
     }
@@ -80,69 +96,69 @@ const NotesDoc = () => {
       .select();
 
     if (error) {
-        console.error("Error updating data:", error);
+      console.error("Error updating data:", error);
     }
 
     await refreshNotes();
-    setOpen(!open)
+    setOpen(!open);
     return;
-  }
+  };
 
   const handleCancel = () => {
     setOpen(!open);
     setNoteTitle("");
     return;
-  }
+  };
 
   const handleNewNoteClick = async () => {
     const { data, error } = await supabase
-    .from("notes")
-    .insert([
-      {
-        user_id: userId,
-        title: "New note"
-      }
-    ])
-    .select();
+      .from("notes")
+      .insert([
+        {
+          user_id: userId,
+          title: "New note",
+        },
+      ])
+      .select();
 
     if (error) {
-        console.error("Error inserting data:", error);
-        return [];
+      console.error("Error inserting data:", error);
+      return [];
     }
 
     setCurrNote(data);
     console.log(data);
     refreshNotes();
-  }
+  };
 
   const refreshNotes = async () => {
     let notes = await fetchNotes();
     setNotes(notes);
-    if(searchQuery){
+    if (searchQuery) {
       setFilteredNotes(
-        notes.filter(note =>
-        note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        note.content.toLowerCase().includes(searchQuery.toLowerCase()))
+        notes.filter(
+          (note) =>
+            note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            note.content.toLowerCase().includes(searchQuery.toLowerCase()),
+        ),
       );
-    }
-    else{
+    } else {
       setFilteredNotes(notes);
     }
-  }
+  };
 
   const fetchNotes = async () => {
     const { data, error } = await supabase
-    .from("notes")
-    .select("*")
-    .eq("user_id", userId);
+      .from("notes")
+      .select("*")
+      .eq("user_id", userId);
 
     if (error) {
       console.error("Error fetching data:", error);
-    }
-    else{
+    } else {
       return data;
     }
-  }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -153,14 +169,14 @@ const NotesDoc = () => {
     };
 
     loadData();
-  }, [])
+  }, []);
 
   return (
-    <Box 
+    <Box
       sx={{
         display: "flex",
         flexDirection: "row",
-        height: '92vh',
+        height: "92vh",
         width: "100%",
         mt: "30px",
       }}
@@ -172,7 +188,7 @@ const NotesDoc = () => {
           backgroundColor: "#615f5f",
           height: "100%",
           width: "50vw",
-          gap: 1
+          gap: 1,
         }}
       >
         {/* Search */}
@@ -188,16 +204,33 @@ const NotesDoc = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            height: "90%"
+            height: "90%",
           }}
         >
           {/* TODO: create cards for each saved notes */}
           {/* might need fixing... since theres no notes, i haven't seen what these look like */}
-          {filteredNotes.map(note => (
-            <Card key={note.note_id} sx={{ marginBottom: 2, backgroundColor: "#6e6b6b" }} onClick={() => handleCardClick(note)}>
+          {filteredNotes.map((note) => (
+            <Card
+              key={note.note_id}
+              sx={{ marginBottom: 2, backgroundColor: "#6e6b6b" }}
+              onClick={() => handleCardClick(note)}
+            >
               <CardContent>
                 <Typography variant="h6">{note.title}</Typography>
                 <Typography variant="body2">{note.content}</Typography>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <IconButton color="primary">
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton color="error">
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
               </CardContent>
             </Card>
           ))}
@@ -208,16 +241,30 @@ const NotesDoc = () => {
           sx={{
             display: "flex",
             flexDirection: "row",
-            gap: 1
+            gap: 1,
           }}
         >
-          <Button variant="contained" color="primary" sx={{ width: "100%"}} onClick={handleSaveClick}>Save</Button>
-          <Button variant="contained" color="primary" sx={{ width: "100%" }} onClick={handleNewNoteClick}>New Note</Button>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ width: "100%" }}
+            onClick={handleSaveClick}
+          >
+            Save
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ width: "100%" }}
+            onClick={handleNewNoteClick}
+          >
+            New Note
+          </Button>
         </Box>
       </Box>
       <Box
         sx={{
-          display: 'flex',
+          display: "flex",
           flexDirection: "row",
         }}
       >
@@ -231,7 +278,7 @@ const NotesDoc = () => {
           }}
         >
           <MDXEditor
-            markdown='#'
+            markdown="#"
             contentEditableClassName="MDXEditorClass"
             plugins={[
               headingsPlugin(),
@@ -252,31 +299,71 @@ const NotesDoc = () => {
                       <ListsToggle />
                       <InsertTable />
                     </>
-                  )
-                }
+                  );
+                },
               }),
             ]}
           />
         </Box>
       </Box>
-      <Dialog
-      open={open}>
+      <Dialog open={open}>
         <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                width: "20vw",
-                backgroundColor: "#525252",
-            }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "20vw",
+            backgroundColor: "#525252",
+          }}
         >
-            <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}> Note title: </Typography>
-            <Box sx={{display: "flex", justifyContent: "center", alignItems: "center", height: "80%", width: "100%", mb: 1}}>
-                <input id="noteTitle" value={noteTitle} onChange={handleTitleChange} style={{ height: "80%", width: "90%", resize: "none" }}/>
-            </Box>
-            <Box sx={{display: "flex", justifyContent: "end", alignItems: "end"}}>
-                <Button title="Save" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={handleSaving}>Save</Button>
-                <Button title="Cancel" sx={{backgroundColor: "cornflowerblue", color:"white", mr: 1, mb: 1}} onClick={handleCancel}>Cancel</Button>
-            </Box>
+          <Typography sx={{ fontWeight: "bold", color: "white", ml: 1 }}>
+            {" "}
+            Note title:{" "}
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "80%",
+              width: "100%",
+              mb: 1,
+            }}
+          >
+            <input
+              id="noteTitle"
+              value={noteTitle}
+              onChange={handleTitleChange}
+              style={{ height: "80%", width: "90%", resize: "none" }}
+            />
+          </Box>
+          <Box
+            sx={{ display: "flex", justifyContent: "end", alignItems: "end" }}
+          >
+            <Button
+              title="Save"
+              sx={{
+                backgroundColor: "cornflowerblue",
+                color: "white",
+                mr: 1,
+                mb: 1,
+              }}
+              onClick={handleSaving}
+            >
+              Save
+            </Button>
+            <Button
+              title="Cancel"
+              sx={{
+                backgroundColor: "cornflowerblue",
+                color: "white",
+                mr: 1,
+                mb: 1,
+              }}
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
+          </Box>
         </Box>
       </Dialog>
     </Box>
