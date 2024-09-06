@@ -13,15 +13,11 @@ import { useUserSessionStore } from "../stores/UserSessionStore.js";
 
 function Navbar() {
   const userId = useUserSessionStore((state) => state.userId);
-  const setProfilePicture = useUserSessionStore(
-    (state) => state.setProfilePicture,
-  );
   const setUserId = useUserSessionStore((state) => state.setUserId);
   const setLoginSuccess = useUserSessionStore((state) => state.setLoginSuccess);
 
   const onSignOutClick = () => {
     setLoginSuccess(false);
-    setProfilePicture(null);
     setUserId(null);
   };
 
@@ -36,6 +32,7 @@ function Navbar() {
               edge="start"
               color="inherit"
               aria-label="nav"
+              href="/Home"
             >
               <img
                 style={{ width: "50px" }}
@@ -61,8 +58,7 @@ function Navbar() {
               QUACKADEMICS
             </Typography>
 
-            <Box sx={{ flexGrow: 1 }} />
-
+            {/* Left-aligned elements */}
             {userId &&
               navComponents.map((page) => (
                 <MenuItem key={page}>
@@ -71,6 +67,8 @@ function Navbar() {
                   </Button>
                 </MenuItem>
               ))}
+
+            <Box sx={{ flexGrow: 1 }} />
 
             {userId === null || userId === "" ? (
               <Button href={loginPage.href} color="inherit">
@@ -81,7 +79,6 @@ function Navbar() {
                 Sign Out
               </Button>
             )}
-
             {userId && <NotificationPopover />}
           </Toolbar>
         </AppBar>

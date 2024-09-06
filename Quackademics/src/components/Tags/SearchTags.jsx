@@ -130,9 +130,9 @@ export const SearchTags = () => {
           flexDirection: "column",
           padding: 3,
           width: "100vh",
-          height: "50vh",
+          height: "40vh",
           gap: 1,
-          overflowY: "scroll"
+          overflowY: "auto"
         }}
       >
         {sessions.map(
