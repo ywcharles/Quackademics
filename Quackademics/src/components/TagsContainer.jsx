@@ -177,14 +177,16 @@ const TagsContainer = (props) => {
         width: "90%",
         height: "10%",
         justifyContent: "center",
-        backgroundColor: "white",
+        backgroundColor: "inherit",
         color: "black",
         marginX: 2,
         padding: 2,
         borderRadius: 2,
       }}
     >
-      {(!sessionTags || sessionTags.length === 0) && <Typography sx={{color:"gray"}}>Tags</Typography>}
+      {(!sessionTags || sessionTags.length === 0) && (
+        <Typography sx={{ color: "gray" }}>Tags</Typography>
+      )}
       <Box
         sx={{
           display: "flex",

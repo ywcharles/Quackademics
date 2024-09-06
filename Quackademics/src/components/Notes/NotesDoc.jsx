@@ -24,7 +24,12 @@ const NotesDoc = () => {
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const [currNote, setCurrNote] = useState({note_id: null, course_id: null, title: null, content: null});
+  const [currNote, setCurrNote] = useState({
+    note_id: null,
+    course_id: null,
+    title: null,
+    content: null,
+  });
   const [titleInput, setNoteTitleInput] = useState("");
   const userId = useUserSessionStore((state) => state.userId);
 
@@ -37,18 +42,17 @@ const NotesDoc = () => {
       .eq("note_id", note.note_id);
     console.log("error", error);
 
-    const {errorTags} = await supabase
-        .from("tags_mapping")
-        .delete()
-        .eq('search_id', note.note_id)
-        .eq('type', 1);
+    const { errorTags } = await supabase
+      .from("tags_mapping")
+      .delete()
+      .eq("search_id", note.note_id)
+      .eq("type", 1);
 
-      if (errorTags) {
-          console.error("Error deleting data:", errorTags);
-      }
+    if (errorTags) {
+      console.error("Error deleting data:", errorTags);
+    }
 
     await refreshNotes();
-
   };
 
   // Handle search input change
@@ -171,12 +175,14 @@ const NotesDoc = () => {
       setNotes(fetchedNotes);
       setFilteredNotes(fetchedNotes);
 
-      if(searchId){
-        let taggedNote = fetchedNotes.filter(note => note.note_id == searchId)[0];
+      if (searchId) {
+        let taggedNote = fetchedNotes.filter(
+          (note) => note.note_id == searchId,
+        )[0];
         console.log(taggedNote);
         setCurrNote(taggedNote);
         await handleCardClick(taggedNote);
-    }
+      }
     };
 
     loadData();
@@ -187,8 +193,8 @@ const NotesDoc = () => {
       sx={{
         display: "flex",
         flexDirection: "row",
-        height: "92vh",
-        width: "100%",
+        height: "700px",
+        width: "1300px",
         mt: "30px",
       }}
     >
@@ -228,7 +234,7 @@ const NotesDoc = () => {
             >
               <CardContent>
                 <Typography variant="h6">{note.title}</Typography>
-                <Typography variant="body2">{note.content}</Typography>
+                <TagsContainer type={1} sessionId={note.note_id} />
                 <Box
                   sx={{
                     display: "flex",
@@ -276,9 +282,17 @@ const NotesDoc = () => {
         sx={{
           display: "flex",
           flexDirection: "row",
+          width: "1300px",
         }}
       >
-        <MDEditor value={markdownContent} onChange={setMarkdownContent} />
+        <MDEditor
+          value={markdownContent}
+          onChange={setMarkdownContent}
+          height="100%"
+          style={{
+            width: "-webkit-fill-available",
+          }}
+        />
       </Box>
       <Dialog open={open}>
         <Box
@@ -311,7 +325,7 @@ const NotesDoc = () => {
           <Box
             sx={{ display: "flex", justifyContent: "end", alignItems: "end" }}
           >
-            <TagsContainer type={1} sessionId={currNote.note_id}/>
+            <TagsContainer type={1} sessionId={currNote.note_id} />
             <Button
               title="Save"
               sx={{
